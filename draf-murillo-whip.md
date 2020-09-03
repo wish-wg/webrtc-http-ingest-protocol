@@ -115,6 +115,12 @@ The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publi
 
 If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per [draft-ietf-ice-trickle-21].
 
+## Webrtc contrains
+
+In order to reduce the complexity of implementing WHIP in both encoders and media servers, some restrictions regarding WebRTC usage are made.
+
+SDP bundle SHALL be used by both the encoder/media producer and the media server. The SDP offer created by the encoder/media producer MUST include the bundle-only attribute in all m-lines as per {{draft-ietf-mmusic-sdp-bundle-negotiation-54}}. Also, RTCP muxing SHALL be supported by the both the encoder/media producer and the media server.
+
 ## Load balancing and redirections
 
 Encoders/media MAY not be colocated on the same server so it is possible to load balance incoming request to different media server. Encoders/media producers SHALL support HTTP redirection via 307 Temporary Redirect response code.
