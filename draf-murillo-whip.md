@@ -4,8 +4,8 @@ title: WebRTC-HTTP ingestion protocol (WHIP)
 abbrev: Whip
 category: info
 
-ipr: trust200902
-area: Security
+ipr:
+area: Applications and Real-Time Area (art)
 keyword: Internet-Draft
 
 stand_alone: yes
@@ -17,6 +17,12 @@ author:
     name: Sergio Garcia Murillo
     organization: CoSMo Software
     email: sergio.garcia.murillo@cosmosoftware.io
+ -
+    ins: A. Gouaillard
+    name: Alexandre Gouaillard
+    organization: CoSMo Software
+    email: alex.gouaillard@cosmosoftware.io
+
 
 normative:
   RFC2119:
@@ -31,8 +37,12 @@ informative:
 --- abstract
 
 While WebRTC has been very sucessfull in a wide range of scenarios, its adption in the broadcasting/streaming industry is lagging behind.
-Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers have to rely on protocols like RTMP for it.
-These protocols are not real-time based and do not match media codecs s used in WebRTC, introducing delay and degrading media quality if WebRTC is used to deliver the content to the end users.
+Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers still rely heavily on protocols like RTMP for it.
+
+These protocols are much older than webrtc and lack by default some important security and resilience features provided by webrtc. Shifting protocols at any point in the media path makes it extremely difficult to implement bandwidth estimation and congestion control protocols that work across the media path like BBR, which is needed to sustain real-time streams quality at scale over the public internet.
+
+The media codecs used in older protocols do not always match those being used in WebRTC, mandating transcoding on the ingest node, introducing delay and degrading media quality. This transcoding step is always present in traditionnal streaming to support e.g. ABR, and comes at no cost. However webrtc implements 
+client-side ABR, also called Network-Aware Encoding by e.g. Huavision, by means of simulcast and SVC codecs, which otherwise alleviate the need for server-side transcoding. Content protection and Privacy Enhancement can be achieve with End-to-End Encryption, which preclude any server-side media processing.
 
 This document proposes a simple HTTP based protocol that will allow WebRTC endpoings to ingest content into streaming servics and/or CDNs to fill this gap and facilitate deployment.
 
@@ -40,18 +50,21 @@ This document proposes a simple HTTP based protocol that will allow WebRTC endpo
 
 # Introduction
 
-WebRTC intentionaly does not specify a signaling protocol, which has allowed a flexible way of implementing a wide range of services. This approach has worked with multiconferencing and web based services, as it allows flexibility and customization.
-However, those services are tipically standalone silos which don't require interoperability with other services or leverage the existence of tools that can communicate with them. 
+WebRTC intentionaly does not specify a signaling transport protocol at application level, while RTCWEB standardized the signalling protocol itself (JSEP, SDP O/A) and everything that was going over the wire (media, codec, encryption, ...). This flexibility has allowed for implementing a wide range of services. However, those services are typically standalone silos which don't require interoperability with other services or leverage the existence of tools that can communicate with them. 
 
-In the broadcasting/streaming world, the usage of encoders that can ingest content to any streaming service or CDN is a strong requirement, and having to implement a custom protocol for each different service make WebRTC very difficult to be used in this area. 
+In the broadcasting/streaming world, the usage of hardware encoders that would make it very simple to plug in (SDI) cables carrying raw media, encoding it in place, and pushing it to any streaming service or CDN ingest is ubiquitous. Having to implement a custom signalling transport protocol for each different webrtc services has hindered adoption.
 
-While some standard protocols are available that can be integrated with WebRTC, like SIP or XMPP, which are not designed of commonly used in broadcasting/streaming services. RTSP on the other hand is not easily usable with WebRTC SDP offer/answer model.
+While some standard signalling protocols are available that can be integrated with WebRTC, like SIP or XMPP, they are not designed to be used in broadcasting/streaming services, and there also is no sign of adoption in that industry. RTSP, which is based on RTP and maybe the closest in terms of features to webrtc, is not compatible with WebRTC SDP offer/answer model.
+
+In the specific case of ingest into a platform, some assumption can be made about the server-side which simplifies the webrtc compliance burden, as detailled in webrtc-gateway document. https://tools.ietf.org/html/draft-ietf-rtcweb-gateways-02
 
 This document proposse a simple protocol for supporting WebRTC as ingest method which is:
-- Easy to implement.
-- Integrates with WebRTC nicelly.
-- Lowers the requirements on both encoders and broadcasting services.
-- Usable both in web brosers and in native encoders.
+- Easy to implement,
+- as easy to use as current RTMP URI.
+- Fully compliant with Webrtc and RTCWEB specs.
+- Allow for both ingest in traditionnal media platforms for extention and ingest in webrtc end-to-end platform for lowest possible latency.
+- Lowers the requirements on both hardware encoders and broadcasting services to support webrtc.
+- Usable both in web browsers and in native encoders.
 
 # Terminology
 
