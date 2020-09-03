@@ -107,6 +107,9 @@ If the Encoder/Media producer gathers additional candidates (via STUN/TURN) afte
 
 Encoders/media MAY not be colocated on the same server so it is possible to load balance incoming request to different media server. Encoders/media producers SHALL support HTTP redirection via 307 Temporary Redirect response code.
 
+In case of high load, the WHIP endpoints may return a 503 (Service Unavailable) status code indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay. 
+The server MAY send a Retry-After header field indicating the minimum time that the user agent is asked to wait before issuing the redirected request.
+
 ## Authentication and authorization
 
 Authtentication and authorization is supported by the Authorization HTTP header with a bearear token as per [rfc6750].
@@ -118,6 +121,7 @@ Both simulcast and scalable video coding (including K-SVC modes) MAY be supporte
 # Security Considerations
 
 HTTPS SHALL be used in order to preserve WebRTC security model.
+
 
 # IANA Considerations
 
