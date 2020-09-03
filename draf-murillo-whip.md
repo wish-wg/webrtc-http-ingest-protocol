@@ -34,8 +34,7 @@ While WebRTC has been very sucessfull in a wide range of scenarios, its adption 
 Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers have to rely on protocols like RTMP for it.
 These protocols are not real-time based and do not match media codecs s used in WebRTC, introducing delay and degrading media quality if WebRTC is used to deliver the content to the end users.
 
-This document proposes a simple HTTP based protocol that will allow WebRTC endpoings to ingest content into streaming servics and/or CDNs to fill this gap.
-facilitate deployment.
+This document proposes a simple HTTP based protocol that will allow WebRTC endpoings to ingest content into streaming servics and/or CDNs to fill this gap and facilitate deployment.
 
 --- middle
 
@@ -51,7 +50,7 @@ While some standard protocols are available that can be integrated with WebRTC, 
 This document proposse a simple protocol for supporting WebRTC as ingest method which is:
 - Easy to implement.
 - Integrates with WebRTC nicelly.
-- Lowers the requirements on .
+- Lowers the requirements on both encoders and broadcasting services.
 - Usable both in web brosers and in native encoders.
 
 # Terminology
