@@ -1,0 +1,127 @@
+---
+docname: draft-murillo-whip-00
+title: WebRTC-HTTP ingestion protocol (WHIP)
+abbrev: Whip
+category: info
+
+ipr: trust200902
+area: Security
+keyword: Internet-Draft
+
+stand_alone: yes
+pi: [toc, sortrefs, symrefs]
+
+author:
+ -
+    ins: S. Murillo
+    name: Sergio Garcia Murillo
+    organization: CoSMo Software
+    email: sergio.garcia.murillo@cosmosoftware.io
+
+normative:
+  RFC2119:
+  RFC3711:
+  RFC8285:
+
+informative:
+  RFC6464:
+  RFC6465:
+  RFC6904:
+
+--- abstract
+
+While WebRTC has been very sucessfull in a wide range of scenarios, its adption in the broadcasting/streaming industry is lagging behind.
+Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers have to rely on protocols like RTMP for it.
+These protocols are not real-time based and do not match media codecs s used in WebRTC, introducing delay and degrading media quality if WebRTC is used to deliver the content to the end users.
+
+This document proposes a simple HTTP based protocol that will allow WebRTC endpoings to ingest content into streaming servics and/or CDNs to fill this gap.
+facilitate deployment.
+
+--- middle
+
+# Introduction
+
+WebRTC intentionaly does not specify a signaling protocol, which has allowed a flexible way of implementing a wide range of services. This approach has worked with multiconferencing and web based services, as it allows flexibility and customization.
+However, those services are tipically standalone silos which don't require interoperability with other services or leverage the existence of tools that can communicate with them. 
+
+In the broadcasting/streaming world, the usage of encoders that can ingest content to any streaming service or CDN is a strong requirement, and having to implement a custom protocol for each different service make WebRTC very difficult to be used in this area. 
+
+While some standard protocols are available that can be integrated with WebRTC, like SIP or XMPP, which are not designed of commonly used in broadcasting/streaming services. RTSP on the other hand is not easily usable with WebRTC SDP offer/answer model.
+
+This document proposse a simple protocol for supporting WebRTC as ingest method which is:
+- Easy to implement.
+- Integrates with WebRTC nicelly.
+- Lowers the requirements on .
+- Usable both in web brosers and in native encoders.
+
+# Terminology
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
+
+# Overview
+
+The WebRTC-HTTP ingest protocol (WHIP) uses an HTTP POST request to perform a single shot SDP offer/answer so an ICE/DTLS session can be established between the encoder/media producer and the broadcasting ingestion endpoint.
+
+Once the ICE/DTLS session is set up, the media will flow unidirectionally from the encoder/media producer broadcasting ingestion endpoint. In order to reduce complexity, no SDP renegotiation is supported, so no tracks or streams can be added or removed once the initial SDP O/A over HTTP is completed.
+
+~~~~~
++-----------------+         +---------------+ +--------------+
+| WebRTC Producer |         | WHIP endpoint | | Media Server |
++---------+-------+         +-------+- -----+ +------+-------+
+          |                         |                |
+          |                         |                |
+          |HTTP POST (SDP Offer)    |                |
+          +-------------------------+                |
+          |202 Accepted (SDP answer)|                |
+          +<------------------------+                |
+          |          ICE REQUEST                     |
+          +----------------------------------------->+
+          |          ICE RESPONSE                    |
+          <------------------------------------------+
+          |          DTLS SETUP                      |
+          <==========================================>
+          |          RTP FLOW                        |
+          +------------------------------------------>
+~~~~~
+{: title="WHIP session setup"}
+
+# Protocol Operation
+
+In order to setup an ingestion session, the WebRTC encoder/media producer will generate an SDP offer according the the JSEP rules and do an HTTP POST request to the WHIP endpoint configured URL.
+
+The HTTP POST request will have a content type of application/sdp and contain the SDP offer as body. The WHIP ingestion endpoint will generate an SDP answer and return it on a 202 Accepted response with content type of application/sdp and the SDP answer as body.
+
+Once session is setup ICE consent freshness [rfc7675] will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
+
+## ICE and NAT support
+
+In order to simplify the protocol, there is no support of exchanging gathered tickle ICE candidates one the SDP offer or answer is sent.
+So in order to support encoders/media producers behind NAT, the WHIP media server MUST be publicly accessible.
+
+The initial offer by the encoder/media producer MAY be sent after the full ICE gathering is complete containing the full list of ICE candidates, or only contain local candidates or even an empty list of candidates.
+The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publicly accessible of the media server. The media server MAY use ICE lite, while the encoder/media producer MUST implement full ICE.
+
+If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per [draft-ietf-ice-trickle-21].
+
+## Load balancing and redirections
+
+Encoders/media MAY not be colocated on the same server so it is possible to load balance incoming request to different media server. Encoders/media producers SHALL support HTTP redirection via 307 Temporary Redirect response code.
+
+## Authentication and authorization
+
+Authtentication and authorization is supported by the Authorization HTTP header with a bearear token as per [rfc6750].
+
+## Simulcast and scalable video coding
+
+Both simulcast and scalable video coding (including K-SVC modes) MAY be supported by both media servers and encoders/media producers.
+
+# Security Considerations
+
+HTTPS SHALL be used in order to preserve WebRTC security model.
+
+# IANA Considerations
+
+# Acknowledgements
+
+--- back
+
