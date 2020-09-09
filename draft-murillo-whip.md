@@ -28,7 +28,7 @@ normative:
 
 --- abstract
 
-While WebRTC has been very sucessfull in a wide range of scenarios, its adption in the broadcasting/streaming industry is lagging behind.
+While WebRTC has been very sucessful in a wide range of scenarios, its adption in the broadcasting/streaming industry is lagging behind.
 Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers still rely heavily on protocols like RTMP for it.
 
 These protocols are much older than webrtc and lack by default some important security and resilience features provided by webrtc with minimal delay.
@@ -75,7 +75,7 @@ Once the ICE/DTLS session is set up, the media will flow unidirectionally from t
           |                         |                |
           |                         |                |
           |HTTP POST (SDP Offer)    |                |
-          +-------------------------+                |
+          +------------------------>+                |
           |202 Accepted (SDP answer)|                |
           +<------------------------+                |
           |          ICE REQUEST                     |
@@ -113,7 +113,7 @@ If the Encoder/Media producer gathers additional candidates (via STUN/TURN) afte
 
 In order to reduce the complexity of implementing WHIP in both encoders and media servers, some restrictions regarding WebRTC usage are made.
 
-SDP bundle SHALL be used by both the encoder/media producer and the media server. The SDP offer created by the encoder/media producer MUST include the bundle-only attribute in all m-lines as per {{draft-ietf-mmusic-sdp-bundle-negotiation-54}}. Also, RTCP muxing SHALL be supported by the both the encoder/media producer and the media server.
+SDP bundle SHALL be used by both the encoder/media producer and the media server. The SDP offer created by the encoder/media producer MUST include the bundle-only attribute in all m-lines as per {{!I-D.draft-ietf-mmusic-sdp-bundle-negotiation-54}}. Also, RTCP muxing SHALL be supported by the both the encoder/media producer and the media server.
 
 ## Load balancing and redirections
 
