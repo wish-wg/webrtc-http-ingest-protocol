@@ -31,7 +31,7 @@ normative:
 While WebRTC has been very sucessfull in a wide range of scenarios, its adption in the broadcasting/streaming industry is lagging behind.
 Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers still rely heavily on protocols like RTMP for it.
 
-These protocols are much older than webrtc and lack by default some important security and resilience features provided by webrtc. Shifting protocols at any point in the media path makes it extremely difficult to implement bandwidth estimation and congestion control protocols that work across the media path like BBR, which is needed to sustain real-time streams quality at scale over the public internet.
+These protocols are much older than webrtc and lack by default some important security and resilience features provided by webrtc with minimal delay.
 
 The media codecs used in older protocols do not always match those being used in WebRTC, mandating transcoding on the ingest node, introducing delay and degrading media quality. This transcoding step is always present in traditionnal streaming to support e.g. ABR, and comes at no cost. However webrtc implements 
 client-side ABR, also called Network-Aware Encoding by e.g. Huavision, by means of simulcast and SVC codecs, which otherwise alleviate the need for server-side transcoding. Content protection and Privacy Enhancement can be achieve with End-to-End Encryption, which preclude any server-side media processing.
@@ -52,7 +52,7 @@ In the specific case of ingest into a platform, some assumption can be made abou
 
 This document proposse a simple protocol for supporting WebRTC as ingest method which is:
 - Easy to implement,
-- as easy to use as current RTMP URI.
+- As easy to use as current RTMP URI.
 - Fully compliant with Webrtc and RTCWEB specs.
 - Allow for both ingest in traditionnal media platforms for extention and ingest in webrtc end-to-end platform for lowest possible latency.
 - Lowers the requirements on both hardware encoders and broadcasting services to support webrtc.
@@ -106,6 +106,12 @@ The initial offer by the encoder/media producer MAY be sent after the full ICE g
 The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publicly accessible of the media server. The media server MAY use ICE lite, while the encoder/media producer MUST implement full ICE.
 
 If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per {{!I-D.draft-ietf-ice-trickle-21}}.
+
+## Webrtc contrains
+
+In order to reduce the complexity of implementing WHIP in both encoders and media servers, some restrictions regarding WebRTC usage are made.
+
+SDP bundle SHALL be used by both the encoder/media producer and the media server. The SDP offer created by the encoder/media producer MUST include the bundle-only attribute in all m-lines as per {{draft-ietf-mmusic-sdp-bundle-negotiation-54}}. Also, RTCP muxing SHALL be supported by the both the encoder/media producer and the media server.
 
 ## Load balancing and redirections
 
