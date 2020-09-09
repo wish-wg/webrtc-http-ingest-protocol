@@ -95,6 +95,8 @@ In order to setup an ingestion session, the WebRTC encoder/media producer will g
 
 The HTTP POST request will have a content type of application/sdp and contain the SDP offer as body. The WHIP ingestion endpoint will generate an SDP answer and return it on a 202 Accepted response with content type of application/sdp and the SDP answer as body.
 
+SDP offer SHOULD use the sendonly attribute and the SDP answer MUST use the recvonly attribute.
+
 Once session is setup ICE consent freshness {{!RFC7675}} will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
 
 ## ICE and NAT support
