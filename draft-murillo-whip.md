@@ -1,11 +1,10 @@
 ---
 docname: draft-murillo-whip-00
 title: WebRTC-HTTP ingestion protocol (WHIP)
-abbrev: Whip
+abbrev: whip
 category: info
 
 ipr:
-area: Applications and Real-Time Area (art)
 keyword: Internet-Draft
 
 stand_alone: yes
@@ -26,13 +25,6 @@ author:
 
 normative:
   RFC2119:
-  RFC3711:
-  RFC8285:
-
-informative:
-  RFC6464:
-  RFC6465:
-  RFC6904:
 
 --- abstract
 
@@ -68,7 +60,7 @@ This document proposse a simple protocol for supporting WebRTC as ingest method 
 
 # Terminology
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{!RFC2119}}.
 
 # Overview
 
@@ -103,7 +95,7 @@ In order to setup an ingestion session, the WebRTC encoder/media producer will g
 
 The HTTP POST request will have a content type of application/sdp and contain the SDP offer as body. The WHIP ingestion endpoint will generate an SDP answer and return it on a 202 Accepted response with content type of application/sdp and the SDP answer as body.
 
-Once session is setup ICE consent freshness [rfc7675] will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
+Once session is setup ICE consent freshness {{!RFC7675}} will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
 
 ## ICE and NAT support
 
@@ -113,7 +105,7 @@ So in order to support encoders/media producers behind NAT, the WHIP media serve
 The initial offer by the encoder/media producer MAY be sent after the full ICE gathering is complete containing the full list of ICE candidates, or only contain local candidates or even an empty list of candidates.
 The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publicly accessible of the media server. The media server MAY use ICE lite, while the encoder/media producer MUST implement full ICE.
 
-If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per [draft-ietf-ice-trickle-21].
+If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per {{!I-D.draft-ietf-ice-trickle-21}}.
 
 ## Load balancing and redirections
 
@@ -124,7 +116,7 @@ The server MAY send a Retry-After header field indicating the minimum time that 
 
 ## Authentication and authorization
 
-Authtentication and authorization is supported by the Authorization HTTP header with a bearear token as per [rfc6750].
+Authtentication and authorization is supported by the Authorization HTTP header with a bearear token as per {{!RFC6750}}.
 
 ## Simulcast and scalable video coding
 
