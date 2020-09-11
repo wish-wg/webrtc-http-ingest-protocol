@@ -115,6 +115,8 @@ In order to reduce the complexity of implementing WHIP in both encoders and medi
 
 SDP bundle SHALL be used by both the encoder/media producer and the media server. The SDP offer created by the encoder/media producer MUST include the bundle-only attribute in all m-lines as per {{!I-D.draft-ietf-mmusic-sdp-bundle-negotiation-54}}. Also, RTCP muxing SHALL be supported by the both the encoder/media producer and the media server.
 
+Unlike {{!RFC5763}} an encoder/media producer MAY use a setup attribute value of setup:active in the SDP offer, in which case the WHIP endpoint MUST use a MUST use the setup attribute value of setup:passive in the SDP answer. 
+
 ## Load balancing and redirections
 
 Encoders/media MAY not be colocated on the same server so it is possible to load balance incoming request to different media server. Encoders/media producers SHALL support HTTP redirection via 307 Temporary Redirect response code.
