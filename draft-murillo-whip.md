@@ -28,15 +28,15 @@ normative:
 
 --- abstract
 
-While WebRTC has been very sucessful in a wide range of scenarios, its adption in the broadcasting/streaming industry is lagging behind.
+While WebRTC has been very sucessful in a wide range of scenarios, its adoption in the broadcasting/streaming industry is lagging behind.
 Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media in a streaming service, and content providers still rely heavily on protocols like RTMP for it.
 
 These protocols are much older than webrtc and lack by default some important security and resilience features provided by webrtc with minimal delay.
 
-The media codecs used in older protocols do not always match those being used in WebRTC, mandating transcoding on the ingest node, introducing delay and degrading media quality. This transcoding step is always present in traditionnal streaming to support e.g. ABR, and comes at no cost. However webrtc implements 
+The media codecs used in older protocols do not always match those being used in WebRTC, mandating transcoding on the ingest node, introducing delay and degrading media quality. This transcoding step is always present in traditional streaming to support e.g. ABR, and comes at no cost. However webrtc implements 
 client-side ABR, also called Network-Aware Encoding by e.g. Huavision, by means of simulcast and SVC codecs, which otherwise alleviate the need for server-side transcoding. Content protection and Privacy Enhancement can be achieve with End-to-End Encryption, which preclude any server-side media processing.
 
-This document proposes a simple HTTP based protocol that will allow WebRTC endpoings to ingest content into streaming servics and/or CDNs to fill this gap and facilitate deployment.
+This document proposes a simple HTTP based protocol that will allow WebRTC endpoints to ingest content into streaming servics and/or CDNs to fill this gap and facilitate deployment.
 
 --- middle
 
@@ -48,13 +48,13 @@ In the broadcasting/streaming world, the usage of hardware encoders that would m
 
 While some standard signalling protocols are available that can be integrated with WebRTC, like SIP or XMPP, they are not designed to be used in broadcasting/streaming services, and there also is no sign of adoption in that industry. RTSP, which is based on RTP and maybe the closest in terms of features to webrtc, is not compatible with WebRTC SDP offer/answer model.
 
-In the specific case of ingest into a platform, some assumption can be made about the server-side which simplifies the webrtc compliance burden, as detailled in webrtc-gateway document. https://tools.ietf.org/html/draft-ietf-rtcweb-gateways-02
+In the specific case of ingest into a platform, some assumption can be made about the server-side which simplifies the webrtc compliance burden, as detailed in webrtc-gateway document. https://tools.ietf.org/html/draft-ietf-rtcweb-gateways-02
 
-This document proposse a simple protocol for supporting WebRTC as ingest method which is:
+This document proposes a simple protocol for supporting WebRTC as ingest method which is:
 - Easy to implement,
 - As easy to use as current RTMP URI.
 - Fully compliant with Webrtc and RTCWEB specs.
-- Allow for both ingest in traditionnal media platforms for extention and ingest in webrtc end-to-end platform for lowest possible latency.
+- Allow for both ingest in traditional media platforms for extention and ingest in webrtc end-to-end platform for lowest possible latency.
 - Lowers the requirements on both hardware encoders and broadcasting services to support webrtc.
 - Usable both in web browsers and in native encoders.
 
@@ -66,7 +66,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 The WebRTC-HTTP ingest protocol (WHIP) uses an HTTP POST request to perform a single shot SDP offer/answer so an ICE/DTLS session can be established between the encoder/media producer and the broadcasting ingestion endpoint.
 
-Once the ICE/DTLS session is set up, the media will flow unidirectionally from the encoder/media producer broadcasting ingestion endpoint. In order to reduce complexity, no SDP renegotiation is supported, so no tracks or streams can be added or removed once the initial SDP O/A over HTTP is completed.
+Once the ICE/DTLS session is set up, the media will flow unidirectionally from the encoder/media producer to the broadcasting ingestion endpoint. In order to reduce complexity, no SDP renegotiation is supported, so no tracks or streams can be added or removed once the initial SDP O/A over HTTP is completed.
 
 ~~~~~
 +-----------------+         +---------------+ +--------------+
@@ -126,7 +126,7 @@ The server MAY send a Retry-After header field indicating the minimum time that 
 
 ## Authentication and authorization
 
-Authtentication and authorization is supported by the Authorization HTTP header with a bearear token as per {{!RFC6750}}.
+Authentication and authorization is supported by the Authorization HTTP header with a bearer token as per {{!RFC6750}}.
 
 ## Simulcast and scalable video coding
 
