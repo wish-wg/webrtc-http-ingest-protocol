@@ -24,7 +24,10 @@ author:
 
 
 normative:
-  RFC2119:
+  RFC2119
+  RFC7675
+  RFC8838
+  RFC8840
 
 --- abstract
 
@@ -48,7 +51,7 @@ In the broadcasting/streaming world, the usage of hardware encoders that would m
 
 While some standard signalling protocols are available that can be integrated with WebRTC, like SIP or XMPP, they are not designed to be used in broadcasting/streaming services, and there also is no sign of adoption in that industry. RTSP, which is based on RTP and maybe the closest in terms of features to webrtc, is not compatible with WebRTC SDP offer/answer model.
 
-In the specific case of ingest into a platform, some assumption can be made about the server-side which simplifies the webrtc compliance burden, as detailed in webrtc-gateway document. https://tools.ietf.org/html/draft-ietf-rtcweb-gateways-02
+In the specific case of ingest into a platform, some assumption can be made about the server-side which simplifies the webrtc compliance burden, as detailed in webrtc-gateway document {{!I-D.draft-alvestrand-rtcweb-gateways}}.
 
 This document proposes a simple protocol for supporting WebRTC as ingest method which is:
 - Easy to implement,
@@ -69,35 +72,45 @@ The WebRTC-HTTP ingest protocol (WHIP) uses an HTTP POST request to perform a si
 Once the ICE/DTLS session is set up, the media will flow unidirectionally from the encoder/media producer to the broadcasting ingestion endpoint. In order to reduce complexity, no SDP renegotiation is supported, so no tracks or streams can be added or removed once the initial SDP O/A over HTTP is completed.
 
 ~~~~~
-+-----------------+         +---------------+ +--------------+
-| WebRTC Producer |         | WHIP endpoint | | Media Server |
-+---------+-------+         +-------+- -----+ +------+-------+
-          |                         |                |
-          |                         |                |
-          |HTTP POST (SDP Offer)    |                |
-          +------------------------>+                |
-          |202 Accepted (SDP answer)|                |
-          +<------------------------+                |
-          |          ICE REQUEST                     |
-          +----------------------------------------->+
-          |          ICE RESPONSE                    |
-          <------------------------------------------+
-          |          DTLS SETUP                      |
-          <==========================================>
-          |          RTP FLOW                        |
-          +------------------------------------------>
+                                                                                 
+ +-----------------+         +---------------+ +--------------+ +----------------+
+ | WebRTC Producer |         | WHIP endpoint | | Media Server | | WHIP Resource  |
+ +---------+-------+         +-------+- -----+ +------+-------+ +--------|-------+
+           |                         |                |                  |        
+           |                         |                |                  |        
+           |HTTP POST (SDP Offer)    |                |                  |        
+           +------------------------>+                |                  |        
+           |201 Created (SDP answer) |                |                  |        
+           +<------------------------+                |                  |        
+           |          ICE REQUEST                     |                  |        
+           +----------------------------------------->+                  |        
+           |          ICE RESPONSE                    |                  |        
+           <------------------------------------------+                  |        
+           |          DTLS SETUP                      |                  |        
+           <==========================================>                  |        
+           |          RTP FLOW                        |                  |        
+           +------------------------------------------>                  |        
+           | HTTP DELETE                                                 |        
+           +------------------------------------------------------------>+         
+           | 200 OK                                                      |        
+           <-------------------------------------------------------------x        
+                                                                    
 ~~~~~
-{: title="WHIP session setup"}
+{: title="WHIP session setup and teardown"}
 
 # Protocol Operation
 
 In order to setup an ingestion session, the WebRTC encoder/media producer will generate an SDP offer according the the JSEP rules and do an HTTP POST request to the WHIP endpoint configured URL.
 
-The HTTP POST request will have a content type of application/sdp and contain the SDP offer as body. The WHIP ingestion endpoint will generate an SDP answer and return it on a 202 Accepted response with content type of application/sdp and the SDP answer as body.
+The HTTP POST request will have a content type of application/sdp and contain the SDP offer as body. The WHIP ingestion endpoint will generate an SDP answer and return it on a 201 Accepted response with content type of application/sdp and the SDP answer as body and a Location header pointing to the newly created resource.
 
 SDP offer SHOULD use the sendonly attribute and the SDP answer MUST use the recvonly attribute.
 
 Once session is setup ICE consent freshness {{!RFC7675}} will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
+
+For explicity terminate the session, the WebRTC media producer will do an HTTP DELETE request to the resource url returned on the Location header of the initial HTTP POST. Upon receving the HTTP DELETE request, the resource will be freed on the media server and the ICE and DTLS sessions terminated.
+
+The media server may terminate the session by using the Immediate Revocation of Consent as defined in {{!RFC7675}} section 5.2.
 
 ## ICE and NAT support
 
@@ -107,9 +120,9 @@ So in order to support encoders/media producers behind NAT, the WHIP media serve
 The initial offer by the encoder/media producer MAY be sent after the full ICE gathering is complete containing the full list of ICE candidates, or only contain local candidates or even an empty list of candidates.
 The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publicly accessible of the media server. The media server MAY use ICE lite, while the encoder/media producer MUST implement full ICE.
 
-If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per {{!I-D.draft-ietf-ice-trickle-21}}.
+If the Encoder/Media producer gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it will send directly a STUN request to the ICE candidates received from the media server as per {{!RFC8838}}.
 
-## Webrtc contrains
+## Webrtc contrainsts
 
 In order to reduce the complexity of implementing WHIP in both encoders and media servers, some restrictions regarding WebRTC usage are made.
 
