@@ -26,11 +26,11 @@ author:
 
 
 normative:
-  RFC2119
-  RFC7675
-  RFC8838
-  RFC8840
-  RFC8863
+  RFC2119:
+  RFC7675:
+  RFC8838:
+  RFC8840:
+  RFC8863:
 
 --- abstract
 
@@ -129,7 +129,7 @@ The initial offer by the WHIP client MAY be sent after the full ICE gathering is
 
 The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publicly accessible of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with mime type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ice candidate or ice ufrag/pwd for ice restarts. A WHIP resource MAY not support either trickle ICE (i.e. ICE lite media servers) or ICE restart, and it MUST return a 405 Method Not Allowed for any HTTP PATCH request.
+The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with mime type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ice candidate or ice ufrag/pwd for ice restarts. A WHIP resource MAY not support either trickle ICE (i.e. ICE lite media servers) or ICE restart, and it MUST return a 405 Method Not Allowed for any HTTP PATCH request.
 
 A WHIP client receiving a 405 response for an HTTP PATCH request SHALL not send further request for ICE trickle or restart. If the WHIP client gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it MUST send STUN request to the ICE candidates received from the media server as per {{!RFC8838}} regardless if the HTTP PATCH is supported by either the WHIP client or the WHIP resource.
 
