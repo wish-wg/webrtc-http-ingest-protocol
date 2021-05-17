@@ -1,5 +1,5 @@
 ---
-docname: draft-ietf-whish-whip-00
+docname: draft-ietf-wish-whip-00
 title: WebRTC-HTTP ingestion protocol (WHIP)
 abbrev: whip
 category: std
