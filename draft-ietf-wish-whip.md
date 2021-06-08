@@ -153,6 +153,14 @@ In case of high load, the WHIP endpoints may return a 503 (Service Unavailable) 
 
 The WHIP endpoint MAY send a Retry-After header field indicating the minimum time that the user agent is asked to wait before issuing the redirected request.
 
+## STUN/TURN server configuration
+
+Configuration of the TURN or STUN servers used by the WHIP client is out of the scope of this document.
+
+It is RECOMMENDED that broadcasting server provides an HTTP interface for provisioning the TUNR/STUN servers url and short term credentiasl as in {{!I-D.draft-uberti-behave-turn-rest-00}}. Note that the authentication information or the url of this API are not related to the WHIP enpoint URLs or authentication.
+
+It could also be possilble to configure the STUN/TURN server URLS and long term credentials provided by the either broadcasting service or an external TURN provider.
+
 ## Authentication and authorization
 
 Authentication and authorization is supported by the Authorization HTTP header with a bearer token as per {{!RFC6750}}.
