@@ -163,6 +163,28 @@ Both simulcast and scalable video coding (including K-SVC modes) MAY be supporte
 
 If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer accoding to the procedures {{!RFC8853}} section 5.3.2.
 
+## Protocol extensions
+
+In order to support future extensions to be defined for the WHIP protocol, a common procedure for registering and announcing the new extensions is defined.
+
+Protocol extensions supported by the WHIP server MUST be advertised to the WHIP client on the 201 created response to initial HTTP POST request to the WHIP enpoint by inserting one Link header for each extension with the extension "rel" type attribute and the uri for the HTTP resource that will be available for receiving request related to that extension.
+
+Protocol extensions are optionasl for bot WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP servers MUST not require the usage of any of the extensions.
+
+Each protocol extension MUST register an unique "rel" attribute values at IANA starting with the prefix: "urn:ietf:params:whip:".
+
+For example, taking a potential extension of server to client communication using server sent events as specified in https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events, the url for connecting to the server side event resource for the published stream will be returned in the initial HTTP "201 Created" response with a "Link" header an a "rel" attribute of  "urn:ietf:params:whip:server-sent-events".
+
+The HTTP 201 response to the HTTP POST request would look like:
+
+```
+HTTP/1.1 201 Created
+Content-Type: application/sdp
+Location: https://whip.ietf.org/publications/213786HF
+Link: <https://whip.ietf.org/publications/213786HF/sse>;rel="urn:ietf:params:whip:server-side-events "
+```
+
+
 # Security Considerations
 
 HTTPS SHALL be used in order to preserve the WebRTC security model.
