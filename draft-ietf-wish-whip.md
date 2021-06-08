@@ -30,6 +30,7 @@ normative:
   RFC7675:
   RFC8838:
   RFC8840:
+  RFC8853:
   RFC8863:
 
 --- abstract
@@ -155,7 +156,9 @@ Authentication and authorization is supported by the Authorization HTTP header w
 
 ## Simulcast and scalable video coding
 
-Both simulcast and scalable video coding (including K-SVC modes) MAY be supported by both media servers and WHIP clients.
+Both simulcast and scalable video coding (including K-SVC modes) MAY be supported by both media servers and WHIP clients and negotiated in the SDP O/A.
+
+If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer accoding to the procedures {{!RFC8853}} section 5.3.2.
 
 # Security Considerations
 
