@@ -58,6 +58,7 @@ While some standard signalling protocols are available that can be integrated wi
 In the specific case of ingest into a platform, some assumption can be made about the server-side which simplifies the webrtc compliance burden, as detailed in webrtc-gateway document {{!I-D.draft-alvestrand-rtcweb-gateways}}.
 
 This document proposes a simple protocol for supporting WebRTC as ingest method which is:
+
 - Easy to implement,
 - As easy to use as current RTMP URIs.
 - Fully compliant with Webrtc and RTCWEB specs.
@@ -71,8 +72,10 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 - WHIP client: WebRTC Media encoder or producer that acts as client on the WHIP protocol and encodes and delivers the media to a remote media server.
 - WHIP endpoint: Ingest server receiving the initial WHIP request.
+- WHIP endpoint URL: URL of the WHIP endpoint that will create the WHIP resource
 - Media Server: WebRTC media server that establishes the media session with the WHIP client and receives the media produced by it.
-- WHIP Resource: Allocated resource by the WHIP endpoint for an ongoing ingest session that the WHIP client can send request for altering the session (ICE operations or termination, for example).
+- WHIP resource: Allocated resource by the WHIP endpoint for an ongoing ingest session that the WHIP client can send request for altering the session (ICE operations or termination, for example).
+- WHIP resource URL: URL allocated to a specific media session by the WHIP endpoint which can be used to perform operations such terminating the session or ICE restarts.
 
 
 # Overview
