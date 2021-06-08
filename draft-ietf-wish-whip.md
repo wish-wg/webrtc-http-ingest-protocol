@@ -123,7 +123,7 @@ Once a session is setup ICE consent freshness {{!RFC7675}} will be used to detec
 
 To explicitly terminate the session, the WHIP client MUST perform an HTTP DELETE request to the resource url returned on the Location header of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP resource will be removed and the resources freed on the media server, terminating the ICE and DTLS sessions.
 
-The media server may terminate the session by using the Immediate Revocation of Consent as defined in {{!RFC7675}} section 5.2.
+A media server terminating a session MUST send a RTCP BYE request on all RTP streams and MUST follow the procedures in {{!RFC7675}} section 5.2 for immediate revocation of consent.
 
 ## ICE and NAT support
 
