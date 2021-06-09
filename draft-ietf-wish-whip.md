@@ -189,12 +189,12 @@ For example, taking a potential extension of server to client communication usin
 
 The HTTP 201 response to the HTTP POST request would look like:
 
-```
+~~~~~
 HTTP/1.1 201 Created
 Content-Type: application/sdp
 Location: https://whip.ietf.org/publications/213786HF
 Link: <https://whip.ietf.org/publications/213786HF/sse>;rel="urn:ietf:params:whip:server-side-events "
-```
+~~~~~
 
 
 # Security Considerations
