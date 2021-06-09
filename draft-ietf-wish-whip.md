@@ -125,6 +125,10 @@ To explicitly terminate the session, the WHIP client MUST perform an HTTP DELETE
 
 A media server terminating a session MUST follow the procedures in {{!RFC7675}} section 5.2 for immediate revocation of consent.
 
+The WHIP endpoints MUST return an HTTP 405 response for any HTTP GET, HEAD or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
+
+The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
+
 ## ICE and NAT support
 
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent.  So in order to support the WHIP client behind NAT, the WHIP media server SHOULD be publicly accessible.
