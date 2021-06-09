@@ -11,4 +11,4 @@ client-side ABR, also called Network-Aware Encoding by e.g. Huavision, by means 
 This document proposes a simple HTTP based protocol that will allow WebRTC endpoings to ingest content into streaming servics and/or CDNs to fill this gap and facilitate deployment.
 
 ## Current Draft
-- [draft-murillo-whip-00](https://tools.ietf.org/html/draft-murillo-whip-00)
+- [draft-murillo-whip-02](https://tools.ietf.org/html/draft-murillo-whip-02)
