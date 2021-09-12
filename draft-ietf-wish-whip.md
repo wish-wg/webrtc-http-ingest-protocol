@@ -167,7 +167,9 @@ It could also be possilble to configure the STUN/TURN server URLS and long term 
 
 ## Authentication and authorization
 
-Authentication and authorization is supported by the Authorization HTTP header with a bearer token as per {{!RFC6750}}.
+The WHIP endpoint MAY choose not to do any authentication and authorization. Alternatively, any HTTP compliant authentication and authorization MAY be implemented.
+
+For example, authentication and authorization MAY be supported on the WHIP endpoint and the WHIP resource by providing the Authorization HTTP header with a bearer token as per {{!RFC6750}}.
 
 ## Simulcast and scalable video coding
 
