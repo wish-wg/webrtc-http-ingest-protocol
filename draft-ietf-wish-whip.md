@@ -42,7 +42,7 @@ These protocols are much older than WebRTC and by default lack some important se
 
 The media codecs used for ingestion in older protocols tend to be limited and not negotiated. WebRTC includes support for negotiation of codecs, potentially alleviating transcoding on the ingest node (wich can introduce delay and degrade media quality). Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with simulcasting and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
 
-Encryption is mandatory in WebRTC, therefore secure end-to-end transport of media is implicit.
+Encryption is mandatory in WebRTC, therefore secure transport of media is implicit.
 
 This document proposes a simple HTTP based protocol that will allow WebRTC based ingest of content into streaming servics and/or CDNs.
 
