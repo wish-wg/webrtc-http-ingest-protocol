@@ -132,7 +132,7 @@ The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST
 
 ## ICE and NAT support
 
-In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent.  So in order to support the WHIP client behind NAT, the WHIP media server SHOULD be publicly accessible.
+In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent. The  WHIP Endpoing SHALL gather all the ICE candidates for the media server before responding to the client request and return all of then in the SDP answer.
 
 The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or only contain local candidates or even an empty list of candidates.
 
