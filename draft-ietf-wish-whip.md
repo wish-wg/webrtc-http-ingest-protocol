@@ -132,15 +132,59 @@ The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST
 
 ## ICE and NAT support
 
-In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent. The  WHIP Endpoing SHALL gather all the ICE candidates for the media server before responding to the client request and return all of then in the SDP answer.
-
 The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or only contain local candidates or even an empty list of candidates.
 
-The WHIP endpoint SDP answer SHALL contain the full list of ICE candidates publicly accessible of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
+In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent. The  WHIP Endpoing SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) nor ICE restart, and it MUST return a 405 Method Not Allowed for any HTTP PATCH request.
+The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
-A WHIP client receiving a 405 response for an HTTP PATCH request SHALL not send further request for ICE trickle or restart. If the WHIP client gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it MUST send a STUN request to the ICE candidates received from the media server as per {{!RFC8838}} regardless of the HTTP PATCH supported by either the WHIP client or the WHIP resource.
+If the WHIP client gathers additional candidates (via STUN/TURN) after the SDP offer is sent, it MUST send a STUN request to the ICE candidates received from the media server as per {{!RFC8838}} regardless if the HTTP PATCH is supported by either the WHIP client or the WHIP resource.
+
+A WHIP resource receving a PATH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. 
+
+~~~~~
+PATCH /resource/id HTTP/1.1
+Host: whip.example.com
+Content-Type: application/trickle-ice-sdpfrag
+Content-Length: 548
+
+a=ice-ufrag:EsAw
+a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
+m=audio RTP/AVP 0
+a=mid:0
+a=candidate:1387637174 1 udp 2122260223 192.168.0.39 61764 typ host generation 0 ufrag EsAw network-id 1
+a=candidate:3471623853 1 udp 2122194687 192.168.64.1 61765 typ host generation 0 ufrag EsAw network-id 2
+a=candidate:473322822 1 tcp 1518280447 192.168.0.39 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
+a=candidate:2154773085 1 tcp 1518214911 192.168.64.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 2
+a=end-of-candidates
+
+HTTP/1.1 204 No Content
+~~~~~
+{: title="Trickle ICE request"}
+
+If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionaly, the new set of ICE candidates for the media server.
+
+~~~~~
+PATCH /resource/id HTTP/1.1
+Host: whip.example.com
+Content-Type: application/trickle-ice-sdpfrag
+Content-Length: 54
+
+a=ice-ufrag:ysXw
+a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
+
+HTTP/1.1 200 OK
+Content-Type: application/trickle-ice-sdpfrag
+Content-Length: 102
+
+a=ice-lite
+a=ice-ufrag:289b31b754eaa438
+a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
+~~~~~
+{: title="ICE restart request"}
+
+As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL not perform and ICE restart but reject the request with a 409 Conflict response instead.
+
 
 ## WebRTC constraints
 
