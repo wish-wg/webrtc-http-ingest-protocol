@@ -116,7 +116,7 @@ Once the ICE/DTLS session is set up, the media will flow unidirectionally from t
 
 In order to setup an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and do an HTTP POST request to the WHIP endpoint configured URL.
 
-The HTTP POST request will have a content type of application/sdp and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a 201 Accepted response with a content type of application/sdp and the SDP answer as the body and a Location header pointing to the newly created resource.
+The HTTP POST request will have a content type of application/sdp and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a 201 Created response with a content type of application/sdp and the SDP answer as the body and a Location header pointing to the newly created resource.
 
 The SDP offer SHOULD use the sendonly attribute and the SDP answer MUST use the recvonly attribute.
 
