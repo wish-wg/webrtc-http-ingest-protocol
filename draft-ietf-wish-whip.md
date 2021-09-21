@@ -50,7 +50,7 @@ This document proposes a simple HTTP based protocol that will allow WebRTC based
 
 # Introduction
 
-WebRTC intentionally does not specify a signaling transport protocol at application level, while RTCWEB standardized the signaling protocol itself (JSEP, SDP O/A) and everything that was going over the wire (media, codec, encryption, ...). This flexibility has allowed the implementation of a wide range of services. However, those services are typically standalone silos which don't require interoperability with other services or leverage the existence of tools that can communicate with them.
+RTCWEB standardized JSEP ({{!RFC8829}}), a mechanishm used to control the setup, management, and teardown of a multimedia session, how to apply it using the SDP Offer/Answer model and all the formats for the data sent over the wire (media, codec, encryption, ...). Also, WebRTC intentionally does not specify a signaling transport protocol at application level. This flexibility has allowed the implementation of a wide range of services. However, those services are typically standalone silos which don't require interoperability with other services or leverage the existence of tools that can communicate with them.
 
 In the broadcasting/streaming world, the usage of hardware encoders that make it very simple to plug in (SDI) cables carrying raw media, encode it in place, and push it to any streaming service or CDN ingest is already ubiquitous. It is the adoption of a custom signaling transport protocol for each WebRTC service has hindered broader adoption as an ingestion protocol.
 
