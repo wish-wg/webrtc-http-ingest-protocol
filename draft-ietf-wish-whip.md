@@ -181,7 +181,7 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
 
-As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource SHOULD keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL not perform and ICE restart but reject the request with a 409 Conflict response instead.
+As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource SHOULD keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL NOT perform and ICE restart but reject the request with a 409 Conflict response instead.
 
 
 ## WebRTC constraints
@@ -242,7 +242,7 @@ In order to support future extensions to be defined for the WHIP protocol, a com
 
 Protocol extensions supported by the WHIP server MUST be advertised to the WHIP client on the 201 Created response to the initial HTTP POST request sent to the WHIP endpoint. The WHIP endpoint MUST return one Link header for each extension with the extension "rel" type attribute and the URI for the HTTP resource that will be available for receiving requests related to that extension.
 
-Protocol extensions are optional for both WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP servers MUST not require the usage of any of the extensions.
+Protocol extensions are optional for both WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP servers MUST NOT require the usage of any of the extensions.
 
 Each protocol extension MUST register an unique "rel" attribute values at IANA starting with the prefix: "urn:ietf:params:whip:".
 
