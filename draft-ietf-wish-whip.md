@@ -28,7 +28,6 @@ author:
 normative:
   RFC2119:
   RFC7675:
-  RFC8838:
   RFC8840:
   RFC8853:
   RFC8863:
@@ -207,7 +206,7 @@ The WHIP endpoint MAY return ICE server configuration urls and credentials usabl
 Each ICE server will be returned on a Link header with a "rel" attribribute value of "ice-server" where the Link target URI is the ICE server URL and the credentials are encoded in the Link target attributes as follows:
 
 - username: If this the Link header represents a TURN server, and creadential-type is "password", then this attribute specifies the username to use with that TURN server.
-- credential: If credentialType is "password", credential represents a long-term authentication password, as described in {{!RFC5389}}, Section 10.2.
+- credential: If credentialType is "password", credential represents a long-term authentication password, as described in {{!RFC8489}}, Section 10.2.
 - creadential-type:  If this RTCIceServer object represents a TURN server, then this attribute specifies how credential should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
 
 ~~~~~
