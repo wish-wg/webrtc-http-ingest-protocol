@@ -266,10 +266,12 @@ HTTPS SHALL be used in order to preserve the WebRTC security model.
 
 The link relation types below have been registered by IANA per Section 4.2 of {{!RFC8288}}.
 
-## Link Relation Type: urn:ietf:params:whip:ice-server
+## Link Relation Type: ice-server
 
 Relation Name:  ice-server
+
 Description:  Describe the STUN and TURN servers that can be used by the ICE Agent to establish a connection with a peer.
+
 Reference:  TBD
 
 # Acknowledgements
