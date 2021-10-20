@@ -181,7 +181,7 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
 
-As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL not perform and ICE restart but reject the request with a 409 Conflict response instead.
+As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource SHOULD keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL not perform and ICE restart but reject the request with a 409 Conflict response instead.
 
 
 ## WebRTC constraints
