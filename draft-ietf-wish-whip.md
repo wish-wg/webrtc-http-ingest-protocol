@@ -202,11 +202,25 @@ The WHIP endpoint MAY send a Retry-After header field indicating the minimum tim
 
 ## STUN/TURN server configuration
 
-Configuration of the TURN or STUN servers used by the WHIP client is out of the scope of this document.
+The WHIP endpoint MAY return ICE server configuration urls and credentials usable by the client in the 201 Created response to the HTTP POST request to the WHIP endpoint url.
 
-It is RECOMMENDED that the broadcasting server provides an HTTP interface for provisioning the STUN/TURN servers' URLs and short term credentials as in {{!I-D.draft-uberti-behave-turn-rest-00}}. Note that neither the authentication information nor the URLs of the STUN/TURN servers are related to the WHIP endpoint.
+Each ICE server will be returned on a Link header with a "rel" attribribute value of "ice-server" where the Link target URI is the ICE server URL and the credentials are encoded in the Link target attributes as follows:
 
-It is also possible to configure the STUN/TURN server URLs with long term credentials provided by either the broadcasting service or an external TURN provider.
+- username: If this the Link header represents a TURN server, and creadential-type is "password", then this attribute specifies the username to use with that TURN server.
+- credential: If credentialType is "password", credential represents a long-term authentication password, as described in {{!RFC5389}}, Section 10.2.
+- creadential-type:  If this RTCIceServer object represents a TURN server, then this attribute specifies how credential should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
+
+~~~~~
+     Link: stun:stun.example.net; 
+     Link: turn:turn.example.net?transport=udp; rel="ice-server"; username="user"; credential: "myPassword"; credential-type: "password"; 
+     Link: turn:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential: "myPassword"; credential-type: "password";
+     Link: turns:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential: "myPassword"; credential-type: "password";
+~~~~~
+{: title="Example ICE server configuration"}
+
+There are some webrtc implementations that do not support updating the ICE server configuration after the local offer has been created. In order to support these clients, the WHIP endpoint MAY also include the ICE server configuration on the responses to an authenticated OPTIONS request sent to the WHIP endpoint URL sent before the POST requests. 
+
+It COULD be also possible to configure the STUN/TURN server URLs with long term credentials provided by either the broadcasting service or an external TURN provider on the WHIP client overriding the values provided by the WHIP endpoint.
 
 ## Authentication and authorization
 
@@ -250,6 +264,14 @@ HTTPS SHALL be used in order to preserve the WebRTC security model.
 
 
 # IANA Considerations
+
+The link relation types below have been registered by IANA per Section 4.2 of {{!RFC8288}}.
+
+## Link Relation Type: urn:ietf:params:whip:ice-server
+
+Relation Name:  ice-server
+Description:  Describe the STUN and TURN servers that can be used by the ICE Agent to establish a connection with a peer.
+Reference:  TBD
 
 # Acknowledgements
 
