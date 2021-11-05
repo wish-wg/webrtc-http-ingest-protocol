@@ -12,4 +12,4 @@ Encryption is mandatory in WebRTC, therefore secure end-to-end transport of medi
 This document proposes a simple HTTP based protocol that will allow WebRTC based ingest of content into streaming servics and/or CDNs.
 
 ## Current Draft
-- [draft-ietf-wish-whip-00](https://datatracker.ietf.org/doc/html/draft-ietf-wish-whip-00)
+- [draft-ietf-wish-whip-00](https://datatracker.ietf.org/doc/html/draft-ietf-wish-whip-01)
