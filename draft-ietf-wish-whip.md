@@ -34,16 +34,16 @@ normative:
 
 --- abstract
 
-While WebRTC has been very sucessful in a wide range of scenarios, its adoption in the broadcasting/streaming industry is lagging behind.
+While WebRTC has been very successful in a wide range of scenarios, its adoption in the broadcasting/streaming industry is lagging behind.
 Currently there is no standard protocol (like SIP or RTSP) designed for ingesting media into a streaming service using WebRTC and so content providers still rely heavily on protocols like RTMP for it.
 
 These protocols are much older than WebRTC and by default lack some important security and resilience features provided by WebRTC with minimal overhead and additional latency.
 
-The media codecs used for ingestion in older protocols tend to be limited and not negotiated. WebRTC includes support for negotiation of codecs, potentially alleviating transcoding on the ingest node (wich can introduce delay and degrade media quality). Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with simulcasting and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
+The media codecs used for ingestion in older protocols tend to be limited and not negotiated. WebRTC includes support for negotiation of codecs, potentially alleviating transcoding on the ingest node (which can introduce delay and degrade media quality). Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with simulcasting and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
 
 Encryption is mandatory in WebRTC, therefore secure transport of media is implicit.
 
-This document proposes a simple HTTP based protocol that will allow WebRTC based ingest of content into streaming servics and/or CDNs.
+This document proposes a simple HTTP based protocol that will allow WebRTC based ingest of content into streaming services and/or CDNs.
 
 --- middle
 
@@ -137,7 +137,7 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 
 The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
-A WHIP resource receving a PATH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. 
+A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. 
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
@@ -159,7 +159,7 @@ HTTP/1.1 204 No Content
 ~~~~~
 {: title="Trickle ICE request"}
 
-If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionaly, the new set of ICE candidates for the media server.
+If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
@@ -203,10 +203,10 @@ The WHIP endpoint MAY send a Retry-After header field indicating the minimum tim
 
 The WHIP endpoint MAY return ICE server configuration urls and credentials usable by the client in the 201 Created response to the HTTP POST request to the WHIP endpoint url.
 
-Each ICE server will be returned on a Link header with a "rel" attribribute value of "ice-server" where the Link target URI is the ICE server URL and the credentials are encoded in the Link target attributes as follows:
+Each ICE server will be returned on a Link header with a "rel" attribute value of "ice-server" where the Link target URI is the ICE server URL and the credentials are encoded in the Link target attributes as follows:
 
-- username: If the Link header represents a TURN server, and creadential-type is "password", then this attribute specifies the username to use with that TURN server.
-- credential: If credential-type attribute is misson or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{!RFC8489}}, Section 10.2.
+- username: If the Link header represents a TURN server, and credential-type is "password", then this attribute specifies the username to use with that TURN server.
+- credential: If credential-type attribute is missing or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{!RFC8489}}, Section 10.2.
 - credential-type:  If the Link header represents represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
 
 ~~~~~
@@ -223,17 +223,17 @@ It COULD be also possible to configure the STUN/TURN server URLs with long term 
 
 ## Authentication and authorization
 
-WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implemenent this authentication and authorization mechanism and send the HTTP Authorization header in all HTTP request sent to either the WHIP endpoint or resource.
+WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header in all HTTP request sent to either the WHIP endpoint or resource.
 
-The nature, syntax and semantics of the bearer token as well as how to distribute it to the client is outside the scope of this document. Some examples ot the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint url and configured on the WHIP clients.
+The nature, syntax and semantics of the bearer token as well as how to distribute it to the client is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint url and configured on the WHIP clients.
 
-WHIP endpoints and resources COULD perform the authentication and authorization by encoding an authentication token withing the urls for the WHIP endpoints or resources instead. In case the WHIP client is not configured to use a bearer token the HTTP Authorization header must not be sent in any request.
+WHIP endpoints and resources COULD perform the authentication and authorization by encoding an authentication token within the urls for the WHIP endpoints or resources instead. In case the WHIP client is not configured to use a bearer token the HTTP Authorization header must not be sent in any request.
 
 ## Simulcast and scalable video coding
 
 Both simulcast and scalable video coding (including K-SVC modes) MAY be supported by both the media servers and WHIP clients through negotiation in the SDP offer/answer.
 
-If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer accoding to the procedures {{!RFC8853}} section 5.3.2.
+If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} section 5.3.2.
 
 ## Protocol extensions
 
