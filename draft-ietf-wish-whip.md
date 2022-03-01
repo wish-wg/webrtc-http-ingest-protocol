@@ -137,11 +137,31 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 
 The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
+As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST generate an unique strong entity-tag as per {{!RFC7232}} section 2.3 each time ICE process is (re)started. The initial value of the entity-tag MUST be returned in the 201 response to the initial POST request to the WHIP endpoint.
+
+~~~~~
+POST /whip/endpoint HTTP/1.1
+Host: whip.example.com
+Content-Type: application/sdp
+
+<SDP Offer>
+
+HTTP/1.1 201 Created
+ETag: "38sdf4fdsf54:EsAw"
+Content-Type: application/sdp
+Location: https://whip.example.org/resource/id
+
+<SDP answer>
+~~~~~
+
+A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resourceas per {{!RFC7232}} section 3.1 and return a  412 Precondition Failed response if they do not match.
+
 A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. 
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
 Host: whip.example.com
+If-Match: "38sdf4fdsf54:EsAw"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 548
 
@@ -159,11 +179,15 @@ HTTP/1.1 204 No Content
 ~~~~~
 {: title="Trickle ICE request"}
 
-If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server.
+
+A WHIP client sending a PATCH request for performing ICE restart MUST contain an If-Match header with a field-value "*" as per {{!RFC7232}} section 3.1.
+
+If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the updated entity-tag in an ETag response header.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
 Host: whip.example.com
+If-Match: "*"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 54
 
@@ -171,6 +195,7 @@ a=ice-ufrag:ysXw
 a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 
 HTTP/1.1 200 OK
+ETag: "289b31b754eaa438:ysXw"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 102
 
@@ -179,9 +204,6 @@ a=ice-ufrag:289b31b754eaa438
 a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
-
-As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource SHOULD keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL NOT perform and ICE restart but reject the request with a 409 Conflict response instead.
-
 
 ## WebRTC constraints
 
