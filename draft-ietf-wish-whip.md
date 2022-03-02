@@ -181,7 +181,7 @@ HTTP/1.1 204 No Content
 {: title="Trickle ICE request"}
 
 
-A WHIP client sending a PATCH request for performing ICE restart MUST either contain an If-Match header with a field-value "*" as per {{!RFC7232}} section 3.1 or do not contain an If-Match header at all. 
+A WHIP client sending a PATCH request for performing ICE restart MUST contain an If-Match header with a field-value "*" as per {{!RFC7232}} section 3.1. 
 
 If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the new entity-tag corresping to the new ICE session in an ETag response header.
 
