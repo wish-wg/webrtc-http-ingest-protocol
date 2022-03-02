@@ -138,7 +138,7 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
 As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST generate a
-unique strong entity-tag as per {{!RFC7232}} section 2.3 each time ICE process is (re)started. The initial value of the entity-tag MUST be returned in the 201 response to the initial POST request to the WHIP endpoint.
+unique strong entity-tag identifying the ICE session as per {{!RFC7232}} section 2.3. The initial value of the entity-tag identifiying the initial ICE session MUST be returned in an ETag header in the 201 response to the initial POST request to the WHIP endpoint and in the 200 OK of a PATCH requests that triggers an ICE restart.
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -181,9 +181,9 @@ HTTP/1.1 204 No Content
 {: title="Trickle ICE request"}
 
 
-A WHIP client sending a PATCH request for performing ICE restart MUST contain an If-Match header with a field-value "*" as per {{!RFC7232}} section 3.1.
+A WHIP client sending a PATCH request for performing ICE restart MUST either contain an If-Match header with a field-value "*" as per {{!RFC7232}} section 3.1 or do not contain an If-Match header at all. 
 
-If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the updated entity-tag in an ETag response header.
+If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the new entity-tag corresping to the new ICE session in an ETag response header.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
