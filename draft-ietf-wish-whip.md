@@ -137,7 +137,8 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 
 The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
-As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST generate an unique strong entity-tag as per {{!RFC7232}} section 2.3 each time ICE process is (re)started. The initial value of the entity-tag MUST be returned in the 201 response to the initial POST request to the WHIP endpoint.
+As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST generate a
+unique strong entity-tag as per {{!RFC7232}} section 2.3 each time ICE process is (re)started. The initial value of the entity-tag MUST be returned in the 201 response to the initial POST request to the WHIP endpoint.
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -154,7 +155,7 @@ Location: https://whip.example.org/resource/id
 <SDP answer>
 ~~~~~
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resourceas per {{!RFC7232}} section 3.1 and return a  412 Precondition Failed response if they do not match.
+A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resourceas per {{!RFC7232}} section 3.1 and return a 412 Precondition Failed response if they do not match.
 
 A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. 
 
@@ -265,7 +266,7 @@ Protocol extensions supported by the WHIP server MUST be advertised to the WHIP 
 
 Protocol extensions are optional for both WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP servers MUST NOT require the usage of any of the extensions.
 
-Each protocol extension MUST register an unique "rel" attribute values at IANA starting with the prefix: "urn:ietf:params:whip:".
+Each protocol extension MUST register a unique "rel" attribute values at IANA starting with the prefix: "urn:ietf:params:whip:".
 
 For example, taking a potential extension of server to client communication using server sent events as specified in https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events, the URL for connecting to the server side event resource for the published stream will be returned in the initial HTTP "201 Created" response with a "Link" header and a "rel" attribute of "urn:ietf:params:whip:server-sent-events".
 
