@@ -155,9 +155,9 @@ Location: https://whip.example.org/resource/id
 <SDP answer>
 ~~~~~
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resourceas per {{!RFC7232}} section 3.1 and return a 412 Precondition Failed response if they do not match. Entity-tag validation MUST only be used for HTTP request requiring to match a known ICE session  and MUST NOT be used otherwise, for example in the HTTP DELETE request to terminate the session.
+A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resourceas per {{!RFC7232}} section 3.1 and return a 412 Precondition Failed response if they do not match. Entity-tag validation MUST only be used for HTTP request requiring to match a known ICE session  and SHOULD NOT be used otherwise, for example in the HTTP DELETE request to terminate the session.
 
-A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. If the media server does not support a candidate tranport or is not be able to resolve the connection address it MUST accept the HTTP request with the 204 responer and silently discard the candidate.
+A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. If the media server does not support a candidate tranport or is not be able to resolve the connection address it MUST accept the HTTP request with the 204 response and silently discard the candidate.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
@@ -185,7 +185,7 @@ A WHIP client sending a PATCH request for performing ICE restart MUST contain an
 
 If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the new entity-tag corresping to the new ICE session in an ETag response header.
 
-If the ICE request can not be performed by the WHIP resource it MUST return an appropiate HTTP error code but MUST NOT terminate the session inmediately. The WHIP client COULD try to agin to perfroma new ICE restart or terminate the session issuing a HTTP DELETE request instead. In any case the session MUST be terminated if the ICE consent expires.
+If the ICE request can not be performed by the WHIP resource it MUST return an appropiate HTTP error code but MUST NOT terminate the session inmediately. The WHIP client COULD try to again to perform a new ICE restart or terminate the session issuing a HTTP DELETE request instead. In any case the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
@@ -208,7 +208,7 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
 
-Given that in order to send new ICE candidetes to the WHIP resource, the WHIP client needs to know the entity-tag associated to the ICE session, it MUST buffer any gathered candidates before the HTTP response to the initial PUT request or the PATCH request with the new entity-tag value is received. Once the entity-tag value is know the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates.
+Given that in order to send new ICE candidetes to the WHIP resource, the WHIP client needs to know the entity-tag associated to the ICE session, it MUST buffer any gathered candidates before the HTTP response to the initial PUT request or the PATCH request with the new entity-tag value is received. Once the entity-tag value is know the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
 
 ## WebRTC constraints
 
