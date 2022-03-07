@@ -137,11 +137,32 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 
 The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
-A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. 
+As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST generate a
+unique strong entity-tag identifying the ICE session as per {{!RFC7232}} section 2.3. The initial value of the entity-tag identifying  the initial ICE session MUST be returned in an ETag header in the 201 response to the initial POST request to the WHIP endpoint and in the 200 OK of a PATCH request that triggers an ICE restart.
+
+~~~~~
+POST /whip/endpoint HTTP/1.1
+Host: whip.example.com
+Content-Type: application/sdp
+
+<SDP Offer>
+
+HTTP/1.1 201 Created
+ETag: "38sdf4fdsf54:EsAw"
+Content-Type: application/sdp
+Location: https://whip.example.org/resource/id
+
+<SDP answer>
+~~~~~
+
+A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resource as per {{!RFC7232}} section 3.1 and return a 412 Precondition Failed response if they do not match. Entity-tag validation MUST only be used for HTTP requests requiring to match a known ICE session  and SHOULD NOT be used otherwise, for example in the HTTP DELETE request to terminate the session.
+
+A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. If the media server does not support a candidate transport or is not able to resolve the connection address it MUST accept the HTTP request with the 204 response and silently discard the candidate.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
 Host: whip.example.com
+If-Match: "38sdf4fdsf54:EsAw"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 548
 
@@ -159,11 +180,17 @@ HTTP/1.1 204 No Content
 ~~~~~
 {: title="Trickle ICE request"}
 
-If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server.
+
+A WHIP client sending a PATCH request for performing ICE restart MUST contain an If-Match header with a field-value "*" as per {{!RFC7232}} section 3.1. 
+
+If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the new entity-tag correspond to the new ICE session in an ETag response header.
+
+If the ICE request can not be performed by the WHIP resource it MUST return an appropriate  HTTP error code but MUST NOT terminate the session immediately. The WHIP client COULD try again to perform a new ICE restart or terminate the session issuing a HTTP DELETE request instead. In any case the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart.
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
 Host: whip.example.com
+If-Match: "*"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 54
 
@@ -171,6 +198,7 @@ a=ice-ufrag:ysXw
 a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 
 HTTP/1.1 200 OK
+ETag: "289b31b754eaa438:ysXw"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 102
 
@@ -180,8 +208,7 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
 
-As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource SHOULD keep track of the previous values of the ICE username fragment and client used by the WHIP client. If an HTTP PATCH request is received with a previously used ICE username fragment and password by the client, the WHIP endpoint SHALL NOT perform and ICE restart but reject the request with a 409 Conflict response instead.
-
+Given that in order to send new ICE candidates to the WHIP resource, the WHIP client needs to know the entity-tag associated to the ICE session, it MUST buffer any gathered candidates before the HTTP response to the initial PUT request or the PATCH request with the new entity-tag value is received. Once the entity-tag value is known the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
 
 ## WebRTC constraints
 
@@ -207,7 +234,7 @@ Each ICE server will be returned on a Link header with a "rel" attribute value o
 
 - username: If the Link header represents a TURN server, and credential-type is "password", then this attribute specifies the username to use with that TURN server.
 - credential: If credential-type attribute is missing or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{!RFC8489}}, Section 10.2.
-- credential-type:  If the Link header represents represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
+- credential-type:  If the Link header represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
 
 ~~~~~
      Link: stun:stun.example.net; rel="ice-server";
@@ -223,7 +250,7 @@ It COULD be also possible to configure the STUN/TURN server URLs with long term 
 
 ## Authentication and authorization
 
-WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header in all HTTP request sent to either the WHIP endpoint or resource.
+WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header in all HTTP requests sent to either the WHIP endpoint or resource.
 
 The nature, syntax and semantics of the bearer token as well as how to distribute it to the client is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint url and configured on the WHIP clients.
 
@@ -243,7 +270,7 @@ Protocol extensions supported by the WHIP server MUST be advertised to the WHIP 
 
 Protocol extensions are optional for both WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP servers MUST NOT require the usage of any of the extensions.
 
-Each protocol extension MUST register an unique "rel" attribute values at IANA starting with the prefix: "urn:ietf:params:whip:".
+Each protocol extension MUST register a unique "rel" attribute values at IANA starting with the prefix: "urn:ietf:params:whip:".
 
 For example, taking a potential extension of server to client communication using server sent events as specified in https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events, the URL for connecting to the server side event resource for the published stream will be returned in the initial HTTP "201 Created" response with a "Link" header and a "rel" attribute of "urn:ietf:params:whip:server-sent-events".
 
