@@ -238,9 +238,9 @@ Each ICE server will be returned on a Link header with a "rel" attribute value o
 
 ~~~~~
      Link: stun:stun.example.net; rel="ice-server";
-     Link: turn:turn.example.net?transport=udp; rel="ice-server"; username="user"; credential: "myPassword"; credential-type: "password"; 
-     Link: turn:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential: "myPassword"; credential-type: "password";
-     Link: turns:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential: "myPassword"; credential-type: "password";
+     Link: turn:turn.example.net?transport=udp; rel="ice-server"; username="user"; credential="myPassword"; credential-type="password";
+     Link: turn:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential="myPassword"; credential-type="password";
+     Link: turns:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential="myPassword"; credential-type="password";
 ~~~~~
 {: title="Example ICE server configuration"}
 
