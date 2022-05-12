@@ -135,7 +135,9 @@ The initial offer by the WHIP client MAY be sent after the full ICE gathering is
 
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent. The  WHIP Endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts. A WHIP resource MAY not support trickle ICE (i.e. ICE lite media servers) or ICE restart, in that case, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
+The WHIP client MAY perform trickle ICE or an ICE restarts {{!RFC8863}} by sending a HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} with the new ICE candidate or ICE ufrag/pwd for ICE restarts.
+
+Trickle ICE and ICE restart support is OPTIONAL for a WHIP resource. If Trickle ICE or ICE restarts are not supported by the WHIP resource, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request.
 
 As the HTTP PATCH request sent by a WHIP client may be received out of order by the WHIP resource, the WHIP resource MUST generate a
 unique strong entity-tag identifying the ICE session as per {{!RFC7232}} section 2.3. The initial value of the entity-tag identifying  the initial ICE session MUST be returned in an ETag header in the 201 response to the initial POST request to the WHIP endpoint and in the 200 OK of a PATCH request that triggers an ICE restart.
