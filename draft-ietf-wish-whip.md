@@ -252,7 +252,7 @@ WHIP endpoints and resources MAY require the HTTP request to be authenticated us
 
 The nature, syntax and semantics of the bearer token as well as how to distribute it to the client is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint url and configured on the WHIP clients.
 
-WHIP endpoints and resources COULD perform the authentication and authorization by encoding an authentication token within the urls for the WHIP endpoints or resources instead. In case the WHIP client is not configured to use a bearer token the HTTP Authorization header must not be sent in any request.
+WHIP endpoints and resources could perform the authentication and authorization by encoding an authentication token within the urls for the WHIP endpoints or resources instead. In case the WHIP client is not configured to use a bearer token the HTTP Authorization header must not be sent in any request.
 
 ## Simulcast and scalable video coding
 
