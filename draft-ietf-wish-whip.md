@@ -155,7 +155,7 @@ Location: https://whip.example.org/resource/id
 <SDP answer>
 ~~~~~
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resource as per {{!RFC7232}} section 3.1 and return a 412 Precondition Failed response if they do not match. Entity-tag validation MUST only be used for HTTP requests requiring to match a known ICE session  and SHOULD NOT be used otherwise, for example in the HTTP DELETE request to terminate the session.
+A WHIP client sending a PATCH request for performing trickle ICE MUST contain an If-Match header with the latest known entity-tag as per {{!RFC7232}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the entity-tag value requested with the current entinty-tag of the resource as per {{!RFC7232}} section 3.1 and return a 412 Precondition Failed response if they do not match. Entity-tag validation MUST be used for HTTP requests requiring to match a known ICE session and SHOULD NOT be used otherwise, for example in the HTTP DELETE request to terminate the session.
 
 A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a 204 No content response without body. If the media server does not support a candidate transport or is not able to resolve the connection address it MUST accept the HTTP request with the 204 response and silently discard the candidate.
 
