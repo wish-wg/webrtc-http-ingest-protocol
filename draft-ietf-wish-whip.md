@@ -85,29 +85,29 @@ The WebRTC-HTTP ingest protocol (WHIP) uses an HTTP POST request to perform a si
 Once the ICE/DTLS session is set up, the media will flow unidirectionally from the encoder/media producer (WHIP client) to the broadcasting ingestion endpoint (media server). In order to reduce complexity, no SDP renegotiation is supported, so no tracks or streams can be added or removed once the initial SDP offer/answer over HTTP is completed.
 
 ~~~~~
-                                                                                 
- +-----------------+         +---------------+ +--------------+ +----------------+
- | WebRTC Producer |         | WHIP endpoint | | Media Server | | WHIP Resource  |
- +---------+-------+         +-------+- -----+ +------+-------+ +--------|-------+
-           |                         |                |                  |        
-           |                         |                |                  |        
-           |HTTP POST (SDP Offer)    |                |                  |        
-           +------------------------>+                |                  |        
-           |201 Created (SDP answer) |                |                  |        
-           +<------------------------+                |                  |        
-           |          ICE REQUEST                     |                  |        
-           +----------------------------------------->+                  |        
-           |          ICE RESPONSE                    |                  |        
-           <------------------------------------------+                  |        
-           |          DTLS SETUP                      |                  |        
-           <==========================================>                  |        
-           |          RTP/RTCP FLOW                   |                  |        
-           +------------------------------------------>                  |        
-           | HTTP DELETE                                                 |        
-           +------------------------------------------------------------>+         
-           | 200 OK                                                      |        
-           <-------------------------------------------------------------x        
-                                                                    
+                                                                               
+ +-------------+    +---------------+ +--------------+ +---------------+
+ | WHIP client |    | WHIP endpoint | | Media Server | | WHIP Resource |
+ +--+----------+    +---------+-----+ +------+-------+ +--------|------+
+    |                         |              |                  |       
+    |                         |              |                  |       
+    |HTTP POST (SDP Offer)    |              |                  |       
+    +------------------------>+              |                  |       
+    |201 Created (SDP answer) |              |                  |       
+    +<------------------------+              |                  |       
+    |          ICE REQUEST                   |                  |       
+    +--------------------------------------->+                  |       
+    |          ICE RESPONSE                  |                  |       
+    <----------------------------------------+                  |       
+    |          DTLS SETUP                    |                  |       
+    <========================================>                  |       
+    |          RTP/RTCP FLOW                 |                  |       
+    +--------------------------------------->+                  |       
+    | HTTP DELETE                                               |       
+    +---------------------------------------------------------->+       
+    | 200 OK                                                    |       
+    <-----------------------------------------------------------x       
+                                                                               
 ~~~~~
 {: title="WHIP session setup and teardown"}
 
@@ -236,9 +236,12 @@ Each ICE server will be returned on a Link header with a "rel" attribute value o
 
 ~~~~~
      Link: stun:stun.example.net; rel="ice-server";
-     Link: turn:turn.example.net?transport=udp; rel="ice-server"; username="user"; credential="myPassword"; credential-type="password";
-     Link: turn:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential="myPassword"; credential-type="password";
-     Link: turns:turn.example.net?transport=tcp; rel="ice-server"; username="user"; credential="myPassword"; credential-type="password";
+     Link: turn:turn.example.net?transport=udp; rel="ice-server";
+           username="user"; credential="myPassword"; credential-type="password";
+     Link: turn:turn.example.net?transport=tcp; rel="ice-server";
+           username="user"; credential="myPassword"; credential-type="password";
+     Link: turns:turn.example.net?transport=tcp; rel="ice-server";
+           username="user"; credential="myPassword"; credential-type="password";
 ~~~~~
 {: title="Example ICE server configuration"}
 
