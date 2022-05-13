@@ -185,7 +185,7 @@ A WHIP client sending a PATCH request for performing ICE restart MUST contain an
 
 If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a 200 OK with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and, optionally, the new set of ICE candidates for the media server and the new entity-tag correspond to the new ICE session in an ETag response header.
 
-If the ICE request can not be performed by the WHIP resource it MUST return an appropriate  HTTP error code but MUST NOT terminate the session immediately. The WHIP client COULD try again to perform a new ICE restart or terminate the session issuing a HTTP DELETE request instead. In any case the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} section 5.1. 
+If the ICE request can not be performed by the WHIP resource it MUST return an appropriate  HTTP error code but MUST NOT terminate the session immediately. The WHIP client MAY try again to perform a new ICE restart or terminate the session issuing a HTTP DELETE request instead. In any case the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} section 5.1. 
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
