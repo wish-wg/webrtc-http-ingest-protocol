@@ -26,7 +26,6 @@ author:
 
 
 normative:
-  RFC2119:
   RFC7675:
   RFC8840:
   RFC8853:
@@ -68,7 +67,7 @@ This document proposes a simple protocol for supporting WebRTC as media ingestio
 
 # Terminology
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{!RFC2119}}.
+{::boilerplate bcp14-tagged}
 
 - WHIP client: WebRTC media encoder or producer that acts as a client of the WHIP protocol by encoding and delivering the media to a remote media server.
 - WHIP endpoint: Ingest server receiving the initial WHIP request.
