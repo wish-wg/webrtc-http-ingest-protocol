@@ -211,6 +211,8 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 
 Given that in order to send new ICE candidates to the WHIP resource, the WHIP client needs to know the entity-tag associated to the ICE session, it MUST buffer any gathered candidates before the HTTP response to the initial PUT request or the PATCH request with the new entity-tag value is received. Once the entity-tag value is known the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
 
+In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ice username/pwd frags and ignore any further HTTP PATCH response received from a pending HTTP PATCH request and apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out of order request), the STUN requests will contain invalid ICE info and will be rejected by the server. When this situation is detected by the WHIP Client it SHOULD send a new ICE restart request to the server.
+
 ## WebRTC constraints
 
 In order to reduce the complexity of implementing WHIP in both clients and media servers, some restrictions regarding WebRTC usage are made.
