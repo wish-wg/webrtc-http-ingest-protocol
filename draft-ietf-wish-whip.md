@@ -218,7 +218,7 @@ Unlike {{!RFC5763}} a WHIP client MAY use a setup attribute value of setup:activ
 
 ## Load balancing and redirections
 
-WHIP endpoints and media servers may not be colocated on the same server so it is possible to load balance incoming requests to different media servers. WHIP clients SHALL support HTTP redirection via the 307 Temporary Redirect response code in the initial HTTP response to the WHIP endpoint URL. The WHIP resource URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE request sent to it.
+WHIP endpoints and media servers might not be colocated on the same server so it is possible to load balance incoming requests to different media servers. WHIP clients SHALL support HTTP redirection via the 307 Temporary Redirect response code in the initial HTTP response to the WHIP endpoint URL. The WHIP resource URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE request sent to it.
 
 In case of high load, the WHIP endpoints MAY return a 503 (Service Unavailable) status code indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request.
 
