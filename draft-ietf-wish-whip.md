@@ -24,13 +24,6 @@ author:
     organization: CoSMo Software
     email: alex.gouaillard@cosmosoftware.io
 
-
-normative:
-  RFC7675:
-  RFC8840:
-  RFC8853:
-  RFC8863:
-
 --- abstract
 
 While WebRTC has been very successful in a wide range of scenarios, its adoption in the broadcasting/streaming industry is lagging behind.
