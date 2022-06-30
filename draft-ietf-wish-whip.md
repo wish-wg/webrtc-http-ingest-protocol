@@ -238,12 +238,12 @@ Each ICE server will be returned on a Link header with a "rel" attribute value o
 - credential-type:  If the Link header represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
 
 ~~~~~
-     Link: stun:stun.example.net; rel="ice-server";
-     Link: turn:turn.example.net?transport=udp; rel="ice-server";
+     Link: <stun:stun.example.net>; rel="ice-server";
+     Link: <turn:turn.example.net?transport=udp>; rel="ice-server";
            username="user"; credential="myPassword"; credential-type="password";
-     Link: turn:turn.example.net?transport=tcp; rel="ice-server";
+     Link: <turn:turn.example.net?transport=tcp>; rel="ice-server";
            username="user"; credential="myPassword"; credential-type="password";
-     Link: turns:turn.example.net?transport=tcp; rel="ice-server";
+     Link: <turns:turn.example.net?transport=tcp>; rel="ice-server";
            username="user"; credential="myPassword"; credential-type="password";
 ~~~~~
 {: title="Example ICE server configuration"}
