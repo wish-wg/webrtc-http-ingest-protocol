@@ -54,7 +54,7 @@ In the broadcasting/streaming world, the usage of hardware encoders that make it
 
 While some standard signaling protocols are available that can be integrated with WebRTC, like SIP or XMPP, they are not designed to be used in broadcasting/streaming services, and there also is no sign of adoption in that industry. RTSP, which is based on RTP and may be the closest in terms of features to WebRTC, is not compatible with the WebRTC SDP offer/answer model.
 
-In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in webrtc-gateway document {{?I-D.draft-alvestrand-rtcweb-gateways}}.
+In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in webrtc-gateway document {{?draft-ietf-rtcweb-gateways}}.
 
 This document proposes a simple protocol for supporting WebRTC as media ingestion method which is:
 
