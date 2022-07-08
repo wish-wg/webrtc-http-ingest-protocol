@@ -212,7 +212,7 @@ In case of unstable network conditions, the ICE restart HTTP PATCH requests and 
 
 In order to reduce the complexity of implementing WHIP in both clients and media servers, some restrictions regarding WebRTC usage are made.
 
-The SDP BUNDLE mechanism {{!RFC8843}} MUST be used by both WHIP clients and media servers. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" sections. In addition, per {{!RFC8843}} the WHIP client and media server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and media server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections.
+The SDP BUNDLE mechanism {{!RFC8843}} MUST be supported by both WHIP clients and WHIP endpoints. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC8843}} section 9. In addition, per {{!RFC8843}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media.  The WHIP client and media server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections.
 
 Unlike {{!RFC5763}} a WHIP client MAY use a setup attribute value of setup:active in the SDP offer, in which case the WHIP endpoint MUST use a setup attribute value of setup:passive in the SDP answer. 
 
