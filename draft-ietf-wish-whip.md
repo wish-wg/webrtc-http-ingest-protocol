@@ -224,9 +224,9 @@ In case of high load, the WHIP endpoints MAY return a 503 (Service Unavailable) 
 
 ## STUN/TURN server configuration
 
-The WHIP endpoint MAY return ICE server configuration urls and credentials usable by the client in the 201 Created response to the HTTP POST request to the WHIP endpoint url.
+The WHIP endpoint MAY return STUN/TURN server configuration urls and credentials usable by the client in the 201 Created response to the HTTP POST request to the WHIP endpoint url.
 
-Each ICE server will be returned on a Link header with a "rel" attribute value of "ice-server" where the Link target URI is the ICE server URL and the credentials are encoded in the Link target attributes as follows:
+Each STUN/TURN server will be returned on a Link header with a "rel" attribute value of "ice-server" where the Link target URI is the server URL as defined in {{!RFC7064}} and {{!RFC7065}} and the credentials are encoded in the Link target attributes as follows:
 
 - username: If the Link header represents a TURN server, and credential-type is "password", then this attribute specifies the username to use with that TURN server.
 - credential: If credential-type attribute is missing or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{!RFC8489}}, Section 10.2.
@@ -243,7 +243,9 @@ Each ICE server will be returned on a Link header with a "rel" attribute value o
 ~~~~~
 {: title="Example ICE server configuration"}
 
-There are some webrtc implementations that do not support updating the ICE server configuration after the local offer has been created. In order to support these clients, the WHIP endpoint MAY also include the ICE server configuration on the responses to an authenticated OPTIONS request sent to the WHIP endpoint URL sent before the POST requests. 
+NOTE: The naming of both the "rel" attribute value of "ice-server" and the target attributes follows the one used on the W3C WebRTC recomendation {{?W3C.REC-webrtc-20210126} RTCConfiguration dictionary in section 4.2.1. "rel" attribute value of "ice-server" is not prepended with the "urn:ietf:params:whip:" so it can be reused by other specifications which may use this mechanishm to configure the usage of STUN/TURN servers.
+
+There are some webrtc implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{!RFC8829}} section 4.1.18. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to an authenticated OPTIONS request sent to the WHIP endpoint URL sent before the POST requests. 
 
 It might be also possible to configure the STUN/TURN server URLs with long term credentials provided by either the broadcasting service or an external TURN provider on the WHIP client overriding the values provided by the WHIP endpoint.
 
