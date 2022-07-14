@@ -124,7 +124,7 @@ The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST
 
 ## ICE and NAT support
 
-The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it may only contain local candidates (or even an empty list of candidates).
+The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates).
 
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from media server ICE candidates once the SDP answer is sent. The  WHIP Endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
