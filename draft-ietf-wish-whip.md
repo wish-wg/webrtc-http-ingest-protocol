@@ -305,6 +305,8 @@ Bothe the WHIP client and the media server SHALL use SDP bundle {{!RFC8843}}. Th
 
 Unlike the behavior defined by {{!RFC5763}}, a WHIP client MAY use a setup attribute value of setup:active in the SDP offer, in which case the WHIP endpoint MUST use a setup attribute value of setup:passive in the SDP answer. 
 
+Tricke ICE and ICE restarts support is OPTIONAL for both the WHIP clients and media servers as explained in section 4.1.
+
 ## Load balancing and redirections
 
 WHIP endpoints and media servers might not be colocated on the same server, so it is possible to load balance incoming requests to different media servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect response code" as described in {{!RFC7231}} section 6.4.7. The WHIP resource URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
