@@ -34,21 +34,15 @@ This document describes a simple HTTP-based protocol that will allow WebRTC-base
 
 While WebRTC has been very successful in a wide range of scenarios, its adoption in the broadcasting/streaming industry is lagging behind.
 
-Currently, there is no standard protocol designed for ingesting media into a streaming service using WebRTC and so content providers still rely heavily on protocols like RTMP for doing so.
-
-These protocols are much older than WebRTC and by default lack some important security and resilience features provided by WebRTC with minimal overhead and additional latency.
-
-The media codecs used for ingestion in older protocols tend to be limited and not negotiated. WebRTC includes support for negotiation of codecs, potentially alleviating transcoding on the ingest node (which can introduce delay and degrade media quality). Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with Simulcast {{!RFC8853}} and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
-
-Encryption is mandatory in WebRTC, therefore secure transport of media is implicit.
-
 The IETF RTCWEB working group standardized JSEP ({{!RFC8829}}), a mechanism used to control the setup, management, and teardown of a multimedia session. It also describes how to negotiate media flows using the Offer/Answer Model with the Session Description Protocol (SDP) {{!RFC3264}} as well as the formats for data sent over the wire (e.g., media types, codec parameters, and encryption). WebRTC intentionally does not specify a signaling transport protocol at application level. This flexibility has allowed the implementation of a wide range of services. However, those services are typically standalone silos which don't require interoperability with other services or leverage the existence of tools that can communicate with them.
 
 In the broadcasting/streaming world, the use of hardware encoders that make it very simple to plug in cables carrying raw media, encode it in-place, and push it to any streaming service or CDN ingest is already ubiquitous. It is the adoption of a custom signaling transport protocol for each WebRTC service has hindered broader adoption as an ingestion protocol.
 
 While some standard signaling protocols are available that can be integrated with WebRTC, like SIP {{?RFC3261}} or XMPP {{?RFC6120}}, they are not designed to be used in broadcasting/streaming services, and there also is no sign of adoption in that industry. RTSP {{?RFC7826}}, which is based on RTP and may be the closest in terms of features to WebRTC, is not compatible with the SDP offer/answer model {{!RFC3264}}.
 
-In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in WebRTC-gateway document {{?draft-ietf-rtcweb-gateways}}.
+So, currently, there is no standard protocol designed for ingesting media into a streaming service using WebRTC and so content providers still rely heavily on protocols like RTMP for doing so. Most of those protocols are not RTP based, requiring media protocol translation when doing egress via WebRTC. Avoiding this media protocol translation is desirable as there is no functional parity between those protocols and WebRTC and it increases the implementation complexity at the media server side. 
+
+Also, the media codecs used in those protocols tend to be limited and not negotiated, not always matching the mediac codes supported in WebRTC. This requires to perform transcoding on the ingest node, which introduces delay, degrades media quality and increases the processing workload required on the server side.  Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with Simulcast {{!RFC8853}} and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
 
 This document proposes a simple protocol for supporting WebRTC as media ingestion method which:
 
@@ -302,6 +296,8 @@ Because the WHIP client needs to know the entity-tag associated with the ICE ses
 In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ice username/pwd frags and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. Clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be rejected by the server. When this situation is detected by the WHIP Client, it SHOULD send a new ICE restart request to the server.
 
 ## WebRTC constraints
+
+In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in WebRTC-gateway document {{?draft-ietf-rtcweb-gateways}}.
 
 In order to reduce the complexity of implementing WHIP in both clients and media servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
