@@ -301,7 +301,7 @@ In the specific case of media ingestion into a streaming service, some assumptio
 
 In order to reduce the complexity of implementing WHIP in both clients and media servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
-Bothe the WHIP client and the media server SHALL use SDP bundle {{!RFC8843}}. The SDP offer created by the WHIP client must include the bundle-only attribute in all m-lines as per {{!RFC8843}}. Also, RTCP muxing SHALL be supported by both the WHIP client and the media server.
+Both the the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC8843}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC8843}} section 9. In addition, per {{!RFC8843}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media.  The WHIP client and media server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections.
 
 When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute with an "actpass" attribute value, as defined in {{!RFC8842}}. However, if the WHIP client only implements the DTLS client role, it MAY use an SDP "setup" attribute with an "active" attribute value. If the WHIP endpoint does not support an SDP offer with an SDP "setup" attribute with an "active" attribute value, it SHOULD reject the request with a 422 Unprocessable Entity response.
 
