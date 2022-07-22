@@ -164,7 +164,7 @@ HTTP/1.1 201 Created
 ETag: "38sdf4fdsf54:EsAw"
 Content-Type: application/sdp
 Content-Length: 1400
-Location: https://whip.example.org/resource/id
+Location: https://whip.example.com/resource/id
 
 v=0
 o=- 1657793490019 1 IN IP4 127.0.0.1
@@ -380,7 +380,7 @@ In this theoretical case, the HTTP 201 response to the HTTP POST request would l
 ~~~~~
 HTTP/1.1 201 Created
 Content-Type: application/sdp
-Location: https://whip.example.org/resource/id
+Location: https://whip.example.com/resource/id
 Link: <https://whip.ietf.org/publications/213786HF/sse>;rel="urn:ietf:params:whip:server-side-events"
 ~~~~~
 
