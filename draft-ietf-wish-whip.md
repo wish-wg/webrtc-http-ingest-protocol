@@ -16,7 +16,7 @@ author:
  -
     ins: S. Murillo
     name: Sergio Garcia Murillo
-    organization: Millicast
+    organization: CoSMo Software
     email: sergio.garcia.murillo@cosmosoftware.io
  -
     ins: A. Gouaillard
@@ -299,7 +299,7 @@ In case of unstable network conditions, the ICE restart HTTP PATCH requests and 
 
 ## WebRTC constraints
 
-In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in WebRTC-gateway document {{?draft-ietf-rtcweb-gateways}}.
+In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in WebRTC-gateway document {{?I-D.draft-ietf-rtcweb-gateways}}.
 
 In order to reduce the complexity of implementing WHIP in both clients and Media Servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
@@ -342,7 +342,7 @@ Each STUN/TURN server will be returned using the "Link" header field {{!RFC8288}
 ~~~~~
 {: title="Example ICE server configuration"}
 
-NOTE: The naming of both the "rel" attribute value of "ice-server" and the target attributes follows the one used on the W3C WebRTC recommendation {{?W3C.REC-webrtc-20210126} RTCConfiguration dictionary in section 4.2.1. "rel" attribute value of "ice-server" is not prepended with the "urn:ietf:params:whip:" so it can be reused by other specifications which may use this mechanism to configure the usage of STUN/TURN servers.
+NOTE: The naming of both the "rel" attribute value of "ice-server" and the target attributes follows the one used on the W3C WebRTC recommendation {{?W3C.REC-webrtc-20210126}} RTCConfiguration dictionary in section 4.2.1. "rel" attribute value of "ice-server" is not prepended with the "urn:ietf:params:whip:" so it can be reused by other specifications which may use this mechanism to configure the usage of STUN/TURN servers.
 
 There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{!RFC8829}} section 4.1.18. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent.
 
@@ -422,9 +422,9 @@ To manage this sub-namespace, IANA has created the "System for Cross-domain Iden
 
    - Index value: See Section {{urn-whip-subspace}}
 
-##  URN Sub-namespace for WHIP {{#urn-whip-subspace}}
+##  URN Sub-namespace for WHIP {#urn-whip-subspace}
 
-WHIP Endpoint utilize URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {#protocol-extensions}.
+WHIP Endpoint utilize URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {{protocol-extensions}}.
 This section creates and registers an IETF URN Sub-namespace for use in the WHIP specifications and future extensions.
 
 ### Specification Template
@@ -455,9 +455,9 @@ Declaration of Syntactic Structure:
 
       - type: The entity type. This specification only defines the "ext" type.
 
-      - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{!RFC2141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
+      - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC2141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
 
-      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{!RFC2141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by
+      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC2141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by
          colons) as needed to uniquely identify an WHIP protocol extension.
 
 Relevant Ancillary Documentation:
@@ -484,7 +484,7 @@ Process of Identifier Resolution:
 
 Rules for Lexical Equivalence:
 
-      No special considerations; the rules for lexical equivalence specified in {{!RFC2141}} apply.
+      No special considerations; the rules for lexical equivalence specified in {{?RFC2141}} apply.
 
 Conformance with URN Syntax:
 
