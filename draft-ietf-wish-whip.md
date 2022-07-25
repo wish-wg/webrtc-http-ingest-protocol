@@ -385,7 +385,8 @@ In this theoretical case, the HTTP 201 response to the HTTP POST request would l
 HTTP/1.1 201 Created
 Content-Type: application/sdp
 Location: https://whip.example.com/resource/id
-Link: <https://whip.ietf.org/publications/213786HF/sse>;rel="urn:ietf:params:whip:ext:example:server-side-events"
+Link: <https://whip.ietf.org/publications/213786HF/sse>;
+      rel="urn:ietf:params:whip:ext:example:server-side-events"
 ~~~~~
 
 
@@ -457,8 +458,7 @@ Declaration of Syntactic Structure:
 
       - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
 
-      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by
-         colons) as needed to uniquely identify an WHIP protocol extension.
+      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
 
 Relevant Ancillary Documentation:
 
