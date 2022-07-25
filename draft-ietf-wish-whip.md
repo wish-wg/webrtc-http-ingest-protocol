@@ -26,7 +26,7 @@ author:
 
 --- abstract
 
-This document describes a simple HTTP-based protocol that will allow WebRTC-based ingest of content into streaming services and/or CDNs.
+This document describes a simple HTTP-based protocol that will allow WebRTC-based ingestion of content into streaming services and/or CDNs.
 
 --- middle
 
@@ -100,7 +100,7 @@ Once the ICE/DTLS session is set up, the media will flow unidirectionally from t
 
 # Protocol Operation
 
-In order to setup an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and perform an HTTP POST request to the configured WHIP endpoint URL.
+In order to set up an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and perform an HTTP POST request to the configured WHIP endpoint URL.
 
 The HTTP POST request will have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created resource.
 
@@ -396,7 +396,7 @@ HTTPS SHALL be used in order to preserve the WebRTC security model.
 
 # IANA Considerations
 
-This specifications adds a new link relation type and a registry for URN sub-namespaces for WHIP protocol extensions.
+This specification adds a new link relation type and a registry for URN sub-namespaces for WHIP protocol extensions.
 
 ## Link Relation Type: ice-server
 
@@ -476,7 +476,7 @@ Identifier Persistence Considerations:
 
 Process of Identifier Assignment:
 
-      Namespaces with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
+      Namespace with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
 
 Process of Identifier Resolution:
 
@@ -501,5 +501,6 @@ Scope:
 # Acknowledgements
 
 --- back
+
 
 
