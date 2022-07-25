@@ -42,7 +42,7 @@ While some standard signaling protocols are available that can be integrated wit
 
 So, currently, there is no standard protocol designed for ingesting media into a streaming service using WebRTC and so content providers still rely heavily on protocols like RTMP for doing so. Most of those protocols are not RTP based, requiring media protocol translation when doing egress via WebRTC. Avoiding this media protocol translation is desirable as there is no functional parity between those protocols and WebRTC and it increases the implementation complexity at the media server side. 
 
-Also, the media codecs used in those protocols tend to be limited and not negotiated, not always matching the mediac codes supported in WebRTC. This requires transcoding on the ingest node, which introduces delay, degrades media quality and increases the processing workload required on the server side.  Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with Simulcast {{!RFC8853}} and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
+Also, the media codecs used in those protocols tend to be limited and not negotiated, not always matching the mediac codes supported in WebRTC. This requires transcoding on the ingest node, which introduces delay, degrades media quality and increases the processing workload required on the server side. Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with Simulcast {{!RFC8853}} and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
 
 This document proposes a simple protocol for supporting WebRTC as media ingestion method which:
 
@@ -229,7 +229,7 @@ The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST
 
 The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates).
 
-In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from Media Server ICE candidates once the SDP answer is sent. The  WHIP Endpoint SHALL gather all the ICE candidates for the Media Server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the Media Server. The Media Server MAY use ICE lite, while the WHIP client MUST implement full ICE.
+In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from Media Server ICE candidates once the SDP answer is sent. The WHIP Endpoint SHALL gather all the ICE candidates for the Media Server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the Media Server. The Media Server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
 The WHIP client MAY perform trickle ICE or ICE restarts {{!RFC8863}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
 
@@ -303,7 +303,7 @@ In the specific case of media ingestion into a streaming service, some assumptio
 
 In order to reduce the complexity of implementing WHIP in both clients and Media Servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
-Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media.  The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections.
+Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections.
 
 While this version of the specification only supports a single audio and video track, in order to ensure forward compatibility, if the number of audio and or video tracks or number streams is not supported by the WHIP Endpoint, it MUST reject the HTTP POST request with a 406 Not Acceptable error code. 
 
@@ -329,7 +329,7 @@ Each STUN/TURN server will be returned using the "Link" header field {{!RFC8288}
 
 - username: If the Link header field represents a TURN server, and credential-type is "password", then this attribute specifies the username to use with that TURN server.
 - credential: If the "credential-type" attribute is missing or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{!RFC8489}}, Section 10.2.
-- credential-type:  If the Link header field represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
+- credential-type: If the Link header field represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
 
 ~~~~~
      Link: <stun:stun.example.net>; rel="ice-server"
@@ -403,17 +403,17 @@ This specification adds a new link relation type and a registry for URN sub-name
 
 The link relation type below has been registered by IANA per Section 4.2 of {{!RFC8288}}.
 
-Relation Name:  ice-server
+Relation Name: ice-server
 
-Description:  For the WHIP protocol, conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.
+Description: For the WHIP protocol, conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.
 
-Reference:  TBD
+Reference: TBD
 
-##  Registration of WHIP URN Sub-namespace and WHIP Registry
+## Registration of WHIP URN Sub-namespace and WHIP Registry
 
 IANA has added an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and created a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
 
-To manage this sub-namespace, IANA has created the "System for Cross-domain Identity Management (WHIP) Schema URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace.  The registry description is as follows:
+To manage this sub-namespace, IANA has created the "System for Cross-domain Identity Management (WHIP) Schema URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
 
    - Registry name: WHIP
 
@@ -423,7 +423,7 @@ To manage this sub-namespace, IANA has created the "System for Cross-domain Iden
 
    - Index value: See Section {{urn-whip-subspace}}
 
-##  URN Sub-namespace for WHIP {#urn-whip-subspace}
+## URN Sub-namespace for WHIP {#urn-whip-subspace}
 
 WHIP Endpoint utilize URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {{protocol-extensions}}.
 This section creates and registers an IETF URN Sub-namespace for use in the WHIP specifications and future extensions.
