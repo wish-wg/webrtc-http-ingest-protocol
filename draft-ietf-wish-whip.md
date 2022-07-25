@@ -16,7 +16,7 @@ author:
  -
     ins: S. Murillo
     name: Sergio Garcia Murillo
-    organization: CoSMo Software
+    organization: Millicast
     email: sergio.garcia.murillo@cosmosoftware.io
  -
     ins: A. Gouaillard
