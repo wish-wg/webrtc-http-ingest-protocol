@@ -466,7 +466,7 @@ Relevant Ancillary Documentation:
 
 Identifier Uniqueness Considerations:
 
-      The designated contact shall be responsible for reviewing and  enforcing uniqueness.
+      The designated contact shall be responsible for reviewing and enforcing uniqueness.
 
 Identifier Persistence Considerations:
 
