@@ -367,7 +367,7 @@ Both Simulcast {{!RFC8853}} and Scalable Video Coding (SVC), including K-SVC (al
 
 If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} section 5.3.2.
 
-## Protocol extensions
+## Protocol extensions {#protocol-extensions}
 
 In order to support future extensions to be defined for the WHIP protocol, a common procedure for registering and announcing the new extensions is defined.
 
@@ -396,15 +396,107 @@ HTTPS SHALL be used in order to preserve the WebRTC security model.
 
 # IANA Considerations
 
-The link relation type below has been registered by IANA per Section 4.2 of {{!RFC8288}}.
+This specifications adds a new link relation type and a registry for URN sub-namespaces for WHIP protocol extensions.
 
 ## Link Relation Type: ice-server
+
+The link relation type below has been registered by IANA per Section 4.2 of {{!RFC8288}}.
 
 Relation Name:  ice-server
 
 Description:  For the WHIP protocol, conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.
 
 Reference:  TBD
+
+##  Registration of WHIP URN Sub-namespace and WHIP Registry
+
+IANA has added an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and created a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
+
+To manage this sub-namespace, IANA has created the "System for Cross-domain Identity Management (WHIP) Schema URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace.  The registry description is as follows:
+
+   - Registry name: WHIP
+
+   - Specification: this document (RFC TBD)
+
+   - Repository: See Section {{urn-whip-subspace}}
+
+   - Index value: See Section {{urn-whip-subspace}}
+
+##  URN Sub-namespace for WHIP {{#urn-whip-subspace}}
+
+WHIP Endpoint utilize URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {#protocol-extensions}.
+This section creates and registers an IETF URN Sub-namespace for use in the WHIP specifications and future extensions.
+
+### Specification Template
+
+Namespace ID:
+
+      The Namespace ID "whip" has been assigned.
+
+Registration Information:
+
+      Version: 1
+
+      Date: TBD
+
+Declared registrant of the namespace:
+
+      The Internet Engineering Task Force.
+
+Designated contact:
+
+       A designated expert will monitor the WHIP public mailing list, "wish@ietf.org".
+
+Declaration of Syntactic Structure:
+
+      The Namespace Specific String (NSS) of all URNs that use the "whip" Namespace ID shall have the following structure: urn:ietf:params:whip:{type}:{name}:{other}
+
+      The keywords have the following meaning:
+
+      - type: The entity type. This specification only defines the "ext" type.
+
+      - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{!RFC2141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
+
+      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{!RFC2141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by
+         colons) as needed to uniquely identify an WHIP protocol extension.
+
+Relevant Ancillary Documentation:
+
+      None
+
+Identifier Uniqueness Considerations:
+
+      The designated contact shall be responsible for reviewing and  enforcing uniqueness.
+
+Identifier Persistence Considerations:
+
+      Once a name has been allocated, it MUST NOT be reallocated for a different purpose.
+      The rules provided for assignments of values within a sub-namespace MUST be constructed so that the meanings of values cannot change.
+      This registration mechanism is not appropriate for naming values whose meanings may change over time.
+
+Process of Identifier Assignment:
+
+      Namespaces with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
+
+Process of Identifier Resolution:
+
+      None specified.
+
+Rules for Lexical Equivalence:
+
+      No special considerations; the rules for lexical equivalence specified in {{!RFC2141}} apply.
+
+Conformance with URN Syntax:
+
+      No special considerations.
+
+Validation Mechanism:
+
+      None specified.
+
+Scope:
+
+      Global.
 
 # Acknowledgements
 
