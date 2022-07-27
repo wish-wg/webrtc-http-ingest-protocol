@@ -233,7 +233,7 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 
 The WHIP client MAY perform trickle ICE or ICE restarts {{!RFC8863}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
 
-Trickle ICE and ICE restart support is OPTIONAL for a WHIP resource. If both Trickle ICE or ICE restarts are not supported by the WHIP resource, it MUST return a 405 Method Not Allowed response for any HTTP PATCH request. If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a 501 Not Implemented for the HTTP PATCH requests that are not supported.
+Trickle ICE and ICE restart support is OPTIONAL for a WHIP resource. If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a 405 (Not Implemented) for the HTTP PATCH requests that are not supported. If the server does not support the PATCH method for any purpose,  it returns a 501 (Not Implemented), as described in {{!RFC7231}} section 6.6.2.
 
 As the HTTP PATCH request sent by a WHIP client may be received out-of-order by the WHIP resource, the WHIP resource MUST generate a
 unique strong entity-tag identifying the ICE session as per {{!RFC9110}} section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the 201 response to the initial POST request to the WHIP endpoint. It MUST also be returned in the 200 OK of any PATCH request that triggers an ICE restart.
