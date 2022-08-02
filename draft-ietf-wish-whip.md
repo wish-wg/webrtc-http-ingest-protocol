@@ -413,7 +413,7 @@ Reference: TBD
 
 IANA has added an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and created a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
 
-To manage this sub-namespace, IANA has created the "System for Cross-domain Identity Management (WHIP) Schema URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
+To manage this sub-namespace, IANA has created the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
 
    - Registry name: WHIP
 
@@ -426,77 +426,132 @@ To manage this sub-namespace, IANA has created the "System for Cross-domain Iden
 ## URN Sub-namespace for WHIP {#urn-whip-subspace}
 
 WHIP Endpoint utilize URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {{protocol-extensions}}.
+
 This section creates and registers an IETF URN Sub-namespace for use in the WHIP specifications and future extensions.
 
 ### Specification Template
 
 Namespace ID:
 
-      The Namespace ID "whip" has been assigned.
+- The Namespace ID "whip" has been assigned.
 
 Registration Information:
 
-      Version: 1
+- Version: 1
 
-      Date: TBD
+- Date: TBD
 
 Declared registrant of the namespace:
 
-      The Internet Engineering Task Force.
+- Registering organization: The Internet Engineering Task Force.
 
-Designated contact:
-
-       A designated expert will monitor the WHIP public mailing list, "wish@ietf.org".
+- Designated contact: A designated expert will monitor the WHIP public mailing list, "wish@ietf.org".
 
 Declaration of Syntactic Structure:
 
-      The Namespace Specific String (NSS) of all URNs that use the "whip" Namespace ID shall have the following structure: urn:ietf:params:whip:{type}:{name}:{other}
+- The Namespace Specific String (NSS) of all URNs that use the "whip" Namespace ID shall have the following structure: urn:ietf:params:whip:{type}:{name}:{other}.
 
-      The keywords have the following meaning:
+ - The keywords have the following meaning:
 
-      - type: The entity type. This specification only defines the "ext" type.
+     - type: The entity type. This specification only defines the "ext" type.
 
-      - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
+     - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
 
-      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
+     - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
 
 Relevant Ancillary Documentation:
 
-      None
+ - None
 
 Identifier Uniqueness Considerations:
 
-      The designated contact shall be responsible for reviewing and enforcing uniqueness.
+- The designated contact shall be responsible for reviewing and enforcing uniqueness.
 
 Identifier Persistence Considerations:
 
-      Once a name has been allocated, it MUST NOT be reallocated for a different purpose.
-      The rules provided for assignments of values within a sub-namespace MUST be constructed so that the meanings of values cannot change.
-      This registration mechanism is not appropriate for naming values whose meanings may change over time.
+ - Once a name has been allocated, it MUST NOT be reallocated for a different purpose.
+ - The rules provided for assignments of values within a sub-namespace MUST be constructed so that the meanings of values cannot change.
+ - This registration mechanism is not appropriate for naming values whose meanings may change over time.
 
 Process of Identifier Assignment:
 
-      Namespace with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
+- Namespace with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
 
 Process of Identifier Resolution:
 
-      None specified.
+ - None specified.
 
 Rules for Lexical Equivalence:
 
-      No special considerations; the rules for lexical equivalence specified in {{?RFC8141}} apply.
+ - No special considerations; the rules for lexical equivalence specified in {{?RFC8141}} apply.
 
 Conformance with URN Syntax:
 
-      No special considerations.
+ - No special considerations.
 
 Validation Mechanism:
 
-      None specified.
+ - None specified.
 
 Scope:
 
-      Global.
+ - Global.
+
+## Registering WHIP Protocol Extensions URIs
+
+This section defines the process for registering new WHIP protocol extensions URIs with IANA in the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry (see {{urn-whip-subspace}}). 
+   
+A WHIP Protocol Extension URI is used as a value in the "rel" attribute of the Link header as defined in {{protocol-extensions}} for the purpose of signalling the WHIP protocol extensions supported by the WHIP Endpoints.
+   
+WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspace}}.
+
+###  Registration Procedure
+
+   The IETF has created a mailing list, "wish@ietf.org", which can be used
+   for public discussion of WHIP protocol extensions proposals prior to registration.
+   Use of the mailing list is strongly encouraged.  The IESG has
+   appointed a designated expert {{?RFC5226}} who will monitor the
+   wish@ietf.orgg mailing list and review registrations.
+
+   Registration of new "ext" type URI (in the namespace
+   "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be reviewed by the
+   designated expert and published in an RFC.  An RFC is REQUIRED for
+   the registration of new value data types that modify existing
+   properties. An RFC is also REQUIRED for registration of WHEP Protocol Extensions
+   URIs that modify WHEP Protocol Extensions previously documented in an existing
+   RFC.
+
+   The registration procedure begins when a completed registration
+   template, defined in the sections below, is sent to wish@ietf.org and
+   iana@iana.org.  Within two weeks, the designated expert is expected
+   to tell IANA and the submitter of the registration whether the
+   registration is approved, approved with minor changes, or rejected
+   with cause.  When a registration is rejected with cause, it can be
+   resubmitted if the concerns listed in the cause are addressed.
+
+   Decisions made by the designated expert can be appealed to the IESG
+   Applications Area Director, then to the IESG. They follow the normal
+   appeals procedure for IESG decisions.
+
+   Once the registration procedure concludes successfully, IANA creates
+   or modifies the corresponding record in the WHIP Protocol Extension registry.
+   The completed registration template is discarded.
+
+   An RFC specifying one or more new WHIP Protocol Extension URIs MUST include the
+   completed registration templates, which MAY be expanded with
+   additional information. These completed templates are intended to go
+   in the body of the document, not in the IANA Considerations section.
+   The RFC SHOULD include any attributes defined.
+
+###  WHIP Protocol Extension Registration Template
+
+A WHIP Protocol Extension URI is defined by completing the following template:
+
+ -   URI: A unique URI for the WHIP Protocol Extension (e.g., "urn:ietf:params:whip:ext:example:server-sent-events").
+ -   Reference: A formal reference to the publicly available specification
+ -   Name: A descriptive name of the WHIP Protocol Extension extension (e.g., "Sender Side events").
+ -   Description: A short phrase describing the function of the extension
+ -   Contact information: Contact information for the organization or person making the registration
 
 # Acknowledgements
 
