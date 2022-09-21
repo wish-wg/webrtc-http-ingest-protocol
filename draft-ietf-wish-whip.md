@@ -215,7 +215,7 @@ a=fmtp:97 apt=96
 ~~~~~
 {: title="HTTP POST doing SDP O/A example"}
 
-Once a session is setup, ICE consent freshness {{!RFC7675}} will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
+Once a session is setup, ICE consent freshness {{!RFC7675}} will be used to detect non graceful disconnection and DTLS teardown for session termination by either side.
 
 To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP resource will be removed and the resources freed on the Media Server, terminating the ICE and DTLS sessions.
 
