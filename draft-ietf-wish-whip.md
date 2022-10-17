@@ -253,7 +253,7 @@ Content-Length: 548
 
 a=ice-ufrag:EsAw
 a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
-m=audio RTP/AVP 0
+m=audio 9 RTP/AVP 0
 a=mid:0
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.1 61765 typ host generation 0 ufrag EsAw network-id 2
