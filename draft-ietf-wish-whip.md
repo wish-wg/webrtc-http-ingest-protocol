@@ -161,7 +161,7 @@ a=rtpmap:97 rtx/90000
 a=fmtp:97 apt=96
 
 HTTP/1.1 201 Created
-ETag: "38sdf4fdsf54:EsAw"
+ETag: "xyzzy"
 Content-Type: application/sdp
 Content-Length: 1400
 Location: https://whip.example.com/resource/id
@@ -247,7 +247,7 @@ A WHIP resource receiving a PATCH request with new ICE candidates, but which doe
 ~~~~~
 PATCH /resource/id HTTP/1.1
 Host: whip.example.com
-If-Match: "38sdf4fdsf54:EsAw"
+If-Match: "xyzzy"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 548
 
@@ -283,7 +283,7 @@ a=ice-ufrag:ysXw
 a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 
 HTTP/1.1 200 OK
-ETag: "289b31b754eaa438:ysXw"
+ETag: "abccd"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 102
 
