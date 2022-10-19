@@ -24,6 +24,13 @@ author:
     organization: CoSMo Software
     email: alex.gouaillard@cosmosoftware.io
 
+normative:
+  FETCH:
+    author:
+      org: WHATWG
+    title: Fetch - Living Standard
+    target: https://fetch.spec.whatwg.org
+      
 --- abstract
 
 This document describes a simple HTTP-based protocol that will allow WebRTC-based ingestion of content into streaming services and/or CDNs.
@@ -221,9 +228,12 @@ To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE r
 
 A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} section 5.2 for immediate revocation of consent.
 
-The WHIP endpoints MUST return an HTTP 405 response for any HTTP GET, HEAD or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
+The WHIP endpoints MUST return an HTTP 405 response for any HTTP GET, HEAD or PUT requests on the endpoint URL in order to reserve its usage for future versions of this protocol specification.
+
+The WHIP endpoint MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{!FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request recevied as per {{!W3C.REC-ldp-20150226}}.
 
 The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
+
 
 ## ICE and NAT support
 
