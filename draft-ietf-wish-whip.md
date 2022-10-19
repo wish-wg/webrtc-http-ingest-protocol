@@ -65,7 +65,7 @@ This document proposes a simple protocol for supporting WebRTC as media ingestio
 {::boilerplate bcp14-tagged}
 
 - WHIP client: WebRTC media encoder or producer that acts as a client of the WHIP protocol by encoding and delivering the media to a remote Media Server.
-- WHIP endpoint: Ingest server receiving the initial WHIP request.****
+- WHIP endpoint: Ingest server receiving the initial WHIP request.
 - WHIP endpoint URL: URL of the WHIP endpoint that will create the WHIP resource.
 - Media Server: WebRTC Media Server or consumer that establishes the media session with the WHIP client and receives the media produced by it.
 - WHIP resource: Allocated resource by the WHIP endpoint for an ongoing ingest session that the WHIP client can send requests for altering the session (ICE operations or termination, for example).
