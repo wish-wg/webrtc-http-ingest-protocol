@@ -81,7 +81,7 @@ Once the ICE/DTLS session is set up, the media will flow unidirectionally from t
 ~~~~~
                                                                                
  +-------------+    +---------------+ +--------------+ +---------------+
- | WHIP client |    | WHIP endpoint | | Media Server | | WHIP Resource |
+ | WHIP client |    | WHIP endpoint | | Media Server | | WHIP resource |
  +--+----------+    +---------+-----+ +------+-------+ +--------|------+
     |                         |              |                  |       
     |                         |              |                  |       
@@ -169,6 +169,7 @@ a=fmtp:97 apt=96
 
 HTTP/1.1 201 Created
 ETag: "xyzzy"
+Accept-Patch: application/trickle-ice-sdpfrag
 Content-Type: application/sdp
 Content-Length: 1400
 Location: https://whip.example.com/resource/id
@@ -230,7 +231,7 @@ A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} 
 
 The WHIP endpoints MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD or PUT requests on the endpoint URL in order to reserve its usage for future versions of this protocol specification.
 
-The WHIP endpoint MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request recevied as per {{!W3C.REC-ldp-20150226}}.
+The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request recevied as per {{!W3C.REC-ldp-20150226}}.
 
 The WHIP resources MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
 
@@ -252,7 +253,7 @@ If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, 
 If the  WHIP resource does not support the PATCH method for any purpose, it MUST return a "501 Not Implemented" response, as described in {{!RFC9110}} section 6.6.2. 
 
 As the HTTP PATCH request sent by a WHIP client may be received out-of-order by the WHIP resource, the WHIP resource MUST generate a
-unique strong entity-tag identifying the ICE session as per {{!RFC9110}} section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 response" to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP resource supports ICE restarts and OPTIONAL otherwise.
+unique strong entity-tag identifying the ICE session as per {{!RFC9110}} section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP resource supports ICE restarts and OPTIONAL otherwise.
 
 A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} section 3.1 and return a "412 Precondition Failed" response if they do not match. 
 
