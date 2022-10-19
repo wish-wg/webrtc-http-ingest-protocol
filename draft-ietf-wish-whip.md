@@ -230,7 +230,7 @@ A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} 
 
 The WHIP endpoints MUST return an HTTP 405 response for any HTTP GET, HEAD or PUT requests on the endpoint URL in order to reserve its usage for future versions of this protocol specification.
 
-The WHIP endpoint MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{!FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request recevied as per {{!W3C.REC-ldp-20150226}}.
+The WHIP endpoint MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request recevied as per {{!W3C.REC-ldp-20150226}}.
 
 The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
 
@@ -249,7 +249,7 @@ If the WHIP resource supports either Trickle ICE or ICE restarts, the WHIP endpo
 
 If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a 405 (Not Implemented) for the HTTP PATCH requests that are not supported. 
 
-If the  WHIP resource does not support the PATCH method for any purpose,  it returns a 501 (Not Implemented), as described in {{!RFC7231}} section 6.6.2. 
+If the  WHIP resource does not support the PATCH method for any purpose,  it returns a 501 (Not Implemented), as described in {{!RFC9110}} section 6.6.2. 
 
 As the HTTP PATCH request sent by a WHIP client may be received out-of-order by the WHIP resource, the WHIP resource MUST generate a
 unique strong entity-tag identifying the ICE session as per {{!RFC9110}} section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 response" to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP resource supports ICE restarts and OPTIONAL otherwise.
@@ -526,7 +526,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    The IETF has created a mailing list, "wish@ietf.org", which can be used
    for public discussion of WHIP protocol extensions proposals prior to registration.
    Use of the mailing list is strongly encouraged.  The IESG has
-   appointed a designated expert {{?RFC5226}} who will monitor the
+   appointed a designated expert {{?RFC8126}} who will monitor the
    wish@ietf.orgg mailing list and review registrations.
 
    Registration of new "ext" type URI (in the namespace
@@ -574,6 +574,5 @@ A WHIP Protocol Extension URI is defined by completing the following template:
 The authors wish to thank Lorenzo Miniero, Juliusz Chroboczek, Adam Roach, Nils Ohlmeier, Christer Holmberg, Cameron Elliott, Gustavo Garcia, Jonas Birme and everyone else in the WebRTC community that have provided comments, feedback, text and improvement proposals on the document and contributed early implementations of the spec.
 
 --- back
-
 
 
