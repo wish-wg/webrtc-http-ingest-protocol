@@ -58,7 +58,7 @@ This document proposes a simple protocol for supporting WebRTC as media ingestio
 {::boilerplate bcp14-tagged}
 
 - WHIP client: WebRTC media encoder or producer that acts as a client of the WHIP protocol by encoding and delivering the media to a remote Media Server.
-- WHIP endpoint: Ingest server receiving the initial WHIP request.
+- WHIP endpoint: Ingest server receiving the initial WHIP request.****
 - WHIP endpoint URL: URL of the WHIP endpoint that will create the WHIP resource.
 - Media Server: WebRTC Media Server or consumer that establishes the media session with the WHIP client and receives the media produced by it.
 - WHIP resource: Allocated resource by the WHIP endpoint for an ongoing ingest session that the WHIP client can send requests for altering the session (ICE operations or termination, for example).
@@ -123,7 +123,7 @@ a=msid-semantic: WMS
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
-a=ice-ufrag:zjkk
+a=ice-ufrag:EsAw
 a=ice-pwd:bP+XJMM09aR8AiX1jdukzR6Y
 a=ice-options:trickle
 a=fingerprint:sha-256 DA:7B:57:DC:28:CE:04:4F:31:79:85:C4:31:67:EB:27:58:29:ED:77:2A:0D:24:AE:ED:AD:30:BC:BD:F1:9C:02
@@ -139,7 +139,7 @@ a=fmtp:111 minptime=10;useinbandfec=1
 m=video 9 UDP/TLS/RTP/SAVPF 96 97
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
-a=ice-ufrag:zjkk
+a=ice-ufrag:EsAw
 a=ice-pwd:bP+XJMM09aR8AiX1jdukzR6Y
 a=ice-options:trickle
 a=fingerprint:sha-256 DA:7B:57:DC:28:CE:04:4F:31:79:85:C4:31:67:EB:27:58:29:ED:77:2A:0D:24:AE:ED:AD:30:BC:BD:F1:9C:02
@@ -177,7 +177,7 @@ a=msid-semantic: WMS *
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
-a=ice-ufrag:526be20a538ee422
+a=ice-ufrag:38sdf4fdsf54
 a=ice-pwd:2e13dde17c1cb009202f627fab90cbec358d766d049c9697
 a=fingerprint:sha-256 F7:EB:F3:3E:AC:D2:EA:A7:C1:EC:79:D9:B3:8A:35:DA:70:86:4F:46:D9:2D:CC:D0:BC:81:9F:67:EF:34:2E:BD
 a=candidate:1 1 UDP 2130706431 198.51.100.1 39132 typ host
@@ -193,7 +193,7 @@ a=fmtp:111 minptime=10;useinbandfec=1
 m=video 9 UDP/TLS/RTP/SAVPF 96 97
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
-a=ice-ufrag:526be20a538ee422
+a=ice-ufrag:38sdf4fdsf54
 a=ice-pwd:2e13dde17c1cb009202f627fab90cbec358d766d049c9697
 a=fingerprint:sha-256 F7:EB:F3:3E:AC:D2:EA:A7:C1:EC:79:D9:B3:8A:35:DA:70:86:4F:46:D9:2D:CC:D0:BC:81:9F:67:EF:34:2E:BD
 a=candidate:1 1 UDP 2130706431 198.51.100.1 39132 typ host
@@ -215,7 +215,7 @@ a=fmtp:97 apt=96
 ~~~~~
 {: title="HTTP POST doing SDP O/A example"}
 
-Once a session is setup, ICE consent freshness {{!RFC7675}} will be used to detect abrupt disconnection and DTLS teardown for session termination by either side.
+Once a session is setup, ICE consent freshness {{!RFC7675}} will be used to detect non graceful disconnection and DTLS teardown for session termination by either side.
 
 To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP resource will be removed and the resources freed on the Media Server, terminating the ICE and DTLS sessions.
 
@@ -227,11 +227,11 @@ The WHIP resources MUST return an HTTP 405 response for any HTTP GET, HEAD, POST
 
 ## ICE and NAT support
 
-The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates).
+The initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}.
 
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from Media Server ICE candidates once the SDP answer is sent. The WHIP Endpoint SHALL gather all the ICE candidates for the Media Server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the Media Server. The Media Server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-The WHIP client MAY perform trickle ICE or ICE restarts {{!RFC8863}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
+The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
 
 Trickle ICE and ICE restart support is OPTIONAL for a WHIP resource. If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a 405 (Not Implemented) for the HTTP PATCH requests that are not supported. If the server does not support the PATCH method for any purpose,  it returns a 501 (Not Implemented), as described in {{!RFC7231}} section 6.6.2.
 
@@ -253,7 +253,7 @@ Content-Length: 548
 
 a=ice-ufrag:EsAw
 a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
-m=audio RTP/AVP 0
+m=audio 9 RTP/AVP 0
 a=mid:0
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.1 61765 typ host generation 0 ufrag EsAw network-id 2
@@ -268,7 +268,7 @@ HTTP/1.1 204 No Content
 
 A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} section 3.1. 
 
-If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password. The response may optionally contain the new set of ICE candidates for the Media Server and the new entity-tag correspond to the new ICE session in an ETag response header field.
+If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password. Also, the "200 OK" response for a sucesscull ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the Media Server.
 
 If the ICE request cannot be satisfied by the WHIP resource, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In either case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} section 5.1. 
 
@@ -303,7 +303,7 @@ In the specific case of media ingestion into a streaming service, some assumptio
 
 In order to reduce the complexity of implementing WHIP in both clients and Media Servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
-Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections.
+Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}}.
 
 While this version of the specification only supports a single audio and video track, in order to ensure forward compatibility, if the number of audio and or video tracks or number streams is not supported by the WHIP Endpoint, it MUST reject the HTTP POST request with a 406 Not Acceptable error code. 
 
@@ -348,15 +348,13 @@ NOTE: Depending on the ICE Agent implementation, the WHIP client may need to cal
 
 There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{!RFC8829}} section 4.1.18. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is not NOT RECOMMENDED and if supported by the underlying WHIP Client's webrtc implementation, the WHIP Client SHOULD wait for the information to be returned by the WHIP Endpoint on the response of the HTTP POST request instead.
 
-The generation of the TURN server credentials may require performing a request to an external provider, which can both add latency to the OPTION request processing and increase the processing required to handle that request. In order to prevent this, the WHIP Endpoint SHOULD NOT return the STUN/TURN server configuration if the OPTION request is a preflight request for CORS, that is, if The OPTION request does not contain an Access-Control-Request-Method with "POST" value and the the Access-Control-Request-Headers HTTP header does not contain the "Link" value. 
+The generation of the TURN server credentials may require performing a request to an external provider, which can both add latency to the OPTIONS request processing and increase the processing required to handle that request. In order to prevent this, the WHIP Endpoint SHOULD NOT return the STUN/TURN server configuration if the OPTIONS request is a preflight request for CORS, that is, if The OPTIONS request does not contain an Access-Control-Request-Method with "POST" value and the the Access-Control-Request-Headers HTTP header does not contain the "Link" value. 
 
 It might be also possible to configure the STUN/TURN server URLs with long term credentials provided by either the broadcasting service or an external TURN provider on the WHIP client, overriding the values provided by the WHIP endpoint.
 
 ## Authentication and authorization
 
 WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or resource except the preflight OPTIONS requests for CORS.
-
-WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or resource.
 
 The nature, syntax, and semantics of the bearer token, as well as how to distribute it to the client, is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint URL and configured on the WHIP clients (similar to the way RTMP URLs and Stream Keys are distributed).
 
@@ -415,7 +413,7 @@ Reference: TBD
 
 IANA has added an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and created a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
 
-To manage this sub-namespace, IANA has created the "System for Cross-domain Identity Management (WHIP) Schema URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
+To manage this sub-namespace, IANA has created the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
 
    - Registry name: WHIP
 
@@ -428,77 +426,132 @@ To manage this sub-namespace, IANA has created the "System for Cross-domain Iden
 ## URN Sub-namespace for WHIP {#urn-whip-subspace}
 
 WHIP Endpoint utilize URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {{protocol-extensions}}.
+
 This section creates and registers an IETF URN Sub-namespace for use in the WHIP specifications and future extensions.
 
 ### Specification Template
 
 Namespace ID:
 
-      The Namespace ID "whip" has been assigned.
+- The Namespace ID "whip" has been assigned.
 
 Registration Information:
 
-      Version: 1
+- Version: 1
 
-      Date: TBD
+- Date: TBD
 
 Declared registrant of the namespace:
 
-      The Internet Engineering Task Force.
+- Registering organization: The Internet Engineering Task Force.
 
-Designated contact:
-
-       A designated expert will monitor the WHIP public mailing list, "wish@ietf.org".
+- Designated contact: A designated expert will monitor the WHIP public mailing list, "wish@ietf.org".
 
 Declaration of Syntactic Structure:
 
-      The Namespace Specific String (NSS) of all URNs that use the "whip" Namespace ID shall have the following structure: urn:ietf:params:whip:{type}:{name}:{other}
+- The Namespace Specific String (NSS) of all URNs that use the "whip" Namespace ID shall have the following structure: urn:ietf:params:whip:{type}:{name}:{other}.
 
-      The keywords have the following meaning:
+ - The keywords have the following meaning:
 
-      - type: The entity type. This specification only defines the "ext" type.
+     - type: The entity type. This specification only defines the "ext" type.
 
-      - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
+     - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
 
-      - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
+     - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
 
 Relevant Ancillary Documentation:
 
-      None
+ - None
 
 Identifier Uniqueness Considerations:
 
-      The designated contact shall be responsible for reviewing and enforcing uniqueness.
+- The designated contact shall be responsible for reviewing and enforcing uniqueness.
 
 Identifier Persistence Considerations:
 
-      Once a name has been allocated, it MUST NOT be reallocated for a different purpose.
-      The rules provided for assignments of values within a sub-namespace MUST be constructed so that the meanings of values cannot change.
-      This registration mechanism is not appropriate for naming values whose meanings may change over time.
+ - Once a name has been allocated, it MUST NOT be reallocated for a different purpose.
+ - The rules provided for assignments of values within a sub-namespace MUST be constructed so that the meanings of values cannot change.
+ - This registration mechanism is not appropriate for naming values whose meanings may change over time.
 
 Process of Identifier Assignment:
 
-      Namespace with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
+- Namespace with type "ext" (e.g., "urn:ietf:params:whip:ext") is reserved for IETF-approved WHIP specifications.
 
 Process of Identifier Resolution:
 
-      None specified.
+ - None specified.
 
 Rules for Lexical Equivalence:
 
-      No special considerations; the rules for lexical equivalence specified in {{?RFC8141}} apply.
+ - No special considerations; the rules for lexical equivalence specified in {{?RFC8141}} apply.
 
 Conformance with URN Syntax:
 
-      No special considerations.
+ - No special considerations.
 
 Validation Mechanism:
 
-      None specified.
+ - None specified.
 
 Scope:
 
-      Global.
+ - Global.
+
+## Registering WHIP Protocol Extensions URIs
+
+This section defines the process for registering new WHIP protocol extensions URIs with IANA in the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry (see {{urn-whip-subspace}}). 
+   
+A WHIP Protocol Extension URI is used as a value in the "rel" attribute of the Link header as defined in {{protocol-extensions}} for the purpose of signalling the WHIP protocol extensions supported by the WHIP Endpoints.
+   
+WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspace}}.
+
+###  Registration Procedure
+
+   The IETF has created a mailing list, "wish@ietf.org", which can be used
+   for public discussion of WHIP protocol extensions proposals prior to registration.
+   Use of the mailing list is strongly encouraged.  The IESG has
+   appointed a designated expert {{?RFC5226}} who will monitor the
+   wish@ietf.orgg mailing list and review registrations.
+
+   Registration of new "ext" type URI (in the namespace
+   "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be reviewed by the
+   designated expert and published in an RFC.  An RFC is REQUIRED for
+   the registration of new value data types that modify existing
+   properties. An RFC is also REQUIRED for registration of WHEP Protocol Extensions
+   URIs that modify WHEP Protocol Extensions previously documented in an existing
+   RFC.
+
+   The registration procedure begins when a completed registration
+   template, defined in the sections below, is sent to wish@ietf.org and
+   iana@iana.org.  Within two weeks, the designated expert is expected
+   to tell IANA and the submitter of the registration whether the
+   registration is approved, approved with minor changes, or rejected
+   with cause.  When a registration is rejected with cause, it can be
+   resubmitted if the concerns listed in the cause are addressed.
+
+   Decisions made by the designated expert can be appealed to the IESG
+   Applications Area Director, then to the IESG. They follow the normal
+   appeals procedure for IESG decisions.
+
+   Once the registration procedure concludes successfully, IANA creates
+   or modifies the corresponding record in the WHIP Protocol Extension registry.
+   The completed registration template is discarded.
+
+   An RFC specifying one or more new WHIP Protocol Extension URIs MUST include the
+   completed registration templates, which MAY be expanded with
+   additional information. These completed templates are intended to go
+   in the body of the document, not in the IANA Considerations section.
+   The RFC SHOULD include any attributes defined.
+
+###  WHIP Protocol Extension Registration Template
+
+A WHIP Protocol Extension URI is defined by completing the following template:
+
+ -   URI: A unique URI for the WHIP Protocol Extension (e.g., "urn:ietf:params:whip:ext:example:server-sent-events").
+ -   Reference: A formal reference to the publicly available specification
+ -   Name: A descriptive name of the WHIP Protocol Extension extension (e.g., "Sender Side events").
+ -   Description: A short phrase describing the function of the extension
+ -   Contact information: Contact information for the organization or person making the registration
 
 # Acknowledgements
 
