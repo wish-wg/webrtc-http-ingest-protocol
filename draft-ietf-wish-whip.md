@@ -571,6 +571,8 @@ A WHIP Protocol Extension URI is defined by completing the following template:
 
 # Acknowledgements
 
+The authors wish to thank Lorenzo Miniero, Juliusz Chroboczek, Adam Roach, Nils Ohlmeier, Christer Holmberg, Cameron Elliott, Gustavo Garcia, Jonas Birme and everyone else in the WebRTC community that have provided comments, feedback, text and improvement proposals on the document and contributed early implementations of the spec.
+
 --- back
 
 
