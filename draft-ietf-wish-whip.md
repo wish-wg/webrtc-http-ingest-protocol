@@ -49,7 +49,7 @@ While some standard signaling protocols are available that can be integrated wit
 
 So, currently, there is no standard protocol designed for ingesting media into a streaming service using WebRTC and so content providers still rely heavily on protocols like RTMP for doing so. Most of those protocols are not RTP based, requiring media protocol translation when doing egress via WebRTC. Avoiding this media protocol translation is desirable as there is no functional parity between those protocols and WebRTC and it increases the implementation complexity at the media server side. 
 
-Also, the media codecs used in those protocols tend to be limited and not negotiated, not always matching the mediac codes supported in WebRTC. This requires transcoding on the ingest node, which introduces delay, degrades media quality and increases the processing workload required on the server side. Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with Simulcast {{!RFC8853}} and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
+Also, the media codecs used in those protocols tend to be limited and not negotiated, not always matching the media codes supported in WebRTC. This requires transcoding on the ingest node, which introduces delay, degrades media quality and increases the processing workload required on the server side. Server side transcoding that has traditionally been done to present multiple renditions in Adaptive Bit Rate Streaming (ABR) implementations can be replaced with Simulcast {{!RFC8853}} and SVC codecs that are well supported by WebRTC clients. In addition, WebRTC clients can adjust client-side encoding parameters based on RTCP feedback to maximize encoding quality.
 
 This document proposes a simple protocol for supporting WebRTC as media ingestion method which:
 
@@ -230,7 +230,7 @@ A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} 
 
 The WHIP endpoints MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD or PUT requests on the endpoint URL in order to reserve its usage for future versions of this protocol specification.
 
-The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request recevied as per {{!W3C.REC-ldp-20150226}}.
+The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request received as per {{!W3C.REC-ldp-20150226}}.
 
 The WHIP resources MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
 
@@ -309,7 +309,7 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 
 Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send new ICE candidates, it MUST buffer any gathered candidates before it receives the HTTP response to the initial POST request or the PATCH request with the new entity-tag value. Once it knows the entity-tag value, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
 
-In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ice username/pwd frags and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. Clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be rejected by the server. When this situation is detected by the WHIP Client, it SHOULD send a new ICE restart request to the server.
+In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ice username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. Clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be rejected by the server. When this situation is detected by the WHIP Client, it SHOULD send a new ICE restart request to the server.
 
 ## WebRTC constraints
 
