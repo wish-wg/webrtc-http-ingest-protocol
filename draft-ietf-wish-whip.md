@@ -243,7 +243,7 @@ In order to simplify the protocol, there is no support for exchanging gathered t
 
 The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
 
-Trickle ICE and ICE restart support is OPTIONAL for a WHIP resource. 
+Trickle ICE and ICE restart support is RECOMMENDED for a WHIP resource. 
 
 If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a "405 Not Implemented" response for the HTTP PATCH requests that are not supported. 
 
