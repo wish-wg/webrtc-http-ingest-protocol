@@ -381,7 +381,7 @@ Simulcast as per {{!RFC8853}} MAY be supported by both the Media Servers and WHI
 
 If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} section 5.3.2.
 
-Scalable Video Coding (SVC) MAY also be supported both by the Media Servers and WHIP clients. However, there is no universal negotiation mechanism in (SDP) for SVC, as a result, SVC support must be addressed on a codec-by-codec basis.
+It is possible for both Media Servers and WHIP clients to support Scalable Video Coding (SVC). However, as there is no universal negotiation mechanism in SDP for SVC, the encoder must consider the negotiated codec(s), intended usage, and SVC support in available decoders when configuring SVC.
 
 ## Protocol extensions {#protocol-extensions}
 
