@@ -371,9 +371,11 @@ WHIP endpoints and resources could perform the authentication and authorization 
 
 ## Simulcast and scalable video coding
 
-Both Simulcast {{!RFC8853}} and Scalable Video Coding (SVC), including K-SVC (also known as "S modes", in which multiple encodings are sent on the same SSRC), MAY be supported by both the Media Servers and WHIP clients through negotiation in the SDP offer/answer.
+Simulcast as per {{!RFC8853}} MAY be supported by both the Media Servers and WHIP clients through negotiation in the SDP offer/answer.
 
 If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} section 5.3.2.
+
+It is possible for both Media Servers and WHIP clients to support Scalable Video Coding (SVC). However, as there is no universal negotiation mechanism in SDP for SVC, the encoder must consider the negotiated codec(s), intended usage, and SVC support in available decoders when configuring SVC.
 
 ## Protocol extensions {#protocol-extensions}
 
