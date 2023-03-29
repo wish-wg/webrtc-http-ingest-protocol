@@ -521,7 +521,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    for public discussion of WHIP protocol extensions proposals prior to registration.
    Use of the mailing list is strongly encouraged.  The IESG has
    appointed a designated expert {{?RFC8126}} who will monitor the
-   wish@ietf.orgg mailing list and review registrations.
+   wish@ietf.org mailing list and review registrations.
 
    Registration of new "ext" type URI (in the namespace
    "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be reviewed by the
