@@ -527,8 +527,8 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be reviewed by the
    designated expert and published in an RFC.  An RFC is REQUIRED for
    the registration of new value data types that modify existing
-   properties. An RFC is also REQUIRED for registration of WHEP Protocol Extensions
-   URIs that modify WHEP Protocol Extensions previously documented in an existing
+   properties. An RFC is also REQUIRED for registration of WHIP Protocol Extensions
+   URIs that modify WHIP Protocol Extensions previously documented in an existing
    RFC.
 
    The registration procedure begins when a completed registration
