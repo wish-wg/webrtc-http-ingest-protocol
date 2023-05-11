@@ -539,9 +539,8 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    with cause.  When a registration is rejected with cause, it can be
    resubmitted if the concerns listed in the cause are addressed.
 
-   Decisions made by the designated expert can be appealed to the IESG
-   Applications Area Director, then to the IESG. They follow the normal
-   appeals procedure for IESG decisions.
+   Decisions made by the designated expert can be appealed to an Applications and Real Time (ART) Area Director, then to the IESG.
+   The normal appeals procedure described in {{!BCP9}} is to be followed.
 
    Once the registration procedure concludes successfully, IANA creates
    or modifies the corresponding record in the WHIP Protocol Extension registry.
