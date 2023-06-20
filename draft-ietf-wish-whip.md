@@ -425,7 +425,7 @@ IANA has added an entry to the "IETF URN Sub-namespace for Registered Protocol P
 
 To manage this sub-namespace, IANA has created the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
 
-   - Registry name: WHIP
+   - Registry name: WebRTC-HTTP ingestion protocol (WHIP) URIs
 
    - Specification: this document (RFC TBD)
 
