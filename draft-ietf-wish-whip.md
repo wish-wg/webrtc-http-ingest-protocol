@@ -429,9 +429,12 @@ To manage this sub-namespace, IANA is asked to created the "WebRTC-HTTP ingestio
 
    - Specification: this document (RFC TBD)
 
+   - Registration policy: Specification Required
+
    - Repository: See Section {{urn-whip-subspace}}
 
    - Index value: See Section {{urn-whip-subspace}}
+     
 
 ## URN Sub-namespace for WHIP {#urn-whip-subspace}
 
