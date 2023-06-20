@@ -562,7 +562,7 @@ A WHIP Protocol Extension URI is defined by completing the following template:
  -   URI: A unique URI for the WHIP Protocol Extension (e.g., "urn:ietf:params:whip:ext:example:server-sent-events").
  -   Reference: A formal reference to the publicly available specification
  -   Name: A descriptive name of the WHIP Protocol Extension extension (e.g., "Sender Side events").
- -   Description: A short phrase describing the function of the extension
+ -   Description: A brief description of the function of the extension, in a short paragraph or two
  -   Contact information: Contact information for the organization or person making the registration
 
 # Acknowledgements
