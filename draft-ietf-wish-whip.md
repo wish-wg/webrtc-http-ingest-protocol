@@ -105,8 +105,7 @@ In order to set up an ingestion session, the WHIP client will generate an SDP of
 
 The HTTP POST request will have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created resource.
 
-The SDP offer SHOULD use the "sendonly" attribute and the SDP answer MUST use the "recvonly" attribute.
-
+The SDP offer SHOULD use the "sendonly" attribute and the SDP answer MUST use the "recvonly" attribute in any case. 
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -248,7 +247,7 @@ unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section
 
 A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 3.1 and return a "412 Precondition Failed" response if they do not match. 
 
-WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session.
+WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP resources MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
 A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a "204 No Content" response without body. If the Media Server does not support a candidate transport or is not able to resolve the connection address, it MUST accept the HTTP request with the "204 No Content" response and silently discard the candidate.
 
@@ -301,9 +300,9 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
 
-Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send new ICE candidates, it MUST buffer any gathered candidates before it receives the HTTP response to the initial POST request or the PATCH request with the new entity-tag value. Once it knows the entity-tag value, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
+Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send new ICE candidates, it MUST buffer any gathered candidates before it receives the HTTP response to the initial POST request or the PATCH request with the new entity-tag value. Once it knows the entity-tag value, in order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
 
-In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ICE username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. WHIP clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be rejected by the server. When this situation is detected by the WHIP Client, it SHOULD send a new ICE restart request to the server.
+In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ICE username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. WHIP clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be rejected by the server. When this situation is detected by the WHIP Client, it MUST send a new ICE restart request to the server.
 
 ## WebRTC constraints
 
@@ -311,11 +310,11 @@ In the specific case of media ingestion into a streaming service, some assumptio
 
 In order to reduce the complexity of implementing WHIP in both clients and Media Servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
-Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}}.
+Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the Media Server, both The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}} i.
 
 This version of the specification only supports, at most, a single audio and video MediaStreamTrack in a single MediaStream as defined in [[!RFC8830]] and therefore, all "m=" sections MUST contain an "msid" attribute with the same value. However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video tracks or number streams is not supported by the WHIP Endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response. 
 
-Furthermore, the WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions.
+Furthermore, the WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions which can be misleading to end users.
 
 When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute with an "actpass" attribute value, as defined in {{!RFC8842}}. However, if the WHIP client only implements the DTLS client role, it MAY use an SDP "setup" attribute with an "active" attribute value. If the WHIP endpoint does not support an SDP offer with an SDP "setup" attribute with an "active" attribute value, it SHOULD reject the request with a "422 Unprocessable Entity" response.
 
