@@ -220,7 +220,7 @@ Once a session is setup, ICE consent freshness {{!RFC7675}} SHALL be used to det
 
 To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP resource will be removed and the resources freed on the Media Server, terminating the ICE and DTLS sessions.
 
-A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} section 5.2 for immediate revocation of consent.
+A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} Section 5.2 for immediate revocation of consent.
 
 The WHIP endpoints MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD or PUT requests on the endpoint URL in order to reserve its usage for future versions of this protocol specification.
 
@@ -241,12 +241,12 @@ Trickle ICE and ICE restart support is RECOMMENDED for a WHIP resource.
 
 If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a "405 Not Implemented" response for the HTTP PATCH requests that are not supported. 
 
-If the  WHIP resource does not support the PATCH method for any purpose, it MUST return a "501 Not Implemented" response, as described in {{!RFC9110}} section 6.6.2. 
+If the  WHIP resource does not support the PATCH method for any purpose, it MUST return a "501 Not Implemented" response, as described in {{!RFC9110}} Section 6.6.2. 
 
 As the HTTP PATCH request sent by a WHIP client may be received out-of-order by the WHIP resource, the WHIP resource MUST generate a
-unique strong entity-tag identifying the ICE session as per {{!RFC9110}} section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP resource supports ICE restarts and OPTIONAL otherwise.
+unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP resource supports ICE restarts and OPTIONAL otherwise.
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} section 3.1 and return a "412 Precondition Failed" response if they do not match. 
+A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 3.1 and return a "412 Precondition Failed" response if they do not match. 
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session.
 
@@ -274,11 +274,11 @@ HTTP/1.1 204 No Content
 {: title="Trickle ICE request"}
 
 
-A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} section 3.1. 
+A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 3.1. 
 
 If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client . Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the Media Server.
 
-If the ICE request cannot be satisfied by the WHIP resource, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In either case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} section 5.1. 
+If the ICE request cannot be satisfied by the WHIP resource, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In either case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1. 
 
 ~~~~~
 PATCH /resource/id HTTP/1.1
@@ -311,11 +311,11 @@ In the specific case of media ingestion into a streaming service, some assumptio
 
 In order to reduce the complexity of implementing WHIP in both clients and Media Servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
-Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}}.
+Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}}.
 
 This version of the specification only supports, at most, a single audio and video MediaStreamTrack in a single MediaStream as defined in [[!RFC8830]] and therefore, all "m=" sections MUST contain an "msid" attribute with the same value. However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video tracks or number streams is not supported by the WHIP Endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response. 
 
-Furthermore, the WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions.
+Furthermore, the WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions.
 
 When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute with an "actpass" attribute value, as defined in {{!RFC8842}}. However, if the WHIP client only implements the DTLS client role, it MAY use an SDP "setup" attribute with an "active" attribute value. If the WHIP endpoint does not support an SDP offer with an SDP "setup" attribute with an "active" attribute value, it SHOULD reject the request with a "422 Unprocessable Entity" response.
 
@@ -325,7 +325,7 @@ Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and M
 
 ## Load balancing and redirections
 
-WHIP endpoints and Media Servers might not be colocated on the same server, so it is possible to load balance incoming requests to different Media Servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} section 6.4.7. The WHIP resource URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
+WHIP endpoints and Media Servers might not be colocated on the same server, so it is possible to load balance incoming requests to different Media Servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} Section 6.4.7. The WHIP resource URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
 
 In case of high load, the WHIP endpoints MAY return a "503 Service Unavailable" response indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request.
 
@@ -354,7 +354,7 @@ NOTE: The naming of both the "rel" attribute value of "ice-server" and the targe
 
 NOTE: Depending on the ICE Agent implementation, the WHIP client may need to call the setConfiguration method before calling the setLocalDescription method with the local SDP offer in order to avoid having to perform an ICE restart for applying the updated STUN/TURN server configuration on the next ICE gathering phase.
 
-There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{!RFC8829}} section 4.1.18. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is not NOT RECOMMENDED and if supported by the underlying WHIP Client's webrtc implementation, the WHIP Client SHOULD wait for the information to be returned by the WHIP Endpoint on the response of the HTTP POST request instead.
+There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{!RFC8829}} Section 4.1.18. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is not NOT RECOMMENDED and if supported by the underlying WHIP Client's webrtc implementation, the WHIP Client SHOULD wait for the information to be returned by the WHIP Endpoint on the response of the HTTP POST request instead.
 
 The generation of the TURN server credentials may require performing a request to an external provider, which can both add latency to the OPTIONS request processing and increase the processing required to handle that request. In order to prevent this, the WHIP Endpoint SHOULD NOT return the STUN/TURN server configuration if the OPTIONS request is a preflight request for CORS, that is, if The OPTIONS request does not contain an Access-Control-Request-Method with "POST" value and the the Access-Control-Request-Headers HTTP header does not contain the "Link" value. 
 
@@ -362,7 +362,7 @@ It might be also possible to configure the STUN/TURN server URIs with long term 
 
 ## Authentication and authorization
 
-WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or resource except the preflight OPTIONS requests for CORS.
+WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} Section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or resource except the preflight OPTIONS requests for CORS.
 
 The nature, syntax, and semantics of the bearer token, as well as how to distribute it to the client, is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint URL and configured on the WHIP clients (similar to the way RTMP URLs and Stream Keys are distributed).
 
@@ -373,7 +373,7 @@ WHIP endpoints and resources could perform the authentication and authorization 
 
 Simulcast as per {{!RFC8853}} MAY be supported by both the Media Servers and WHIP clients through negotiation in the SDP offer/answer.
 
-If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} section 5.3.2.
+If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} Section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} Section 5.3.2.
 
 It is possible for both Media Servers and WHIP clients to support Scalable Video Coding (SVC). However, as there is no universal negotiation mechanism in SDP for SVC, the encoder must consider the negotiated codec(s), intended usage, and SVC support in available decoders when configuring SVC.
 
@@ -402,7 +402,33 @@ Link: <https://whip.ietf.org/publications/213786HF/sse>;
 
 # Security Considerations
 
-HTTPS SHALL be used in order to preserve the WebRTC security model.
+This document specifies a new protocol on top of HTTP and WebRTC, thus, security security protocols and considerations from related specifications apply to the WHIP specidifcation. These include:
+
+- WebRTC security considerations: {{!RFC8826}}. HTTPS SHALL be used in order to preserve the WebRTC security model.
+- Transport Layer Security (TLS): {{!RFC8446}}, {{!RFC5246}}, and {{!RFC6347}}.
+- HTTP security: Section 11 of {{!RFC9112}}, Section 17 of {{!RFC9110}}, etc.
+- URI security: Section 7 of {{!RFC3986}}.
+
+On top of that, the WHIP protocol exposes a thin new attack surface expecific of the REST API methods used within it:
+
+- HTTP POST flooding and resource exhaustion:
+  It would be possible for an attacker in possesion of authentication credentials valid to publish a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
+  This will force the WHIP endpoint to process the incoming SDP and allocate resources for being able to setup the DTLS/ICE connection.
+  While the malicious client do not need to initiate the DTLS/ICE connection at all, the WHIP resource will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
+  If the connection rate is high enought, this could lead to a resource exhaustion on the WHIP server and it will not be able to process legit incoming publications.
+  In order to prevent this scenario, WHIP endpoints SHOULD implemement a rate limit and abalanche control mechanism for incoming initial HTTP POST requests.
+
+- Insecure direct object references (IDOR) on the WHIP resource locations:
+  If the URsL returned by the WHIP endpoint for the WHIP resources location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP resources currentlyrunning in a a WHIP server.
+  In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enought randomness, using a cryptographically secure pseudorandom number generator and implemement a rate limit and abalanche control mechanism for HTTP DELETE requests.
+  The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122}} Section 6 are applicable for generating the WHIP resources location URL.
+
+- HTTP PATCH flooding: 
+Similar to the HTTP POST flooding, a malicious client could also gcreate a resource exhaustion by sending multiple HTTP PATCH request to the WHIP resource. 
+In order to prevent this scenario, WHIP endpoints SHOULD implemement a rate limit and abalanche control mechanism for incoming HTTP PATCH requests.
+  
+- Denial of service (DoS) on ICE restarts: 
+
 
 
 # IANA Considerations
@@ -567,7 +593,7 @@ A WHIP Protocol Extension URI is defined by completing the following template:
 
 # Acknowledgements
 
-The authors wish to thank Lorenzo Miniero, Juliusz Chroboczek, Adam Roach, Nils Ohlmeier, Christer Holmberg, Cameron Elliott, Gustavo Garcia, Jonas Birme and everyone else in the WebRTC community that have provided comments, feedback, text and improvement proposals on the document and contributed early implementations of the spec.
+The authors wish to thank Lorenzo Miniero, Juliusz Chroboczek, Adam Roach, Nils Ohlmeier, Christer Holmberg, Cameron Elliott, Gustavo Garcia, Jonas Birme, Sandro Gauci and everyone else in the WebRTC community that have provided comments, feedback, text and improvement proposals on the document and contributed early implementations of the spec. 
 
 --- back
 
