@@ -424,12 +424,8 @@ On top of that, the WHIP protocol exposes a thin new attack surface expecific of
   The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122}} Section 6 are applicable for generating the WHIP resources location URL.
 
 - HTTP PATCH flooding: 
-Similar to the HTTP POST flooding, a malicious client could also gcreate a resource exhaustion by sending multiple HTTP PATCH request to the WHIP resource. 
+Similar to the HTTP POST flooding, a malicious client could also create a resource exhaustion by sending multiple HTTP PATCH request to the WHIP resource, although the WHIP Resources can limit the impact by not allocating new ICE candaidates and reusing the existing ICE candidates when doing ICE restarts.
 In order to prevent this scenario, WHIP endpoints SHOULD implemement a rate limit and abalanche control mechanism for incoming HTTP PATCH requests.
-  
-- Denial of service (DoS) on ICE restarts: 
-
-
 
 # IANA Considerations
 
