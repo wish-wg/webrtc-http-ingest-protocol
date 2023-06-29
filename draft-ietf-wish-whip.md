@@ -547,17 +547,12 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    appointed a designated expert {{?RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
-   Registration of new "ext" type URI (in the namespace
-   "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be reviewed by the
-   designated expert and published in an RFC.  An RFC is REQUIRED for
-   the registration of new value data types that modify existing
-   properties. An RFC is also REQUIRED for registration of WHIP Protocol Extensions
-   URIs that modify WHIP Protocol Extensions previously documented in an existing
-   RFC.
+   Registration of new "ext" type URI (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per {{!BCP26}} Section 4.6.
+   An RFC is REQUIRED for the registration of new value data types that modify existing properties.
+   An RFC is also REQUIRED for registration of WHIP Protocol Extensions URIs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
-   The registration procedure begins when a completed registration
-   template, defined in the sections below, is sent to wish@ietf.org and
-   iana@iana.org.  Within two weeks, the designated expert is expected
+   The registration procedure begins when a completed registration template, defined in the sections below, is sent to iana@iana.org.
+   Within two weeks, the designated expert is expected
    to tell IANA and the submitter of the registration whether the
    registration is approved, approved with minor changes, or rejected
    with cause.  When a registration is rejected with cause, it can be
@@ -568,7 +563,6 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
 
    Once the registration procedure concludes successfully, IANA creates
    or modifies the corresponding record in the WHIP Protocol Extension registry.
-   The completed registration template is discarded.
 
    An RFC specifying one or more new WHIP Protocol Extension URIs MUST include the
    completed registration templates, which MAY be expanded with
