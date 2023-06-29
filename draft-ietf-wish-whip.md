@@ -555,7 +555,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    Within two weeks, the designated expert is expected
    to tell IANA and the submitter of the registration whether the
    registration is approved, approved with minor changes, or rejected
-   with cause.  When a registration is rejected with cause, it can be
+   with cause if the concerns raised during the review process cannot be addressed or agreed on.  When a registration is rejected with cause, it can be
    resubmitted if the concerns listed in the cause are addressed.
 
    Decisions made by the designated expert can be appealed to an Applications and Real Time (ART) Area Director, then to the IESG.
