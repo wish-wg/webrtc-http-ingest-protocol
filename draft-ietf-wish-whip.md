@@ -552,15 +552,9 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    An RFC is also REQUIRED for registration of WHIP Protocol Extensions URIs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
    The registration procedure begins when a completed registration template, defined in the sections below, is sent to iana@iana.org.
-   Within two weeks, the designated expert is expected
-   to tell IANA and the submitter of the registration whether the
-   registration is approved, approved with minor changes, or rejected
-   with cause if the concerns raised during the review process cannot be addressed or agreed on.  When a registration is rejected with cause, it can be
-   resubmitted if the concerns listed in the cause are addressed.
-
    Decisions made by the designated expert can be appealed to an Applications and Real Time (ART) Area Director, then to the IESG.
-   The normal appeals procedure described in {{!BCP9}} is to be followed.
-
+   The normal appeals procedure described in {{!BCP9}} is to be followed. 
+   
    Once the registration procedure concludes successfully, IANA creates
    or modifies the corresponding record in the WHIP Protocol Extension registry.
 
