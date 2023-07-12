@@ -564,6 +564,16 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    in the body of the document, not in the IANA Considerations section.
    The RFC SHOULD include any attributes defined.
 
+### Guidance for Designated Experts
+
+The Designated Expert (DE) is expected to ascertain the existence of suitable documentation (a specification) as described in {{!RFC8126}} and to verify that the document is permanently and publicly available. 
+
+The DE is also expected to check the clarity of purpose and use of the requested registration.
+
+Additionally, the DE must verify that any request for one of these registrations has been made available for review and comment within the IETF: the DE will post the request to the WebRTC Ingest Signaling over HTTPS (wish) Working Group mailing list (or a successor mailing list designated by the IESG). 
+
+If the request comes from within the IETF, it should be documented in an Internet-Draft. Lastly, the DE must ensure that any other request for a code point does not conflict with work that is active or already published within the IETF.
+
 ###  WHIP Protocol Extension Registration Template
 
 A WHIP Protocol Extension URI is defined by completing the following template:
