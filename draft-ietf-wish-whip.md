@@ -544,7 +544,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    The IETF has created a mailing list, "wish@ietf.org", which can be used
    for public discussion of WHIP protocol extensions proposals prior to registration.
    Use of the mailing list is strongly encouraged.  The IESG has
-   appointed a designated expert {{?RFC8126}} who will monitor the
+   appointed a designated expert {{!RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
    Registration of new "ext" type URI (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per {{!BCP26}} Section 4.6.
