@@ -404,7 +404,7 @@ Link: <https://whip.ietf.org/publications/213786HF/sse>;
 This document specifies a new protocol on top of HTTP and WebRTC, thus, security security protocols and considerations from related specifications apply to the WHIP specidifcation. These include:
 
 - WebRTC security considerations: {{!RFC8826}}. HTTPS SHALL be used in order to preserve the WebRTC security model.
-- Transport Layer Security (TLS): {{!RFC8446}}, {{!RFC5246}}, and {{!RFC6347}}.
+- Transport Layer Security (TLS): {{!RFC8446}}, {{!RFC8446}}, and {{!RFC9147}}.
 - HTTP security: Section 11 of {{!RFC9112}}, Section 17 of {{!RFC9110}}, etc.
 - URI security: Section 7 of {{!RFC3986}}.
 
@@ -544,7 +544,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    The IETF has created a mailing list, "wish@ietf.org", which can be used
    for public discussion of WHIP protocol extensions proposals prior to registration.
    Use of the mailing list is strongly encouraged.  The IESG has
-   appointed a designated expert {{!RFC8126}} who will monitor the
+   appointed a designated expert {{RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
    Registration of new "ext" type URI (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per {{!BCP26}} Section 4.6.
@@ -566,7 +566,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
 
 ### Guidance for Designated Experts
 
-The Designated Expert (DE) is expected to ascertain the existence of suitable documentation (a specification) as described in {{!RFC8126}} and to verify that the document is permanently and publicly available. 
+The Designated Expert (DE) is expected to ascertain the existence of suitable documentation (a specification) as described in {{RFC8126}} and to verify that the document is permanently and publicly available. 
 
 The DE is also expected to check the clarity of purpose and use of the requested registration.
 
