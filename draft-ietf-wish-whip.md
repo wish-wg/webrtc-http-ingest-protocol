@@ -108,9 +108,13 @@ The elements in {{whip-protocol-operation}} are described as follows:
 
 In order to set up an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and perform an HTTP POST request to the configured WHIP endpoint URL.
 
-The HTTP POST request will have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created resource.
+The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created resource.
 
-The SDP offer SHOULD use the "sendonly" attribute and the SDP answer MUST use the "recvonly" attribute in any case. 
+The SDP offer SHOULD use the "sendonly" attribute and the SDP answer MUST use the "recvonly" attribute in any case.
+
+If the HTTP POST to the WHIP endoint has a content type different than "application/sdp", the WHIP endoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. 
+
+If the SDP body is malformed, the WHIP resource MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -242,6 +246,8 @@ The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by s
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from Media Server ICE candidates once the SDP answer is sent. The WHIP Endpoint SHALL gather all the ICE candidates for the Media Server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the Media Server. The Media Server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
 Trickle ICE and ICE restart support is RECOMMENDED for a WHIP resource. 
+
+If the HTTP POST to the WHIP resource has a content type different than "application/trickle-ice-sdpfrag", the WHIP resource MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP resource MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
 If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a "405 Not Implemented" response for the HTTP PATCH requests that are not supported. 
 
