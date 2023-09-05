@@ -419,7 +419,7 @@ On top of that, the WHIP protocol exposes a thin new attack surface specific of 
 
 - Insecure direct object references (IDOR) on the WHIP resource locations:
   If the URsL returned by the WHIP endpoint for the WHIP resources location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP resources currently running in a WHIP server.
-  In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enough randomness, using a cryptographically secure pseudorandom number generator and implement a rate limit and avalanche control mechanism for HTTP DELETE requests.
+  In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enough randomness, using a cryptographically secure pseudorandom number generator following the best practices in Randomness Requirements for Security {{!RFC4086}}, and implement a rate limit and avalanche control mechanism for HTTP DELETE requests.
   The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122}} Section 6 are applicable for generating the WHIP resources location URL.
 
 - HTTP PATCH flooding: 
