@@ -215,7 +215,7 @@ a=fmtp:97 apt=96
 ~~~~~
 {: title="HTTP POST doing SDP O/A example"}
 
-Once a session is setup, ICE consent freshness {{!RFC7675}} SHALL be used to detect non graceful disconnection and DTLS teardown for session termination by either side.
+Once a session is setup, ICE consent freshness {{!RFC7675}} SHALL be used to detect non-graceful disconnection and DTLS teardown for session termination by either side.
 
 To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP resource will be removed and the resources freed on the Media Server, terminating the ICE and DTLS sessions.
 
@@ -223,7 +223,7 @@ A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} 
 
 The WHIP endpoints MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD or PUT requests on the endpoint URL in order to reserve its usage for future versions of this protocol specification.
 
-The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a mime type value of "application/sdp" on the "200 OK" response to any OPTIONS request received as per {{!W3C.REC-ldp-20150226}}.
+The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a media type value of "application/sdp" on the "200 OK" response to any OPTIONS request received as per {{!W3C.REC-ldp-20150226}}.
 
 The WHIP resources MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
 
@@ -234,7 +234,7 @@ The initial offer by the WHIP client MAY be sent after the full ICE gathering is
 
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from Media Server ICE candidates once the SDP answer is sent. The WHIP Endpoint SHALL gather all the ICE candidates for the Media Server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the Media Server. The Media Server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with MIME type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
+The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
 
 Trickle ICE and ICE restart support is RECOMMENDED for a WHIP resource. 
 
@@ -401,30 +401,30 @@ Link: <https://whip.ietf.org/publications/213786HF/sse>;
 
 # Security Considerations
 
-This document specifies a new protocol on top of HTTP and WebRTC, thus, security security protocols and considerations from related specifications apply to the WHIP specidifcation. These include:
+This document specifies a new protocol on top of HTTP and WebRTC, thus, security protocols and considerations from related specifications apply to the WHIP specification. These include:
 
 - WebRTC security considerations: {{!RFC8826}}. HTTPS SHALL be used in order to preserve the WebRTC security model.
-- Transport Layer Security (TLS): {{!RFC8446}}, {{!RFC8446}}, and {{!RFC9147}}.
+- Transport Layer Security (TLS): {{!RFC8446}} and {{!RFC9147}}.
 - HTTP security: Section 11 of {{!RFC9112}}, Section 17 of {{!RFC9110}}, etc.
 - URI security: Section 7 of {{!RFC3986}}.
 
-On top of that, the WHIP protocol exposes a thin new attack surface expecific of the REST API methods used within it:
+On top of that, the WHIP protocol exposes a thin new attack surface specific of the REST API methods used within it:
 
 - HTTP POST flooding and resource exhaustion:
-  It would be possible for an attacker in possesion of authentication credentials valid to publish a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
+  It would be possible for an attacker in possession of authentication credentials valid to publish a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
   This will force the WHIP endpoint to process the incoming SDP and allocate resources for being able to setup the DTLS/ICE connection.
-  While the malicious client do not need to initiate the DTLS/ICE connection at all, the WHIP resource will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
-  If the connection rate is high enought, this could lead to a resource exhaustion on the WHIP server and it will not be able to process legit incoming publications.
-  In order to prevent this scenario, WHIP endpoints SHOULD implemement a rate limit and abalanche control mechanism for incoming initial HTTP POST requests.
+  While the malicious client does not need to initiate the DTLS/ICE connection at all, the WHIP resource will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
+  If the connection rate is high enough, this could lead to resource exhaustion on the WHIP server and it will not be able to process legitimate incoming publications.
+  In order to prevent this scenario, WHIP endpoints SHOULD implement a rate limit and avalanche control mechanism for incoming initial HTTP POST requests.
 
 - Insecure direct object references (IDOR) on the WHIP resource locations:
-  If the URsL returned by the WHIP endpoint for the WHIP resources location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP resources currentlyrunning in a a WHIP server.
-  In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enought randomness, using a cryptographically secure pseudorandom number generator and implemement a rate limit and abalanche control mechanism for HTTP DELETE requests.
+  If the URsL returned by the WHIP endpoint for the WHIP resources location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP resources currently running in a WHIP server.
+  In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enough randomness, using a cryptographically secure pseudorandom number generator and implement a rate limit and avalanche control mechanism for HTTP DELETE requests.
   The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122}} Section 6 are applicable for generating the WHIP resources location URL.
 
 - HTTP PATCH flooding: 
-Similar to the HTTP POST flooding, a malicious client could also create a resource exhaustion by sending multiple HTTP PATCH request to the WHIP resource, although the WHIP Resources can limit the impact by not allocating new ICE candaidates and reusing the existing ICE candidates when doing ICE restarts.
-In order to prevent this scenario, WHIP endpoints SHOULD implemement a rate limit and abalanche control mechanism for incoming HTTP PATCH requests.
+Similar to the HTTP POST flooding, a malicious client could also create a resource exhaustion by sending multiple HTTP PATCH request to the WHIP resource, although the WHIP Resources can limit the impact by not allocating new ICE candidates and reusing the existing ICE candidates when doing ICE restarts.
+In order to prevent this scenario, WHIP endpoints SHOULD implement a rate limit and avalanche control mechanism for incoming HTTP PATCH requests.
 
 # IANA Considerations
 
