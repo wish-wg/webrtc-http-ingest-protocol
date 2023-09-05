@@ -436,7 +436,7 @@ The link relation type below has been registered by IANA per Section 4.2 of {{!R
 
 Relation Name: ice-server
 
-Description: For the WHIP protocol, conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.
+Description: Conveys the STUN and TURN servers that can be used by an ICE Agent to establish a connection with a peer.
 
 Reference: TBD
 
