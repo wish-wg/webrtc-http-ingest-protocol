@@ -405,7 +405,7 @@ This document specifies a new protocol on top of HTTP and WebRTC, thus, security
 
 - WebRTC security considerations: {{!RFC8826}}. HTTPS SHALL be used in order to preserve the WebRTC security model.
 - Transport Layer Security (TLS): {{!RFC8446}} and {{!RFC9147}}.
-- HTTP security: Section 11 of {{!RFC9112}}, Section 17 of {{!RFC9110}}, etc.
+- HTTP security: Section 11 of {{!RFC9112}} and Section 17 of {{!RFC9110}}.
 - URI security: Section 7 of {{!RFC3986}}.
 
 On top of that, the WHIP protocol exposes a thin new attack surface specific of the REST API methods used within it:
