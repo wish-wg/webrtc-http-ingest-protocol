@@ -310,15 +310,25 @@ In the specific case of media ingestion into a streaming service, some assumptio
 
 In order to reduce the complexity of implementing WHIP in both clients and Media Servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
+### SDP Bundle
+
 Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the Media Server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and Media Server will use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the Media Server, both The WHIP client and Media Server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}} Section 3.
+
+### Single MediaStream
 
 This version of the specification only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain an "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP Endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response. 
 
-Furthermore, the WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions which can be misleading to end users.
+### No partially sucessful answers
+
+The WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions which can be misleading to end users.
+
+### DTLS setup role and SDP "setup" attribute
 
 When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute with an "actpass" attribute value, as defined in {{!RFC8842}}. However, if the WHIP client only implements the DTLS client role, it MAY use an SDP "setup" attribute with an "active" attribute value. If the WHIP endpoint does not support an SDP offer with an SDP "setup" attribute with an "active" attribute value, it SHOULD reject the request with a "422 Unprocessable Entity" response.
 
 NOTE: {{!RFC8842}} defines that the offerer must insert an SDP "setup" attribute with an "actpass" attribute value. However, the WHIP client will always communicate with a Media Server that is expected to support the DTLS server role, in which case the client might choose to only implement support for the DTLS client role.
+
+### Tricle ICE and ICE restarts
 
 Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and Media Servers as explained in section 4.1.
 
