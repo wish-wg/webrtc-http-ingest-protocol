@@ -58,19 +58,15 @@ This document proposes a simple protocol for supporting WebRTC as media ingestio
 
 {::boilerplate bcp14-tagged}
 
-- WHIP client: WebRTC media encoder or producer that acts as a client of the WHIP protocol by encoding and delivering the media to a remote Media Server.
-- WHIP endpoint: Ingest server receiving the initial WHIP request.
-- WHIP endpoint URL: URL of the WHIP endpoint that will create the WHIP resource.
-- Media Server: WebRTC Media Server or consumer that establishes the media session with the WHIP client and receives the media produced by it.
-- WHIP resource: Allocated resource by the WHIP endpoint for an ongoing ingest session that the WHIP client can send requests for altering the session (ICE operations or termination, for example).
-- WHIP resource URL: URL allocated to a specific media session by the WHIP endpoint which can be used to perform operations such as terminating the session or ICE restarts.
-
-
 # Overview
 
-The WebRTC-HTTP Ingest Protocol (WHIP) uses an HTTP POST request to perform a single-shot SDP offer/answer so an ICE/DTLS session can be established between the encoder/media producer (WHIP client) and the broadcasting ingestion endpoint (Media Server).
+The WebRTC-HTTP Ingest Protocol (WHIP) is designed to facilitate a one-time exchange of Session Description Protocol (SDP) offers and answers using HTTP POST requests. This exchange is a fundamental step in establishing an Interactive Connectivity Establishment (ICE) and Datagram Transport Layer Security (DTLS) session between the WHIP client, which represents the encoder or media producer, and the Media Server, the broadcasting ingestion endpoint.
 
-Once the ICE/DTLS session is set up, the media will flow unidirectionally from the encoder/media producer (WHIP client) to the broadcasting ingestion endpoint (Media Server). In order to reduce complexity, no SDP renegotiation is supported, so no  "m=" sections can be added once the initial SDP offer/answer over HTTP is completed.
+Upon successful establishment of the ICE/DTLS session, unidirectional media data transmission commences from the WHIP client to the Media Server. It is important to note that SDP renegotiations are not supported in WHIP, meaning that no modifications to the "m=" sections can be made after the initial SDP offer/answer exchange via HTTP POST is completed.
+
+In order to reduce complexity, SDP renegotiations are not supported, so no "m=" sections can be added or removed once the initial SDP offer/answer over HTTP POST is completed.
+
+The following diagram illustrates the core operation of the WHIP protocol for initiating and terminating a WHIP session:
 
 ~~~~~
                                                                                
@@ -97,7 +93,16 @@ Once the ICE/DTLS session is set up, the media will flow unidirectionally from t
     <-----------------------------------------------------------x       
                                                                                
 ~~~~~
-{: title="WHIP session setup and teardown"}
+{: title="WHIP session setup and teardown" #whip-protocol-operation}
+
+The elements in {{whip-protocol-operation}} are described as follows:
+
+- WHIP client: This represents the WebRTC media encoder or producer, which functions as a client of the WHIP protocol by encoding and delivering media to a remote Media Server.
+- WHIP endpoint: This denotes the ingest server that receives the initial WHIP request.
+- WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP resource.
+- Media Server: This is the WebRTC Media Server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
+- WHIP resource:  Indicates the allocated resource by the WHIP endpoint for an ongoing ingest session.
+- WHIP resource URL:  Refers to the URL of the WHIP resouce allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP resource using this URL to modify the session, such as ICE operations or termination. 
 
 # Protocol Operation
 
