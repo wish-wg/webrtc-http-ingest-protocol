@@ -71,7 +71,7 @@ The following diagram illustrates the core operation of the WHIP protocol for in
 ~~~~~
                                                                                
  +-------------+    +---------------+ +--------------+ +---------------+
- | WHIP client |    | WHIP endpoint | | Media Server | | WHIP resource |
+ | WHIP client |    | WHIP endpoint | | Media Server | | WHIP session  |
  +--+----------+    +---------+-----+ +------+-------+ +--------|------+
     |                         |              |                  |       
     |                         |              |                  |       
@@ -99,22 +99,22 @@ The elements in {{whip-protocol-operation}} are described as follows:
 
 - WHIP client: This represents the WebRTC media encoder or producer, which functions as a client of the WHIP protocol by encoding and delivering media to a remote Media Server.
 - WHIP endpoint: This denotes the ingest server that receives the initial WHIP request.
-- WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP resource.
+- WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP session.
 - Media Server: This is the WebRTC Media Server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
-- WHIP resource:  Indicates the allocated resource by the WHIP endpoint for an ongoing ingest session.
-- WHIP resource URL:  Refers to the URL of the WHIP resouce allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP resource using this URL to modify the session, such as ICE operations or termination. 
+- WHIP session:  Indicates the allocated WHIP session by the WHIP endpoint for an ongoing ingest session.
+- WHIP session URL:  Refers to the URL of the WHIP resouce allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
 # Protocol Operation
 
 In order to set up an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and perform an HTTP POST request to the configured WHIP endpoint URL.
 
-The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created resource.
+The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
 
 The SDP offer SHOULD use the "sendonly" attribute and the SDP answer MUST use the "recvonly" attribute in any case.
 
 If the HTTP POST to the WHIP endoint has a content type different than "application/sdp", the WHIP endoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. 
 
-If the SDP body is malformed, the WHIP resource MUST reject the HTTP POST with a "400 Bad Request" error response. 
+If the SDP body is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -173,7 +173,7 @@ HTTP/1.1 201 Created
 ETag: "xyzzy"
 Content-Type: application/sdp
 Content-Length: 1400
-Location: https://whip.example.com/resource/id
+Location: https://whip.example.com/session/id
 
 v=0
 o=- 1657793490019 1 IN IP4 127.0.0.1
@@ -226,7 +226,7 @@ a=fmtp:97 apt=96
 
 Once a session is setup, ICE consent freshness {{!RFC7675}} SHALL be used to detect non-graceful disconnection and DTLS teardown for session termination by either side.
 
-To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP resource will be removed and the resources freed on the Media Server, terminating the ICE and DTLS sessions.
+To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP session will be removed and the resources freed on the Media Server, terminating the ICE and DTLS sessions.
 
 A Media Server terminating a session MUST follow the procedures in {{!RFC7675}} Section 5.2 for immediate revocation of consent.
 
@@ -234,36 +234,36 @@ The WHIP endpoints MUST return an "405 Method Not Allowed" response for any HTTP
 
 The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}} and it SHOULD include an "Accept-Post" header with a media type value of "application/sdp" on the "200 OK" response to any OPTIONS request received as per {{!W3C.REC-ldp-20150226}}.
 
-The WHIP resources MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
+The WHIP sessions MUST return an "405 Method Not Allowed" response for any HTTP GET, HEAD, POST or PUT requests on the resource URL in order to reserve its usage for future versions of this protocol specification.
 
 
 ## ICE and NAT support
 
 Depending on the Tricke ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. In order to reduce the setup times, Tricke ICE support is RECOMMENDED for WHIP clients and the WHIP client SHOULD send the SDP offer as soon as possible containing either local gathered ICE candidates or an empty list of candidates.
 
-The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request to the WHIP resource URL with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
+The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request to the WHIP session URL with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair.
 
 In order to simplify the protocol, there is no support for exchanging gathered trickle candidates from Media Server ICE candidates once the SDP answer is sent. The WHIP Endpoint SHALL gather all the ICE candidates for the Media Server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the Media Server. The Media Server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-Trickle ICE and ICE restart support is RECOMMENDED for a WHIP resource. 
+Trickle ICE and ICE restart support is RECOMMENDED for a WHIP session. 
 
-If the HTTP POST to the WHIP resource has a content type different than "application/trickle-ice-sdpfrag", the WHIP resource MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP resource MUST reject the HTTP POST with a "400 Bad Request" error response. 
+If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
-If the WHIP resource supports either Trickle ICE or ICE restarts, but not both, it MUST return a "405 Not Implemented" response for the HTTP PATCH requests that are not supported. 
+If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "405 Not Implemented" response for the HTTP PATCH requests that are not supported. 
 
-If the  WHIP resource does not support the PATCH method for any purpose, it MUST return a "501 Not Implemented" response, as described in {{!RFC9110}} Section 6.6.2. 
+If the  WHIP session does not support the PATCH method for any purpose, it MUST return a "501 Not Implemented" response, as described in {{!RFC9110}} Section 6.6.2. 
 
-As the HTTP PATCH request sent by a WHIP client may be received out-of-order by the WHIP resource, the WHIP resource MUST generate a
-unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP resource supports ICE restarts and OPTIONAL otherwise.
+As the HTTP PATCH request sent by a WHIP client may be received out-of-order by the WHIP session, the WHIP session MUST generate a
+unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP session supports ICE restarts and OPTIONAL otherwise.
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 3.1. When the PATCH request is received by the WHIP resource, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 3.1 and return a "412 Precondition Failed" response if they do not match. 
+A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 3.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 3.1 and return a "412 Precondition Failed" response if they do not match. 
 
-WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP resources MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
+WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
-A WHIP resource receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a "204 No Content" response without body. If the Media Server does not support a candidate transport or is not able to resolve the connection address, it MUST accept the HTTP request with the "204 No Content" response and silently discard the candidate.
+A WHIP session receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a "204 No Content" response without body. If the Media Server does not support a candidate transport or is not able to resolve the connection address, it MUST accept the HTTP request with the "204 No Content" response and silently discard the candidate.
 
 ~~~~~
-PATCH /resource/id HTTP/1.1
+PATCH /session/id HTTP/1.1
 Host: whip.example.com
 If-Match: "xyzzy"
 Content-Type: application/trickle-ice-sdpfrag
@@ -286,12 +286,12 @@ HTTP/1.1 204 No Content
 
 A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 3.1. 
 
-If the HTTP PATCH request results in an ICE restart, the WHIP resource SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client . Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the Media Server.
+If the HTTP PATCH request results in an ICE restart, the WHIP session SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client . Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the Media Server.
 
-If the ICE request cannot be satisfied by the WHIP resource, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In either case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1. 
+If the ICE request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In either case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1. 
 
 ~~~~~
-PATCH /resource/id HTTP/1.1
+PATCH /session/id HTTP/1.1
 Host: whip.example.com
 If-Match: "*"
 Content-Type: application/trickle-ice-sdpfrag
@@ -345,7 +345,7 @@ Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and M
 
 ## Load balancing and redirections
 
-WHIP endpoints and Media Servers might not be colocated on the same server, so it is possible to load balance incoming requests to different Media Servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} Section 6.4.7. The WHIP resource URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
+WHIP endpoints and Media Servers might not be colocated on the same server, so it is possible to load balance incoming requests to different Media Servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} Section 6.4.7. The WHIP session URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
 
 In case of high load, the WHIP endpoints MAY return a "503 Service Unavailable" response indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request.
 
@@ -382,11 +382,11 @@ It might be also possible to configure the STUN/TURN server URIs with long term 
 
 ## Authentication and authorization
 
-WHIP endpoints and resources MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} Section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or resource except the preflight OPTIONS requests for CORS.
+WHIP endpoints and sessions MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} Section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or session except the preflight OPTIONS requests for CORS.
 
 The nature, syntax, and semantics of the bearer token, as well as how to distribute it to the client, is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint URL and configured on the WHIP clients (similar to the way RTMP URLs and Stream Keys are distributed).
 
-WHIP endpoints and resources could perform the authentication and authorization by encoding an authentication token within the URLs for the WHIP endpoints or resources instead. In case the WHIP client is not configured to use a bearer token, the HTTP Authorization header field must not be sent in any request.
+WHIP endpoints and sessions could perform the authentication and authorization by encoding an authentication token within the URLs for the WHIP endpoints or sessions instead. In case the WHIP client is not configured to use a bearer token, the HTTP Authorization header field must not be sent in any request.
 
 
 ## Simulcast and scalable video coding
@@ -414,7 +414,7 @@ In this theoretical case, the "201 Created" response to the HTTP POST request wo
 ~~~~~
 HTTP/1.1 201 Created
 Content-Type: application/sdp
-Location: https://whip.example.com/resource/id
+Location: https://whip.example.com/session/id
 Link: <https://whip.ietf.org/publications/213786HF/sse>;
       rel="urn:ietf:params:whip:ext:example:server-side-events"
 ~~~~~
@@ -434,17 +434,17 @@ On top of that, the WHIP protocol exposes a thin new attack surface specific of 
 - HTTP POST flooding and resource exhaustion:
   It would be possible for an attacker in possession of authentication credentials valid to publish a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
   This will force the WHIP endpoint to process the incoming SDP and allocate resources for being able to setup the DTLS/ICE connection.
-  While the malicious client does not need to initiate the DTLS/ICE connection at all, the WHIP resource will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
+  While the malicious client does not need to initiate the DTLS/ICE connection at all, the WHIP session will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
   If the connection rate is high enough, this could lead to resource exhaustion on the WHIP server and it will not be able to process legitimate incoming publications.
   In order to prevent this scenario, WHIP endpoints SHOULD implement a rate limit and avalanche control mechanism for incoming initial HTTP POST requests.
 
-- Insecure direct object references (IDOR) on the WHIP resource locations:
-  If the URsL returned by the WHIP endpoint for the WHIP resources location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP resources currently running in a WHIP server.
+- Insecure direct object references (IDOR) on the WHIP session locations:
+  If the URsL returned by the WHIP endpoint for the WHIP sessions location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP sessions currently running in a WHIP server.
   In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enough randomness, using a cryptographically secure pseudorandom number generator following the best practices in Randomness Requirements for Security {{!RFC4086}}, and implement a rate limit and avalanche control mechanism for HTTP DELETE requests.
-  The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122}} Section 6 are applicable for generating the WHIP resources location URL.
+  The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122}} Section 6 are applicable for generating the WHIP sessions location URL.
 
 - HTTP PATCH flooding: 
-Similar to the HTTP POST flooding, a malicious client could also create a resource exhaustion by sending multiple HTTP PATCH request to the WHIP resource, although the WHIP Resources can limit the impact by not allocating new ICE candidates and reusing the existing ICE candidates when doing ICE restarts.
+Similar to the HTTP POST flooding, a malicious client could also create a resource exhaustion by sending multiple HTTP PATCH request to the WHIP session, although the WHIP sessions can limit the impact by not allocating new ICE candidates and reusing the existing ICE candidates when doing ICE restarts.
 In order to prevent this scenario, WHIP endpoints SHOULD implement a rate limit and avalanche control mechanism for incoming HTTP PATCH requests.
 
 # IANA Considerations
