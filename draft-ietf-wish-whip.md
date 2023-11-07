@@ -264,7 +264,7 @@ A WHIP client sending a PATCH request for performing trickle ICE MUST include an
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
-When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a '204 No Content' response without a body. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST accept the HTTP request with the "204 No Content" response and silently discard the candidate.
+When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a "204 No Content" response without a body. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST silently discard the candidate and continue processing the rest of the request normally. 
 
 ~~~~~
 PATCH /session/id HTTP/1.1
@@ -292,7 +292,7 @@ A WHIP client sending a PATCH request for performing ICE restart MUST contain an
 
 If the HTTP PATCH request results in an ICE restart, the WHIP session SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client . Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server.
 
-If the ICE request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In either case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1. 
+If the ICE restart request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately and keep the existing ICE session. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In any case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1. 
 
 ~~~~~
 PATCH /session/id HTTP/1.1
@@ -315,19 +315,18 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="ICE restart request"}
 
-Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send new ICE candidates, it MUST buffer any gathered candidates before it receives the HTTP response to the initial POST request or the PATCH request with the new entity-tag value. Once it knows the entity-tag value, in order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the ICE candidates it has buffered so far.
+Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either initial POST request or the last PATCH request performing an ICE restart.
+In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
 
-In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ICE username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. WHIP clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the client and at the server (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be rejected by the server. When this situation is detected by the WHIP Client, it MUST send a new ICE restart request to the server.
+In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ICE username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. WHIP clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the WHIP client and at the WHIP session (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be dropped by the receiving side. If this situation is detected by the WHIP Client, it MUST send a new ICE restart request to the server.
 
 ## WebRTC constraints
-
-In the specific case of media ingestion into a streaming service, some assumptions can be made about the server-side which simplifies the WebRTC compliance burden, as detailed in WebRTC-gateway document {{?I-D.draft-ietf-rtcweb-gateways}}.
 
 In order to reduce the complexity of implementing WHIP in both clients and media servers, WHIP imposes the following restrictions regarding WebRTC usage:
 
 ### SDP Bundle
 
-Both the WHIP client and the WHIP endpoint SHALL use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the media server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and media server will use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the media server, both The WHIP client and media server SHOULD include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}} Section 3.
+Both the WHIP client and the WHIP endpoint SHALL support and use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the media server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and media server SHALL use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the media server, both The WHIP client and WHIP endpoints MUST include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}} Section 3.
 
 ### Single MediaStream
 
