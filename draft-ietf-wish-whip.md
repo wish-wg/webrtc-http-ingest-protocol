@@ -256,13 +256,15 @@ If the WHIP session supports either Trickle ICE or ICE restarts, but not both, i
 
 If the  WHIP session does not support the PATCH method for any purpose, it MUST return a "501 Not Implemented" response, as described in {{!RFC9110}} Section 15.6.2. 
 
-The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, the WHIP session MUST generate a unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 2.3. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint. It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart. Note that including the ETag in the original "201 Created" response is only REQUIRED if the WHIP session supports ICE restarts and OPTIONAL otherwise.
+The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, if WHIP session supports ICE restarts,it MUST generate a unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 2.3, being OPTIONAL otherwise. 
+The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
+It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart.
 
 A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 3.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 3.1 and return a "412 Precondition Failed" response if they do not match. 
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
-A WHIP session receiving a PATCH request with new ICE candidates, but which does not perform an ICE restart, MUST return a "204 No Content" response without body. If the media server does not support a candidate transport or is not able to resolve the connection address, it MUST accept the HTTP request with the "204 No Content" response and silently discard the candidate.
+When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a '204 No Content' response without a body. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST accept the HTTP request with the "204 No Content" response and silently discard the candidate.
 
 ~~~~~
 PATCH /session/id HTTP/1.1
