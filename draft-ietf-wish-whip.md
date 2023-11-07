@@ -285,7 +285,7 @@ a=end-of-candidates
 
 HTTP/1.1 204 No Content
 ~~~~~
-{: title="Trickle ICE request"}
+{: title="Example of a Trickle ICE request and response"}
 
 
 A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 3.1. 
@@ -313,7 +313,7 @@ a=ice-lite
 a=ice-ufrag:289b31b754eaa438
 a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
-{: title="ICE restart request"}
+{: title="Example of an ICE restart request and response"}
 
 Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either initial POST request or the last PATCH request performing an ICE restart.
 In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
@@ -348,7 +348,7 @@ Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and m
 
 ## Load balancing and redirections
 
-WHIP endpoints and media servers might not be colocated on the same server, so it is possible to load balance incoming requests to different media servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} Section 6.4.7. The WHIP session URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
+WHIP endpoints and media servers might not be colocated on the same server, so it is possible to load balance incoming requests to different media servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} Section 15.4.8. The WHIP session URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
 
 In case of high load, the WHIP endpoints MAY return a "503 Service Unavailable" response indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request.
 
@@ -371,7 +371,7 @@ A reference to each STUN/TURN server will be returned using the "Link" header fi
      Link: <turns:turn.example.net?transport=tcp>; rel="ice-server";
            username="user"; credential="myPassword"; credential-type="password"
 ~~~~~
-{: title="Example ICE server configuration"}
+{: title="Example of a STUN/TURN servers configuration"}
 
 NOTE: The naming of both the "rel" attribute value of "ice-server" and the target attributes follows the one used on the W3C WebRTC recommendation {{?W3C.REC-webrtc-20210126}} RTCConfiguration dictionary in section 4.2.1. "rel" attribute value of "ice-server" is not prepended with the "urn:ietf:params:whip:" so it can be reused by other specifications which may use this mechanism to configure the usage of STUN/TURN servers.
 
@@ -421,7 +421,7 @@ Location: https://whip.example.com/session/id
 Link: <https://whip.ietf.org/publications/213786HF/sse>;
       rel="urn:ietf:params:whip:ext:example:server-side-events"
 ~~~~~
-
+{: title="Example of a WHIP protocol extension"}
 
 # Security Considerations
 
