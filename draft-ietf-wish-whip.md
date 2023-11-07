@@ -587,7 +587,8 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    completed registration templates, which MAY be expanded with
    additional information. These completed templates are intended to go
    in the body of the document, not in the IANA Considerations section.
-   The RFC SHOULD include any attributes defined.
+   The RFC MUST include the syntax and semantics of any extension-specific attributes that may be provided in a Link header
+   field advertising the extension.
 
 ### Guidance for Designated Experts
 
