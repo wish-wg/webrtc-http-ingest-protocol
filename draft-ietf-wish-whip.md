@@ -106,7 +106,7 @@ The elements in {{whip-protocol-operation}} are described as follows:
 
 # Protocol Operation
 
-In order to set up an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and perform an HTTP POST request to the configured WHIP endpoint URL.
+In order to set up an ingestion session, the WHIP client will generate an SDP offer according to the JSEP rules and perform an HTTP POST request as per {{!RFC7231}} Section 4.3.3 to the configured WHIP endpoint URL.
 
 The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
 
