@@ -110,7 +110,7 @@ In order to set up an ingestion session, the WHIP client will generate an SDP of
 
 The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint will generate an SDP answer and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
 
-The SDP offer SHOULD use the "sendonly" attribute or MAY use the "sendrecv" attribute instead, "inactive" and "recvonly" attributes MUST NOT be used. The SDP answer MUST use the "recvonly" attribute.
+As the WHIP protocol only supports the ingestion use case with unidirectional media, the WHIP client SHOULD use "sendonly" attribute in the SDP offer but MAY use the "sendrecv" attribute instead, "inactive" and "recvonly" attributes MUST NOT be used. The WHIP endpoint MUST use "recvonly" attribute in the SDP answer. 
 
 If the HTTP POST to the WHIP endoint has a content type different than "application/sdp", the WHIP endoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. 
 
