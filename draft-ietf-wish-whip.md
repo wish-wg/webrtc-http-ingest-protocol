@@ -469,9 +469,9 @@ Reference: TBD
 
 IANA is asked to add an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and create a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
 
-To manage this sub-namespace, IANA is asked to created the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
+To manage this sub-namespace, IANA is asked to created the "WebRTC-HTTP ingestion protocol (WHIP) URNs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
 
-   - Registry name: WebRTC-HTTP ingestion protocol (WHIP) URIs
+   - Registry name: WebRTC-HTTP ingestion protocol (WHIP) URNs
 
    - Specification: this document (RFC TBD)
 
@@ -484,7 +484,7 @@ To manage this sub-namespace, IANA is asked to created the "WebRTC-HTTP ingestio
 
 ## URN Sub-namespace for WHIP {#urn-whip-subspace}
 
-WHIP Endpoint utilizes URIs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {{protocol-extensions}}.
+WHIP Endpoint utilizes URNs to identify the supported WHIP protocol extensions on the "rel" attribute of the Link header as defined in {{protocol-extensions}}.
 
 This section creates and registers an IETF URN Sub-namespace for use in the WHIP specifications and future extensions.
 
@@ -556,13 +556,13 @@ Scope:
 
  - Global.
 
-## Registering WHIP Protocol Extensions URIs
+## Registering WHIP Protocol Extensions URNs
 
-This section defines the process for registering new WHIP protocol extensions URIs with IANA in the "WebRTC-HTTP ingestion protocol (WHIP) URIs" registry (see {{urn-whip-subspace}}). 
+This section defines the process for registering new WHIP protocol extensions URNs with IANA in the "WebRTC-HTTP ingestion protocol (WHIP) URNs" registry (see {{urn-whip-subspace}}). 
    
-A WHIP Protocol Extension URI is used as a value in the "rel" attribute of the Link header as defined in {{protocol-extensions}} for the purpose of signaling the WHIP protocol extensions supported by the WHIP Endpoints.
+A WHIP Protocol Extension URNs is used as a value in the "rel" attribute of the Link header as defined in {{protocol-extensions}} for the purpose of signaling the WHIP protocol extensions supported by the WHIP Endpoints.
    
-WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspace}}.
+WHIP Protocol Extensions URNs have a "ext" type as defined in {{urn-whip-subspace}}.
 
 ###  Registration Procedure
 
@@ -572,9 +572,9 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    appointed a designated expert {{RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
-   Registration of new "ext" type URI (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per {{!BCP26}} Section 4.6.
+   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per {{!BCP26}} Section 4.6.
    An RFC is REQUIRED for the registration of new value data types that modify existing properties.
-   An RFC is also REQUIRED for registration of WHIP Protocol Extensions URIs that modify WHIP Protocol Extensions previously documented in an existing RFC.
+   An RFC is also REQUIRED for registration of WHIP Protocol Extensions URNs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
    The registration procedure begins when a completed registration template, defined in the sections below, is sent to iana@iana.org.
    Decisions made by the designated expert can be appealed to an Applications and Real Time (ART) Area Director, then to the IESG.
@@ -583,7 +583,7 @@ WHIP Protocol Extensions URIs have a "ext" type as defined in {{urn-whip-subspac
    Once the registration procedure concludes successfully, IANA creates
    or modifies the corresponding record in the WHIP Protocol Extension registry.
 
-   An RFC specifying one or more new WHIP Protocol Extension URIs MUST include the
+   An RFC specifying one or more new WHIP Protocol Extension URNs MUST include the
    completed registration templates, which MAY be expanded with
    additional information. These completed templates are intended to go
    in the body of the document, not in the IANA Considerations section.
@@ -602,9 +602,9 @@ If the request comes from within the IETF, it should be documented in an Interne
 
 ###  WHIP Protocol Extension Registration Template
 
-A WHIP Protocol Extension URI is defined by completing the following template:
+A WHIP Protocol Extension URNs is defined by completing the following template:
 
- -   URI: A unique URI for the WHIP Protocol Extension (e.g., "urn:ietf:params:whip:ext:example:server-sent-events").
+ -   URN: A unique URN for the WHIP Protocol Extension (e.g., "urn:ietf:params:whip:ext:example:server-sent-events").
  -   Reference: A formal reference to the publicly available specification
  -   Name: A descriptive name of the WHIP Protocol Extension extension (e.g., "Sender Side events").
  -   Description: A brief description of the function of the extension, in a short paragraph or two
