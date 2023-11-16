@@ -348,9 +348,11 @@ Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and m
 
 ## Load balancing and redirections
 
-WHIP endpoints and media servers might not be colocated on the same server, so it is possible to load balance incoming requests to different media servers. WHIP clients SHALL support HTTP redirection via the "307 Temporary Redirect" response as described in {{!RFC9110}} Section 15.4.8. The WHIP session URL MUST be a final one, and redirections are not required to be supported for the PATCH and DELETE requests sent to it.
+WHIP endpoints and media servers might not be colocated on the same server, so it is possible to load balance incoming requests to different media servers. 
 
-In case of high load, the WHIP endpoints MAY return a "503 Service Unavailable" response indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request.
+WHIP clients SHALL support HTTP redirections as per {{!RFC9110}} Section 15.4. In order to avoid POST requests to be redirected as GET requests, status codes 301 and 302 MUST NOT be used and the preffered method for performing load balancing is via the "307 Temporary Redirect" response status code as described in {{!RFC9110}} Section 15.4.8. Redirections are not required to be supported for the PATCH and DELETE requests.
+
+In case of high load, the WHIP endpoints MAY return a "503 Service Unavailable" response indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance as described in {{!RFC9110}} Section 15.6.4, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request as described in {{!RFC9110}} Section 10.2.3.
 
 ## STUN/TURN server configuration
 
