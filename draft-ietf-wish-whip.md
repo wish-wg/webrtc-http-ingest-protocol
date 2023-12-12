@@ -393,7 +393,7 @@ The WHIP clients MAY also support configuring the STUN/TURN server URIs with lon
 
 ## Authentication and authorization
 
-All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9910] Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {!!RFC8819}} Section 11.6.
+All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9910}} Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {!!RFC8819}} Section 11.6.
 
 ### Bearer token authentication
 
