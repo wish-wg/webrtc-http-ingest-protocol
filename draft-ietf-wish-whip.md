@@ -238,31 +238,39 @@ The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Shari
 
 The WHIP sessions MUST return an "405 Method Not Allowed" response for any HTTP request method different than PATCH and DELETE on the session URLs in order to reserve their usage for future versions of this protocol specification.
 
-
 ## ICE support
 
-Depending on the Tricke ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. In order to reduce the setup times, Tricke ICE support is RECOMMENDED for WHIP clients and the WHIP client SHOULD send the SDP offer as soon as possible containing either local gathered ICE candidates or an empty list of candidates.
+ICE  {{!RFC8838}} is a protocol addressing the complexities of Network Address Translation (NAT) traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
 
-The WHIP client MAY perform trickle ICE or ICE restarts as per {{!RFC8838}} by sending an HTTP PATCH request as per {{!RTC5789}} to the WHIP session URL with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair as defined in {{!RFC8838}} Section 5.4.
+Trickle ICE optimizes the connectivity process by incrementally sharing potential communication paths, reducing latency, and facilitating quicker establishment. 
 
-In order to simplify the protocol, exchanging media server's gathered ICE candidates after sending the SDP answer is not supported.
-The WHIP Endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
+ICE Restarts are crucial for maintaining connectivity in dynamic network conditions or disruptions, allowing devices to re-establish communication paths without complete renegotiation. This ensures minimal latency and reliable real-time communication.
 
-Trickle ICE and ICE restart support is RECOMMENDED for a WHIP session. 
+Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and clients.
 
-If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
+### HTTP PATCH request usage
 
-If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" response for the HTTP PATCH requests that are not supported as per {{!RFC9110}} Section 15.5.21. If neither feature is supported, the  WHIP the MUST return a "501 Not Implemented" response for such HTTP PATCH requests, as described in {{!RFC9110}} Section 15.6.2. 
+The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RTC5789}} to the WHIP session URL, with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair as defined in {{!RFC8838}} Section 5.4.
 
-The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, if WHIP session supports ICE restarts,it MUST generate a unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 8.8.3, being OPTIONAL otherwise. 
-The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
-It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart.
+If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response.
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. If the HTTP PATCH request does not containt an "If-Match" header the WHIP session MUST return an "428 Precondition Required" response as per {{!RFC6585}} Section 3. 
+If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" response for the HTTP PATCH requests that are not supported as per {{!RFC9110}} Section 15.5.21. If neither feature is supported, the WHIP the MUST return a "501 Not Implemented" response for such HTTP PATCH requests, as described in {{!RFC9110}} Section 15.6.2.
+
+The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, if WHIP session supports ICE restarts, it MUST generate a unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 8.8.3, being OPTIONAL otherwise. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
-When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a "204 No Content" response without a body. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST silently discard the candidate and continue processing the rest of the request normally. 
+### Trickle ICE
+
+Depending on the Tricke ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. In order to reduce the setup times, Tricke ICE support is RECOMMENDED for WHIP clients and the WHIP client SHOULD send the SDP offer as soon as possible containing either local gathered ICE candidates or an empty list of candidates.
+
+Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either the initial POST request or the last PATCH request performing an ICE restart. In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
+
+In order to simplify the protocol, exchanging media server's gathered ICE candidates after sending the SDP answer is not supported. The WHIP Endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
+
+A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. If the HTTP PATCH request does not containt an "If-Match" header the WHIP session MUST return an "428 Precondition Required" response as per {{!RFC6585}} Section 3.
+
+When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a "204 No Content" response without a body. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST silently discard the candidate and continue processing the rest of the request normally.
 
 ~~~~~
 PATCH /session/id HTTP/1.1
@@ -285,12 +293,15 @@ HTTP/1.1 204 No Content
 ~~~~~
 {: title="Example of a Trickle ICE request and response"}
 
+### ICE Restarts
 
-A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 13.1.1. 
+A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 13.1.1.
 
-If the HTTP PATCH request results in an ICE restart, the WHIP session SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client . Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server.
+If the HTTP PATCH request results in an ICE restart, the WHIP session SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server.
 
-If the ICE restart request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately and keep the existing ICE session. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In any case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1. 
+If the ICE restart request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately and keep the existing ICE session. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In any case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1.
+
+In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ICE username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. WHIP clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the WHIP client and at the WHIP session (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be dropped by the receiving side. If this situation is detected by the WHIP Client, it MUST send a new ICE restart request to the server.
 
 ~~~~~
 PATCH /session/id HTTP/1.1
@@ -312,11 +323,6 @@ a=ice-ufrag:289b31b754eaa438
 a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 ~~~~~
 {: title="Example of an ICE restart request and response"}
-
-Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either the initial POST request or the last PATCH request performing an ICE restart.
-In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
-
-In case of unstable network conditions, the ICE restart HTTP PATCH requests and responses might be received out of order. In order to mitigate this scenario, when the client performs an ICE restart, it MUST discard any previous ICE username and passwords fragments and ignore any further HTTP PATCH response received from a pending HTTP PATCH request. WHIP clients MUST apply only the ICE information received in the response to the last sent request. If there is a mismatch between the ICE information at the WHIP client and at the WHIP session (because of an out-of-order request), the STUN requests will contain invalid ICE information and will be dropped by the receiving side. If this situation is detected by the WHIP Client, it MUST send a new ICE restart request to the server.
 
 ## WebRTC constraints
 
