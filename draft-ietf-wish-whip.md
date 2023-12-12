@@ -67,8 +67,6 @@ The WebRTC-HTTP Ingest Protocol (WHIP) is designed to facilitate a one-time exch
 
 Upon successful establishment of the ICE/DTLS session, unidirectional media data transmission commences from the WHIP client to the media server. It is important to note that SDP renegotiations are not supported in WHIP, meaning that no modifications to the "m=" sections can be made after the initial SDP offer/answer exchange via HTTP POST is completed.
 
-In order to reduce complexity, SDP renegotiations are not supported, so no "m=" sections can be added or removed once the initial SDP offer/answer over HTTP POST is completed.
-
 The following diagram illustrates the core operation of the WHIP protocol for initiating and terminating a WHIP session:
 
 ~~~~~
@@ -394,7 +392,7 @@ The WHIP clients MAY also support configuring the STUN/TURN server URIs with lon
 
 ## Authentication and authorization
 
-All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9110}} Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {!!RFC8819}} Section 11.6.
+All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9110}} Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {{!RFC8819}} Section 11.6.
 
 ### Bearer token authentication
 
