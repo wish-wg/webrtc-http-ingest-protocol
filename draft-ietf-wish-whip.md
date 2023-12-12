@@ -8,7 +8,7 @@ area: ART
 workgroup: wish
 
 keyword: WebRTC
-****
+
 stand_alone: yes
 pi: [toc, sortrefs, symrefs]
 
