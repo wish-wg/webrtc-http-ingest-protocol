@@ -252,7 +252,7 @@ Trickle ICE and ICE restart support is RECOMMENDED for a WHIP session.
 
 If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
-If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "405 Not Allowed" response for the HTTP PATCH requests that are not supported. If neither feature is supported, the  WHIP the MUST return a "501 Not Implemented" response for such HTTP PATCH requests, as described in {{!RFC9110}} Section 15.6.2. 
+If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" response for the HTTP PATCH requests that are not supported as per {{!RFC9110}} Section 15.5.21. If neither feature is supported, the  WHIP the MUST return a "501 Not Implemented" response for such HTTP PATCH requests, as described in {{!RFC9110}} Section 15.6.2. 
 
 The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, if WHIP session supports ICE restarts,it MUST generate a unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 8.8.3, being OPTIONAL otherwise. 
 The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
