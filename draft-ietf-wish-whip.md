@@ -385,6 +385,10 @@ The WHIP clients MAY also support configuring the STUN/TURN server URIs with lon
 
 ## Authentication and authorization
 
+All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9910] Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next secion MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {!!RFC8819}} Section 11.6.
+
+### Bearer token authentication
+
 WHIP endpoints and sessions MAY require the HTTP request to be authenticated using an HTTP Authorization header field with a Bearer token as specified in {{!RFC6750}} Section 2.1. WHIP clients MUST implement this authentication and authorization mechanism and send the HTTP Authorization header field in all HTTP requests sent to either the WHIP endpoint or session except the preflight OPTIONS requests for CORS.
 
 The nature, syntax, and semantics of the bearer token, as well as how to distribute it to the client, is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint URL and configured on the WHIP clients (similar to the way RTMP URLs and Stream Keys are distributed).
