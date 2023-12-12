@@ -35,6 +35,8 @@ normative:
 
 This document describes a simple HTTP-based protocol that will allow WebRTC-based ingestion of content into streaming services and/or CDNs.
 
+This document updates RFC 8842.
+
 --- middle
 
 # Introduction
