@@ -104,7 +104,7 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP session.
 - media server: This is the WebRTC media server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
 - WHIP session:  Indicates the allocated WHIP session by the WHIP endpoint for an ongoing ingest session.
-- WHIP session URL:  Refers to the URL of the WHIP resouce allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
+- WHIP session URL:  Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
 # Protocol Operation
 
@@ -114,7 +114,7 @@ The HTTP POST request MUST have a content type of "application/sdp" and contain 
 
 As the WHIP protocol only supports the ingestion use case with unidirectional media, the WHIP client SHOULD use "sendonly" attribute in the SDP offer but MAY use the "sendrecv" attribute instead, "inactive" and "recvonly" attributes MUST NOT be used. The WHIP endpoint MUST use "recvonly" attribute in the SDP answer. 
 
-If the HTTP POST to the WHIP endoint has a content type different than "application/sdp", the WHIP endoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. 
+If the HTTP POST to the WHIP endpoint  has a content type different than "application/sdp", the WHIP endpoint  MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. 
 
 If the SDP body is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
@@ -254,9 +254,9 @@ Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and c
 
 The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RTC5789}} to the WHIP session URL, with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair as defined in {{!RFC8838}} Section 5.4.
 
-If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP framgent is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response.
+If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP fragment is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response.
 
-If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" response for the HTTP PATCH requests that are not supported as per {{!RFC9110}} Section 15.5.21. If neither feature is supported, the WHIP the MUST return a "501 Not Implemented" response for such HTTP PATCH requests, as described in {{!RFC9110}} Section 15.6.2.
+If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" response for the HTTP PATCH requests that are not supported as per {{!RFC9110}} Section 15.5.21. If neither feature is supported, the WHIP session MUST return a "501 Not Implemented" response for such HTTP PATCH requests, as described in {{!RFC9110}} Section 15.6.2.
 
 The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, if WHIP session supports ICE restarts, it MUST generate a unique strong entity-tag identifying the ICE session as per {{!RFC9110}} Section 8.8.3, being OPTIONAL otherwise. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
 
@@ -264,13 +264,13 @@ WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE s
 
 ### Trickle ICE
 
-Depending on the Tricke ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. In order to reduce the setup times, Tricke ICE support is RECOMMENDED for WHIP clients and the WHIP client SHOULD send the SDP offer as soon as possible containing either local gathered ICE candidates or an empty list of candidates.
+Depending on the Trickle  ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. In order to reduce the setup times, Trickle  ICE support is RECOMMENDED for WHIP clients and the WHIP client SHOULD send the SDP offer as soon as possible containing either local gathered ICE candidates or an empty list of candidates.
 
 Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either the initial POST request or the last PATCH request performing an ICE restart. In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
 
 In order to simplify the protocol, exchanging media server's gathered ICE candidates after sending the SDP answer is not supported. The WHIP Endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server. The media server MAY use ICE lite, while the WHIP client MUST implement full ICE.
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. If the HTTP PATCH request does not containt an "If-Match" header the WHIP session MUST return an "428 Precondition Required" response as per {{!RFC6585}} Section 3.
+A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. If the HTTP PATCH request does not contain an "If-Match" header the WHIP session MUST return an "428 Precondition Required" response as per {{!RFC6585}} Section 3.
 
 When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a "204 No Content" response without a body and MUST NOT include an ETag header in the response. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST silently discard the candidate and continue processing the rest of the request normally.
 
@@ -338,7 +338,7 @@ Both the WHIP client and the WHIP endpoint SHALL support and use SDP bundle {{!R
 
 This version of the specification only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain an "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP Endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response. 
 
-### No partially sucessful answers
+### No partially successful answers
 
 The WHIP Endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions which can be misleading to end users.
 
@@ -348,7 +348,7 @@ When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute
 
 NOTE: {{!RFC8842}} defines that the offerer must insert an SDP "setup" attribute with an "actpass" attribute value. However, the WHIP client will always communicate with a media server that is expected to support the DTLS server role, in which case the client might choose to only implement support for the DTLS client role.
 
-### Tricle ICE and ICE restarts
+### Trickle ICE and ICE restarts
 
 Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and media servers as explained in section 4.1.
 
@@ -356,7 +356,7 @@ Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and m
 
 WHIP endpoints and media servers might not be colocated on the same server, so it is possible to load balance incoming requests to different media servers. 
 
-WHIP clients SHALL support HTTP redirections as per {{!RFC9110}} Section 15.4. In order to avoid POST requests to be redirected as GET requests, status codes 301 and 302 MUST NOT be used and the preffered method for performing load balancing is via the "307 Temporary Redirect" response status code as described in {{!RFC9110}} Section 15.4.8. Redirections are not required to be supported for the PATCH and DELETE requests.
+WHIP clients SHALL support HTTP redirections as per {{!RFC9110}} Section 15.4. In order to avoid POST requests to be redirected as GET requests, status codes 301 and 302 MUST NOT be used and the preferred method for performing load balancing is via the "307 Temporary Redirect" response status code as described in {{!RFC9110}} Section 15.4.8. Redirections are not required to be supported for the PATCH and DELETE requests.
 
 In case of high load, the WHIP endpoints MAY return a "503 Service Unavailable" response indicating that the server is currently unable to handle the request due to a temporary overload or scheduled maintenance as described in {{!RFC9110}} Section 15.6.4, which will likely be alleviated after some delay. The WHIP endpoint might send a Retry-After header field indicating the minimum time that the user agent ought to wait before making a follow-up request as described in {{!RFC9110}} Section 10.2.3.
 
@@ -393,7 +393,7 @@ The WHIP clients MAY also support configuring the STUN/TURN server URIs with lon
 
 ## Authentication and authorization
 
-All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9910] Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next secion MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {!!RFC8819}} Section 11.6.
+All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{!RFC9910] Section 11 and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {!!RFC8819}} Section 11.6.
 
 ### Bearer token authentication
 
@@ -481,7 +481,7 @@ Reference: TBD
 
 IANA is asked to add an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and create a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
 
-To manage this sub-namespace, IANA is asked to created the "WebRTC-HTTP ingestion protocol (WHIP) URNs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
+To manage this sub-namespace, IANA is asked to create the "WebRTC-HTTP ingestion protocol (WHIP) URNs" registry, which is used to manage entries within the "urn:ietf:params:whip" namespace. The registry description is as follows:
 
    - Registry name: WebRTC-HTTP ingestion protocol (WHIP) URNs
 
