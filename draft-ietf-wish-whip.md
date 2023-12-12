@@ -258,7 +258,7 @@ The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Co
 The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
 It MUST also be returned in the "200 OK" of any PATCH request that triggers an ICE restart.
 
-A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. 
+A WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1. When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. If the HTTP PATCH request does not containt an "If-Match" header the WHIP session MUST return an "428 Precondition Required" response as per {{!RFC6585}} Section 3. 
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
