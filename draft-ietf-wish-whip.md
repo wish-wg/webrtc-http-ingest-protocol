@@ -117,7 +117,7 @@ If the HTTP POST to the WHIP endpoint  has a content type different than "applic
 
 If the SDP body is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
-Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Link header pointing to the newly created WHIP session:
+Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Location header pointing to the newly created WHIP session:
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
