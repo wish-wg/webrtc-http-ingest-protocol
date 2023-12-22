@@ -408,7 +408,7 @@ WHIP endpoints and sessions could perform the authentication and authorization b
 
 Simulcast as per {{!RFC8853}} MAY be supported by both the media servers and WHIP clients through negotiation in the SDP offer/answer.
 
-If the client supports simulcast and wants to enable it for publishing, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} Section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} Section 5.3.2.
+If the client supports simulcast and wants to enable it for ingesting, it MUST negotiate the support in the SDP offer according to the procedures in {{!RFC8853}} Section 5.3. A server accepting a simulcast offer MUST create an answer according to the procedures {{!RFC8853}} Section 5.3.2.
 
 It is possible for both media servers and WHIP clients to support Scalable Video Coding (SVC). However, as there is no universal negotiation mechanism in SDP for SVC, the encoder must consider the negotiated codec(s), intended usage, and SVC support in available decoders when configuring SVC.
 
@@ -423,7 +423,7 @@ Protocol extensions are optional for both WHIP clients and servers. WHIP clients
 
 Each protocol extension MUST register a unique "rel" attribute value at IANA starting with the prefix: "urn:ietf:params:whip:ext" as defined in {{urn-whip-subspace}}.
 
-For example, considering a potential extension of server-to-client communication using server-sent events as specified in https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events, the URL for connecting to the server-sent event resource for the published stream could be returned in the initial HTTP "201 Created" response with a "Link" header field and a "rel" attribute of "urn:ietf:params:whip:ext:example:server-sent-events" (this document does not specify such an extension, and uses it only as an example).
+For example, considering a potential extension of server-to-client communication using server-sent events as specified in https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events, the URL for connecting to the server-sent event resource for the ingested stream could be returned in the initial HTTP "201 Created" response with a "Link" header field and a "rel" attribute of "urn:ietf:params:whip:ext:example:server-sent-events" (this document does not specify such an extension, and uses it only as an example).
 
 In this theoretical case, the "201 Created" response to the HTTP POST request would look like:
 
@@ -448,10 +448,10 @@ This document specifies a new protocol on top of HTTP and WebRTC, thus, security
 On top of that, the WHIP protocol exposes a thin new attack surface specific of the REST API methods used within it:
 
 - HTTP POST flooding and resource exhaustion:
-  It would be possible for an attacker in possession of authentication credentials valid to publish a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
+  It would be possible for an attacker in possession of authentication credentials valid for ingesting a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
   This will force the WHIP endpoint to process the incoming SDP and allocate resources for being able to setup the DTLS/ICE connection.
   While the malicious client does not need to initiate the DTLS/ICE connection at all, the WHIP session will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
-  If the connection rate is high enough, this could lead to resource exhaustion on the servers handling the requests and it will not be able to process legitimate incoming publications.
+  If the connection rate is high enough, this could lead to resource exhaustion on the servers handling the requests and it will not be able to process legitimate incoming ingests.
   In order to prevent this scenario, WHIP endpoints SHOULD implement a rate limit and avalanche control mechanism for incoming initial HTTP POST requests.
 
 - Insecure direct object references (IDOR) on the WHIP session locations:
