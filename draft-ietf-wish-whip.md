@@ -102,7 +102,7 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP endpoint: This denotes the ingest server that receives the initial WHIP request.
 - WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP session.
 - media server: This is the WebRTC media server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
-- WHIP session:  Indicates the allocated WHIP session by the WHIP endpoint for an ongoing ingest session.
+- WHIP session:  Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
 - WHIP session URL:  Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
 # Protocol Operation
