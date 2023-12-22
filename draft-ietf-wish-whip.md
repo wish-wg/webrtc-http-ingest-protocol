@@ -67,7 +67,7 @@ The WebRTC-HTTP Ingest Protocol (WHIP) is designed to facilitate a one-time exch
 
 Upon successful establishment of the ICE/DTLS session, unidirectional media data transmission commences from the WHIP client to the media server. It is important to note that SDP renegotiations are not supported in WHIP, meaning that no modifications to the "m=" sections can be made after the initial SDP offer/answer exchange via HTTP POST is completed.
 
-The following diagram illustrates the core operation of the WHIP protocol for initiating and terminating a WHIP session:
+The following diagram illustrates the core operation of the WHIP protocol for initiating and terminating an ingest session:
 
 ~~~~~
                                                                                
@@ -340,7 +340,7 @@ WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore
 
 ### No partially successful answers
 
-The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful WHIP sessions which can be misleading to end users.
+The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{!RFC8829}} Section 5.3.1 in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful ingest sessions which can be misleading to end users.
 
 ### DTLS setup role and SDP "setup" attribute
 
