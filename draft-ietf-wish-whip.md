@@ -6,7 +6,7 @@ category: std
 ipr: trust200902
 area: ART
 workgroup: wish
-updates: 8842
+updates: 8842, 8840
 
 keyword: WebRTC
 
@@ -36,7 +36,7 @@ normative:
 
 This document describes a simple HTTP-based protocol that will allow WebRTC-based ingestion of content into streaming services and/or CDNs.
 
-This document updates RFC 8842.
+This document updates RFC 8842 and RFC 8840.
 
 --- middle
 
@@ -252,7 +252,7 @@ Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and c
 
 ### HTTP PATCH request usage
 
-The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new ICE candidate; when used for ICE restarts, it will contain a new ICE ufrag/pwd pair as defined in {{!RFC8838}} Section 5.4.
+The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}}. When used for trickle ICE, the body of this PATCH message will contain the new gathered set of ICE candidates and when used for ICE restarts, it will also contain the new ICE ufrag/pwd pair as defined in {{!RFC8838}} Section 5.4.
 
 If the HTTP POST to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP fragment is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response.
 
@@ -281,11 +281,12 @@ PATCH /session/id HTTP/1.1
 Host: whip.example.com
 If-Match: "xyzzy"
 Content-Type: application/trickle-ice-sdpfrag
-Content-Length: 548
+Content-Length: 576
 
 a=ice-ufrag:EsAw
 a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
-m=audio 9 RTP/AVP 0
+a=group:BUNDLE 0 1
+m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.1 61765 typ host generation 0 ufrag EsAw network-id 2
@@ -301,7 +302,7 @@ HTTP/1.1 204 No Content
 
 A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 13.1.1.
 
-If the HTTP PATCH request results in an ICE restart, the WHIP session SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and OPTIONALLY a new set of ICE candidates for the WHIP client. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server. The WHIP client MUST discard any previous set of media server's ICE candidates when receiving a successfull response for an ICE restart request.
+{{!RFC8840}} states that an agent MUST discard any received requests containing "ice-pwd" and "ice-ufrag" attributes that do not match those of the current ICE Negotiation Session, howevever, any WHIP session receiving an updated "ice-pwd" and "ice-ufrag" attributes MUST consider the request as performing an ICE restart instead and, if supported, SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and a new set of ICE candidates for the WHIP session. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server. The WHIP client MUST discard any previous set of media server's ICE candidates when receiving a successful response for an ICE restart request.
 
 If the ICE restart request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately and keep the existing ICE session. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In any case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{!RFC7675}} Section 5.1.
 
@@ -320,11 +321,16 @@ a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 HTTP/1.1 200 OK
 ETag: "abccd"
 Content-Type: application/trickle-ice-sdpfrag
-Content-Length: 102
+Content-Length: 224
 
 a=ice-lite
 a=ice-ufrag:289b31b754eaa438
 a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
+a=group:BUNDLE 0 1
+m=audio 9 UDP/TLS/RTP/SAVPF 111
+a=mid:0
+a=candidate:1 1 UDP 2130706431 198.51.100.1 39132 typ host
+a=end-of-candidates
 ~~~~~
 {: title="Example of an ICE restart request and response"}
 
