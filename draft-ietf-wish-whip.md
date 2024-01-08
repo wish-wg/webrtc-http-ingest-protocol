@@ -264,7 +264,7 @@ WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE s
 
 ### Trickle ICE
 
-Depending on the Trickle  ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. In order to reduce the setup times, Trickle  ICE support is RECOMMENDED for WHIP clients and the WHIP client SHOULD send the SDP offer as soon as possible containing either local gathered ICE candidates or an empty list of candidates.
+Depending on the Trickle  ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8863}}. When using Trickle ICE, the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates, in order to reduce setup times..
 
 Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either the initial POST request or the last PATCH request performing an ICE restart. In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
 
