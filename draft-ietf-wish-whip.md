@@ -123,7 +123,7 @@ Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoi
 POST /whip/endpoint HTTP/1.1
 Host: whip.example.com
 Content-Type: application/sdp
-Content-Length: 1326
+Content-Length: 1394
 
 v=0
 o=- 5228595038118931041 2 IN IP4 127.0.0.1
@@ -143,7 +143,7 @@ a=mid:0
 a=bundle-only
 a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
 a=sendonly
-a=msid:- d46fb922-d52a-4e9c-aa87-444eadc1521b
+a=msid:d46fb922-d52a-4e9c-aa87-444eadc1521b ce326ecf-a081-453a-8f9f-0605d5ef4128
 a=rtcp-mux
 a=rtcp-mux-only
 a=rtpmap:111 opus/48000/2
@@ -162,7 +162,7 @@ a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
 a=extmap:10 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id
 a=extmap:11 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id
 a=sendonly
-a=msid:- d46fb922-d52a-4e9c-aa87-444eadc1521b
+a=msid:d46fb922-d52a-4e9c-aa87-444eadc1521b 3956b460-40f4-4d05-acef-03abcdd8c6fd
 a=rtcp-mux
 a=rtcp-mux-only
 a=rtpmap:96 VP8/90000
