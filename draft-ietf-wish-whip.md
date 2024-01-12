@@ -226,7 +226,7 @@ a=fmtp:97 apt=96
 ~~~~~
 {: title="Example of SDP offer/answer exchange done via an HTTP POST"}
 
-Once a session is setup, consent freshness as per {{!RFC7675}} SHALL be used to detect non-graceful disconnection and DTLS teardown for session termination by either side.
+Once a session is setup, consent freshness as per {{!RFC7675}} SHALL be used to detect non-graceful disconnection by full ICE implementations and DTLS teardown for session termination by either side.
 
 To explicitly terminate a session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP session will be removed and the resources freed on the media server, terminating the ICE and DTLS sessions.
 
