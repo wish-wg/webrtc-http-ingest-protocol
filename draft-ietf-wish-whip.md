@@ -207,7 +207,7 @@ a=rtcp:9 IN IP4 0.0.0.0
 a=ice-ufrag:38sdf4fdsf54
 a=ice-pwd:2e13dde17c1cb009202f627fab90cbec358d766d049c9697
 a=fingerprint:sha-256 F7:EB:F3:3E:AC:D2:EA:A7:C1:EC:79:D9:B3:8A:35:DA:70:86:4F:46:D9:2D:CC:D0:BC:81:9F:67:EF:34:2E:BD
-a=candidate:1 1 UDP 2130706431 198.51.100.1 39132 typ host
+a=candidate:1 1 udp 2130706431 198.51.100.1 39132 typ host
 a=setup:passive
 a=mid:1
 a=bundle-only
@@ -288,7 +288,7 @@ a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
-a=candidate:3471623853 1 udp 2122194687 198.51.100.1 61765 typ host generation 0 ufrag EsAw network-id 2
+a=candidate:3471623853 1 udp 2122194687 198.51.100.2 61765 typ host generation 0 ufrag EsAw network-id 2
 a=candidate:473322822 1 tcp 1518280447 192.0.2.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
 a=candidate:2154773085 1 tcp 1518214911 198.51.100.2 9 typ host tcptype active generation 0 ufrag EsAw network-id 2
 a=end-of-candidates
@@ -316,6 +316,13 @@ Content-Length: 54
 
 a=ice-ufrag:ysXw
 a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
+a=group:BUNDLE 0 1
+m=audio 9 UDP/TLS/RTP/SAVPF 111
+a=mid:0
+a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
+a=candidate:3471623853 1 udp 2122194687 198.51.100.2 61765 typ host generation 0 ufrag EsAw network-id 2
+a=candidate:473322822 1 tcp 1518280447 192.0.2.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
+a=candidate:2154773085 1 tcp 1518214911 198.51.100.2 9 typ host tcptype active generation 0 ufrag EsAw network-id 2
 
 HTTP/1.1 200 OK
 ETag: "abccd"
@@ -328,7 +335,7 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
-a=candidate:1 1 UDP 2130706431 198.51.100.1 39132 typ host
+a=candidate:1 1 udp 2130706431 198.51.100.1 39132 typ host
 a=end-of-candidates
 ~~~~~
 {: title="Example of an ICE restart request and response"}
