@@ -270,6 +270,8 @@ In order to simplify the protocol, the WHIP session cannot signal additional ICE
 
 The media server SHOULD support full ICE, unless it is connected to the to the Internet with an IP address that is accessible by each WHIP client that is authorized to use it, in which case it MAY support only ICE lite. The WHIP client MUST implement and use full ICE.
 
+WHIP clients generating the HTTP PATCH body with the SDP fragment and its subsequent processing by WHIP sessions MUST follow to the guidelines defined in {{!RFC8840}} section 4.4.
+
 If the WHIP session is using entity-tags for identifying the ICE sessions in explained in Section 4.1.1, a WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{!RFC9110}} Section 13.1.1.
 When the PATCH request is received by the WHIP session, it MUST compare the indicated entity-tag value with the current entity-tag of the resource as per {{!RFC9110}} Section 13.1.1 and return a "412 Precondition Failed" response if they do not match. If the HTTP PATCH request does not contain an "If-Match" header the WHIP session MUST return an "428 Precondition Required" response as per {{!RFC6585}} Section 3.
 
