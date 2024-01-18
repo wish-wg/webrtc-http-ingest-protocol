@@ -348,7 +348,7 @@ In order to reduce the complexity of implementing WHIP in both clients and media
 
 ### SDP Bundle
 
-Both the WHIP client and the WHIP endpoint SHALL support and use SDP bundle {{!RFC9143}}. Each "m=" section MUST be part of a single BUNDLE group. Hence, when a WHIP client sends an SDP offer, it MUST include a "bundle-only" attribute in each bundled "m=" section. The WHIP client and the media server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and media server SHALL use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the media server, both The WHIP client and WHIP endpoints MUST include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}} Section 3.
+Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "max-bundle" policy as defined in {{!RFC8829}}. The WHIP client and the media server MUST support multiplexed media associated with the BUNDLE group as per {{!RFC9143}} Section 9. In addition, per {{!RFC9143}} the WHIP client and media server SHALL use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the media server, both The WHIP client and WHIP endpoints MUST include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{!RFC8858}} Section 3.
 
 ### Single MediaStream
 
