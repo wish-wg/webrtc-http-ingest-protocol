@@ -258,13 +258,11 @@ WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE s
 
 ### Trickle ICE
 
-Depending on the Trickle  ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8845}}. When using Trickle ICE, the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates, in order to reduce setup times..
-
-Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either the initial POST request or the last PATCH request performing an ICE restart. In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
+Depending on the Trickle ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8845}}. For the purpose of reducing setup times, when using Trickle ICE the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates.
 
 In order to simplify the protocol, the WHIP session cannot signal additional ICE candidates to the WHIP client after the SDP answer has been sent. The WHIP endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server.
 
-The media server SHOULD support full ICE, unless it is connected to the to the Internet with an IP address that is accessible by each WHIP client that is authorized to use it, in which case it MAY support only ICE lite. The WHIP client MUST implement and use full ICE.
+Because the WHIP client needs to know the entity-tag associated with the ICE session in order to send a PATCH request containing new ICE candidates, it MUST wait and buffer any gathered candidates until it receives the HTTP response with the new entity-tag value to either the initial POST request or the last PATCH request performing an ICE restart. In order to lower the HTTP traffic and processing time required, the WHIP client SHOULD send a single aggregated HTTP PATCH request with all the buffered ICE candidates once it receives the new entity-tag value.
 
 WHIP clients generating the HTTP PATCH body with the SDP fragment and its subsequent processing by WHIP sessions MUST follow to the guidelines defined in {{!RFC8840}} section 4.4 with the following considerations:
 
@@ -368,6 +366,8 @@ When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute
 NOTE: {{!RFC8842}} defines that the offerer must insert an SDP "setup" attribute with an "actpass" attribute value. However, the WHIP client will always communicate with a media server that is expected to support the DTLS server role, in which case the client might choose to only implement support for the DTLS client role.
 
 ### Trickle ICE and ICE restarts
+
+The media server SHOULD support full ICE, unless it is connected to the to the Internet with an IP address that is accessible by each WHIP client that is authorized to use it, in which case it MAY support only ICE lite. The WHIP client MUST implement and use full ICE.
 
 Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and media servers as explained in section 4.1.
 
