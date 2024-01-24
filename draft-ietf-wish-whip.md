@@ -65,7 +65,7 @@ This document proposes a simple protocol based on HTTP for supporting WebRTC as 
 
 The WebRTC-HTTP Ingest Protocol (WHIP) is designed to facilitate a one-time exchange of Session Description Protocol (SDP) offers and answers using HTTP POST requests. This exchange is a fundamental step in establishing an Interactive Connectivity Establishment (ICE) and Datagram Transport Layer Security (DTLS) session between the WHIP client, which represents the encoder or media producer, and the media server, the broadcasting ingestion endpoint.
 
-Upon successful establishment of the ICE/DTLS session, unidirectional media data transmission commences from the WHIP client to the media server. It is important to note that SDP renegotiations are not supported in WHIP, meaning that no modifications to the "m=" sections can be made after the initial SDP offer/answer exchange via HTTP POST is completed and only ICE related information can be updated via HTTP PATCH requests as defined in Section 4.1.
+Upon successful establishment of the ICE/DTLS session, unidirectional media data transmission commences from the WHIP client to the media server. It is important to note that SDP renegotiations are not supported in WHIP, meaning that no modifications to the "m=" sections can be made after the initial SDP offer/answer exchange via HTTP POST is completed and only ICE related information can be updated via HTTP PATCH requests as defined in {{ice-support}}.
 
 The following diagram illustrates the core operation of the WHIP protocol for initiating and terminating an ingest session:
 
@@ -234,7 +234,7 @@ The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Shari
 
 The WHIP sessions MUST return an "405 Method Not Allowed" response for any HTTP request method different than PATCH and DELETE on the session URLs in order to reserve their usage for future versions of this protocol specification.
 
-## ICE support
+## ICE support {#ice-support}
 
 ICE  {{!RFC8845}} is a protocol addressing the complexities of Network Address Translation (NAT) traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
 
@@ -244,7 +244,7 @@ ICE Restarts are crucial for maintaining connectivity in dynamic network conditi
 
 Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and clients.
 
-### HTTP PATCH request usage
+### HTTP PATCH request usage {#http-patch-usage}
 
 The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} carrying the relevant ICE information.
 
@@ -256,7 +256,7 @@ The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Co
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
-### Trickle ICE
+### Trickle ICE {#trickle-ice}
 
 Depending on the Trickle ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8845}}. For the purpose of reducing setup times, when using Trickle ICE the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates.
 
@@ -296,9 +296,9 @@ HTTP/1.1 204 No Content
 ~~~~~
 {: title="Example of a Trickle ICE request and response"}
 
-### ICE Restarts
+### ICE Restarts {#ice-restarts}
 
-As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, the WHIP client and WHIP session will only exchange the relevant ICE information via an HTTP PATCH request as defined in section 4.1.1 and MUST assume that the previously negotiated non-ICE related SDP information still apply after the ICE restart.
+As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, the WHIP client and WHIP session will only exchange the relevant ICE information via an HTTP PATCH request as defined in {{http-patch-usage}}  and MUST assume that the previously negotiated non-ICE related SDP information still apply after the ICE restart.
 
 When performing an ICE restart, the WHIP client MUST include the updated "ice-pwd" and "ice-ufrag" in the SDP fragment of the HTTP PATCH request body as well as the new set of gathered ICE candidates as defined in {{!RFC8840}}.
 Similar what is defined in section 4.1.2, as per {{!RFC8829}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policiy is being used, the SDP fragment will contain only the fist m-line of the bundle group.
@@ -369,7 +369,7 @@ NOTE: {{!RFC8842}} defines that the offerer must insert an SDP "setup" attribute
 
 The media server SHOULD support full ICE, unless it is connected to the to the Internet with an IP address that is accessible by each WHIP client that is authorized to use it, in which case it MAY support only ICE lite. The WHIP client MUST implement and use full ICE.
 
-Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and media servers as explained in section 4.1.
+Trickle ICE and ICE restarts support is OPTIONAL for both the WHIP clients and media servers as explained in {{ice-support}}.
 
 ## Load balancing and redirections
 
