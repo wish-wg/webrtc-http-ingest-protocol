@@ -386,7 +386,7 @@ The WHIP endpoint MAY return STUN/TURN server configuration URLs and credentials
 A reference to each STUN/TURN server will be returned using the "Link" header field {{!RFC8288}} with a "rel" attribute value of "ice-server". The Link target URI is the server URI as defined in {{!RFC7064}} and {{!RFC7065}}. The credentials are encoded in the Link target attributes as follows:
 
 - username: If the Link header field represents a TURN server, and credential-type is "password", then this attribute specifies the username to use with that TURN server.
-- credential: If the "credential-type" attribute is missing or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{Section 10.2 of !RFC8489}}.
+- credential: If the "credential-type" attribute is missing or has a "password" value, the credential attribute represents a long-term authentication password, as described in {{Section 9.2 of !RFC8489}}.
 - credential-type: If the Link header field represents a TURN server, then this attribute specifies how the credential attribute value should be used when that TURN server requests authorization. The default value if the attribute is not present is "password".
 
 ~~~~~
@@ -412,7 +412,7 @@ The WHIP clients MAY also support configuring the STUN/TURN server URIs with lon
 
 ## Authentication and authorization
 
-All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{Section 11 of !RFC9110}} and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {{Section 11.6 of !RFC8819}}.
+All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{Section 11 of !RFC9110}} and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {{Section 11.6 of !RFC9110}}.
 
 ### Bearer token authentication
 
