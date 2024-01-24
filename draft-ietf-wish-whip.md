@@ -302,9 +302,11 @@ HTTP/1.1 204 No Content
 
 ### ICE Restarts
 
-A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 13.1.1.
+As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, it will only send its updated "ice-pwd" and "ice-ufrag" and the new set of ICE candidates, and the WHIP session will only return its updated "ice-pwd" and "ice-ufrag" and new set of candidates, using and HTTP PATCH request as defined in Section 4.1. The WHIP client and WHIP session MUST assume that the previously negotiaded non-ICE related SDP information still apply after the ICE restart.
 
 {{!RFC8840}} states that an agent MUST discard any received requests containing "ice-pwd" and "ice-ufrag" attributes that do not match those of the current ICE Negotiation Session, howevever, any WHIP session receiving an updated "ice-pwd" and "ice-ufrag" attributes MUST consider the request as performing an ICE restart instead and, if supported, SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and a new set of ICE candidates for the WHIP session. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server. The WHIP client MUST discard any previous set of media server's ICE candidates when receiving a successful response for an ICE restart request.
+
+A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{!RFC9110}} Section 13.1.1.
 
 Similar what is defined in section 4.1.2, as per {{!RFC8829}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policiy is being used, the SDP fragment will contain only the fist m-line of the bundle group.
  
