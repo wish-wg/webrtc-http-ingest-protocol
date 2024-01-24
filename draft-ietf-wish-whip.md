@@ -224,7 +224,7 @@ a=fmtp:97 apt=96
 
 Once a session is setup, consent freshness as per {{!RFC7675}} SHALL be used to detect non-graceful disconnection by full ICE implementations and DTLS teardown for session termination by either side.
 
-To explicitly terminate a WHIP session, the WHIP client MUST perform an HTTP DELETE request to the resource URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP session will be removed and the resources freed on the media server, terminating the ICE and DTLS sessions.
+To explicitly terminate a WHIP session, the WHIP client MUST perform an HTTP DELETE request to the WHIP session URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP session will be removed and the resources freed on the media server, terminating the ICE and DTLS sessions.
 
 A media server terminating a session MUST follow the procedures in {{!RFC7675}} Section 5.2 for immediate revocation of consent.
 
