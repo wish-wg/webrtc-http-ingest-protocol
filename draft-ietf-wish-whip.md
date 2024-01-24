@@ -102,8 +102,8 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP endpoint: This denotes the ingest server that receives the initial WHIP request.
 - WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP session.
 - media server: This is the WebRTC media server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
-- WHIP session:  Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
-- WHIP session URL:  Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
+- WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
+- WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
 # Protocol Operation
 
@@ -236,7 +236,7 @@ The WHIP sessions MUST return an "405 Method Not Allowed" response for any HTTP 
 
 ## ICE support {#ice-support}
 
-ICE  {{!RFC8845}} is a protocol addressing the complexities of Network Address Translation (NAT) traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
+ICE {{!RFC8845}} is a protocol addressing the complexities of Network Address Translation (NAT) traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
 
 Trickle ICE {{!RFC8838}} optimizes the connectivity process by incrementally sharing potential communication paths, reducing latency, and facilitating quicker establishment. 
 
@@ -298,7 +298,7 @@ HTTP/1.1 204 No Content
 
 ### ICE Restarts {#ice-restarts}
 
-As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, the WHIP client and WHIP session will only exchange the relevant ICE information via an HTTP PATCH request as defined in {{http-patch-usage}}  and MUST assume that the previously negotiated non-ICE related SDP information still apply after the ICE restart.
+As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, the WHIP client and WHIP session will only exchange the relevant ICE information via an HTTP PATCH request as defined in {{http-patch-usage}} and MUST assume that the previously negotiated non-ICE related SDP information still apply after the ICE restart.
 
 When performing an ICE restart, the WHIP client MUST include the updated "ice-pwd" and "ice-ufrag" in the SDP fragment of the HTTP PATCH request body as well as the new set of gathered ICE candidates as defined in {{!RFC8840}}.
 Similar what is defined in {{trickle-ice}}, as per {{!RFC8829}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the fist m-line of the bundle group.
@@ -599,11 +599,11 @@ WHIP Protocol Extensions URNs have a "ext" type as defined in {{urn-whip-subspac
 
    The IETF has created a mailing list, "wish@ietf.org", which can be used
    for public discussion of WHIP protocol extensions proposals prior to registration.
-   Use of the mailing list is strongly encouraged.  The IESG has
+   Use of the mailing list is strongly encouraged. The IESG has
    appointed a designated expert {{RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
-   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per {{Section 4.6 of !BCP26}}.
+   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {{!BCP26}} .
    An RFC is REQUIRED for the registration of new value data types that modify existing properties.
    An RFC is also REQUIRED for registration of WHIP Protocol Extensions URNs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
