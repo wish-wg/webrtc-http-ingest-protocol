@@ -290,7 +290,7 @@ A WHIP client sending a PATCH request for performing ICE restart MUST contain an
 
 {{!RFC8840}} states that an agent MUST discard any received requests containing "ice-pwd" and "ice-ufrag" attributes that do not match those of the current ICE Negotiation Session, howevever, any WHIP session receiving an updated "ice-pwd" and "ice-ufrag" attributes MUST consider the request as performing an ICE restart instead and, if supported, SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and a new set of ICE candidates for the WHIP session. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server. 
 
-As defined in {{Section 4.4.1.1.1 of !RFC8839}} the set of candidates after an ICE restart may include some, none, or all of the previous candidates for that data stream and may include a totally new set of candidates. So after performing a sucsessful ICE restart, both the WHIP client and the WHIP session MUST replace the previous set of remote candidates with the new set exchanged in the HTTP PATCH request and respose, discarding any remote ICE candidate not present on the new set.
+As defined in {{Section 4.4.1.1.1 of !RFC8839}} the set of candidates after an ICE restart may include some, none, or all of the previous candidates for that data stream and may include a totally new set of candidates. So after performing a sucsessful ICE restart, both the WHIP client and the WHIP session MUST replace the previous set of remote candidates with the new set exchanged in the HTTP PATCH request and respose, discarding any remote ICE candidate not present on the new set. Both the WHIP client and the WHIP session MUST include any "ice-options", "ice-pacing" and "ice-lite" attributes in the HTTP PATCH requests and response bodys and discard any previous received ones.
 
 If the ICE restart request cannot be satisfied by the WHIP session, the resource MUST return an appropriate HTTP error code and MUST NOT terminate the session immediately and keep the existing ICE session. The WHIP client MAY retry performing a new ICE restart or terminate the session by issuing an HTTP DELETE request instead. In any case, the session MUST be terminated if the ICE consent expires as a consequence of the failed ICE restart as per {{Section 5.1 of !RFC7675}}.
 
@@ -301,8 +301,9 @@ PATCH /session/id HTTP/1.1
 Host: whip.example.com
 If-Match: "*"
 Content-Type: application/trickle-ice-sdpfrag
-Content-Length: 54
+Content-Length: 82
 
+a=ice-options:trickle ice2
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
@@ -316,9 +317,10 @@ a=candidate:2154773085 1 tcp 1518214911 198.51.100.2 9 typ host tcptype active g
 HTTP/1.1 200 OK
 ETag: "abccd"
 Content-Type: application/trickle-ice-sdpfrag
-Content-Length: 224
+Content-Length: 252
 
 a=ice-lite
+a=ice-options:trickle ice2
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
@@ -407,7 +409,6 @@ WHIP endpoints and sessions MAY require the HTTP request to be authenticated usi
 The nature, syntax, and semantics of the bearer token, as well as how to distribute it to the client, is outside the scope of this document. Some examples of the kind of tokens that could be used are, but are not limited to, JWT tokens as per {{!RFC6750}} and {{!RFC8725}} or a shared secret stored on a database. The tokens are typically made available to the end user alongside the WHIP endpoint URL and configured on the WHIP clients (similar to the way RTMP URLs and Stream Keys are distributed).
 
 WHIP endpoints and sessions could perform the authentication and authorization by encoding an authentication token within the URLs for the WHIP endpoints or sessions instead. In case the WHIP client is not configured to use a bearer token, the HTTP Authorization header field must not be sent in any request.
-
 
 ## Simulcast and scalable video coding
 
