@@ -1,4 +1,4 @@
----
+fir---
 docname: draft-ietf-wish-whip-12
 title: WebRTC-HTTP ingestion protocol (WHIP)
 abbrev: whip
@@ -266,7 +266,7 @@ Because the WHIP client needs to know the entity-tag associated with the ICE ses
 
 WHIP clients generating the HTTP PATCH body with the SDP fragment and its subsequent processing by WHIP sessions MUST follow to the guidelines defined in {{Section 4.4 of !RFC8840}} with the following considerations:
 
- - As per {{!RFC8829}}, only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the fist m-line of the bundle group.
+ - As per {{!RFC8829}}, only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
  - The WHIP client MAY exclude ICE candidates from the HTTP PATCH body if they have already been confirmed by the WHIP session with a successful HTTP response to a previous HTTP PATCH request.
 
 If the WHIP session is using entity-tags for identifying the ICE sessions in explained in {{http-patch-usage}}, a WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{Section 13.1.1 of !RFC9110}}.
@@ -301,7 +301,7 @@ HTTP/1.1 204 No Content
 As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, the WHIP client and WHIP session will only exchange the relevant ICE information via an HTTP PATCH request as defined in {{http-patch-usage}} and MUST assume that the previously negotiated non-ICE related SDP information still apply after the ICE restart.
 
 When performing an ICE restart, the WHIP client MUST include the updated "ice-pwd" and "ice-ufrag" in the SDP fragment of the HTTP PATCH request body as well as the new set of gathered ICE candidates as defined in {{!RFC8840}}.
-Similar what is defined in {{trickle-ice}}, as per {{!RFC8829}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the fist m-line of the bundle group.
+Similar what is defined in {{trickle-ice}}, as per {{!RFC8829}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
 A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{Section 13.1.1 of !RFC9110}}. 
 
 {{!RFC8840}} states that an agent MUST discard any received requests containing "ice-pwd" and "ice-ufrag" attributes that do not match those of the current ICE Negotiation Session, howevever, any WHIP session receiving an updated "ice-pwd" and "ice-ufrag" attributes MUST consider the request as performing an ICE restart instead and, if supported, SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and a new set of ICE candidates for the WHIP session. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server. 
