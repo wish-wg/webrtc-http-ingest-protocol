@@ -121,7 +121,7 @@ Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoi
 POST /whip/endpoint HTTP/1.1
 Host: whip.example.com
 Content-Type: application/sdp
-Content-Length: 1394
+Content-Length: 1101
 
 v=0
 o=- 5228595038118931041 2 IN IP4 127.0.0.1
@@ -129,7 +129,7 @@ s=-
 t=0 0
 a=group:BUNDLE 0 1
 a=extmap-allow-mixed
-a=ice-options:trickle
+a=ice-options:trickle ice2
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
@@ -146,12 +146,6 @@ a=rtcp-mux-only
 a=rtpmap:111 opus/48000/2
 a=fmtp:111 minptime=10;useinbandfec=1
 m=video 0 UDP/TLS/RTP/SAVPF 96 97
-c=IN IP4 0.0.0.0
-a=rtcp:9 IN IP4 0.0.0.0
-a=ice-ufrag:EsAw
-a=ice-pwd:bP+XJMM09aR8AiX1jdukzR6Y
-a=fingerprint:sha-256 DA:7B:57:DC:28:CE:04:4F:31:79:85:C4:31:67:EB:27:58:29:ED:77:2A:0D:24:AE:ED:AD:30:BC:BD:F1:9C:02
-a=setup:actpass
 a=mid:1
 a=bundle-only
 a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
@@ -159,8 +153,6 @@ a=extmap:10 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id
 a=extmap:11 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id
 a=sendonly
 a=msid:d46fb922-d52a-4e9c-aa87-444eadc1521b 3956b460-40f4-4d05-acef-03abcdd8c6fd
-a=rtcp-mux
-a=rtcp-mux-only
 a=rtpmap:96 VP8/90000
 a=rtcp-fb:96 ccm fir
 a=rtcp-fb:96 nack
@@ -171,7 +163,7 @@ a=fmtp:97 apt=96
 HTTP/1.1 201 Created
 ETag: "xyzzy"
 Content-Type: application/sdp
-Content-Length: 1400
+Content-Length: 1053
 Location: https://whip.example.com/session/id
 
 v=0
@@ -181,7 +173,7 @@ t=0 0
 a=group:BUNDLE 0 1
 a=extmap-allow-mixed
 a=ice-lite
-a=ice-options:trickle
+a=ice-options:trickle ice2
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
@@ -199,20 +191,12 @@ a=rtpmap:111 opus/48000/2
 a=fmtp:111 minptime=10;useinbandfec=1
 m=video 0 UDP/TLS/RTP/SAVPF 96 97
 c=IN IP4 0.0.0.0
-a=rtcp:9 IN IP4 0.0.0.0
-a=ice-ufrag:38sdf4fdsf54
-a=ice-pwd:2e13dde17c1cb009202f627fab90cbec358d766d049c9697
-a=fingerprint:sha-256 F7:EB:F3:3E:AC:D2:EA:A7:C1:EC:79:D9:B3:8A:35:DA:70:86:4F:46:D9:2D:CC:D0:BC:81:9F:67:EF:34:2E:BD
-a=candidate:1 1 udp 2130706431 198.51.100.1 39132 typ host
-a=setup:passive
 a=mid:1
 a=bundle-only
 a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
 a=extmap:10 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id
 a=extmap:11 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id
 a=recvonly
-a=rtcp-mux
-a=rtcp-mux-only
 a=rtpmap:96 VP8/90000
 a=rtcp-fb:96 ccm fir
 a=rtcp-fb:96 nack
@@ -281,11 +265,11 @@ If-Match: "xyzzy"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 576
 
-a=ice-ufrag:EsAw
-a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
+a=ice-ufrag:EsAw
+a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.2 61765 typ host generation 0 ufrag EsAw network-id 2
 a=candidate:473322822 1 tcp 1518280447 192.0.2.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
@@ -319,11 +303,11 @@ If-Match: "*"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 54
 
-a=ice-ufrag:ysXw
-a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
+a=ice-ufrag:ysXw
+a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.2 61765 typ host generation 0 ufrag EsAw network-id 2
 a=candidate:473322822 1 tcp 1518280447 192.0.2.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
@@ -335,11 +319,11 @@ Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 224
 
 a=ice-lite
-a=ice-ufrag:289b31b754eaa438
-a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
+a=ice-ufrag:289b31b754eaa438
+a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 a=candidate:1 1 udp 2130706431 198.51.100.1 39132 typ host
 a=end-of-candidates
 ~~~~~
