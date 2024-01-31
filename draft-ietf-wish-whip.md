@@ -121,7 +121,7 @@ Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoi
 POST /whip/endpoint HTTP/1.1
 Host: whip.example.com
 Content-Type: application/sdp
-Content-Length: 1113
+Content-Length: 1096
 
 v=0
 o=- 5228595038118931041 2 IN IP4 127.0.0.1
@@ -146,7 +146,6 @@ a=rtcp-mux-only
 a=rtpmap:111 opus/48000/2
 a=fmtp:111 minptime=10;useinbandfec=1
 m=video 0 UDP/TLS/RTP/SAVPF 96 97
-a=setup:actpass
 a=mid:1
 a=bundle-only
 a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
@@ -164,7 +163,7 @@ a=fmtp:97 apt=96
 HTTP/1.1 201 Created
 ETag: "xyzzy"
 Content-Type: application/sdp
-Content-Length: 1026
+Content-Length: 1048
 Location: https://whip.example.com/session/id
 
 v=0
@@ -192,7 +191,6 @@ a=rtpmap:111 opus/48000/2
 a=fmtp:111 minptime=10;useinbandfec=1
 m=video 0 UDP/TLS/RTP/SAVPF 96 97
 c=IN IP4 0.0.0.0
-a=setup:passive
 a=mid:1
 a=bundle-only
 a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
@@ -267,11 +265,11 @@ If-Match: "xyzzy"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 576
 
-a=ice-ufrag:EsAw
-a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
+a=ice-ufrag:EsAw
+a=ice-pwd:P2uYro0UCOQ4zxjKXaWCBui1
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.2 61765 typ host generation 0 ufrag EsAw network-id 2
 a=candidate:473322822 1 tcp 1518280447 192.0.2.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
@@ -305,11 +303,11 @@ If-Match: "*"
 Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 54
 
-a=ice-ufrag:ysXw
-a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
+a=ice-ufrag:ysXw
+a=ice-pwd:vw5LmwG4y/e6dPP/zAP9Gp5k
 a=candidate:1387637174 1 udp 2122260223 192.0.2.1 61764 typ host generation 0 ufrag EsAw network-id 1
 a=candidate:3471623853 1 udp 2122194687 198.51.100.2 61765 typ host generation 0 ufrag EsAw network-id 2
 a=candidate:473322822 1 tcp 1518280447 192.0.2.1 9 typ host tcptype active generation 0 ufrag EsAw network-id 1
@@ -321,11 +319,11 @@ Content-Type: application/trickle-ice-sdpfrag
 Content-Length: 224
 
 a=ice-lite
-a=ice-ufrag:289b31b754eaa438
-a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 a=group:BUNDLE 0 1
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 a=mid:0
+a=ice-ufrag:289b31b754eaa438
+a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 a=candidate:1 1 udp 2130706431 198.51.100.1 39132 typ host
 a=end-of-candidates
 ~~~~~
