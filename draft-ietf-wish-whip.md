@@ -121,7 +121,7 @@ Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoi
 POST /whip/endpoint HTTP/1.1
 Host: whip.example.com
 Content-Type: application/sdp
-Content-Length: 1096
+Content-Length: 1101
 
 v=0
 o=- 5228595038118931041 2 IN IP4 127.0.0.1
@@ -129,7 +129,7 @@ s=-
 t=0 0
 a=group:BUNDLE 0 1
 a=extmap-allow-mixed
-a=ice-options:trickle
+a=ice-options:trickle ice2
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
@@ -163,7 +163,7 @@ a=fmtp:97 apt=96
 HTTP/1.1 201 Created
 ETag: "xyzzy"
 Content-Type: application/sdp
-Content-Length: 1048
+Content-Length: 1053
 Location: https://whip.example.com/session/id
 
 v=0
@@ -173,7 +173,7 @@ t=0 0
 a=group:BUNDLE 0 1
 a=extmap-allow-mixed
 a=ice-lite
-a=ice-options:trickle
+a=ice-options:trickle ice2
 m=audio 9 UDP/TLS/RTP/SAVPF 111
 c=IN IP4 0.0.0.0
 a=rtcp:9 IN IP4 0.0.0.0
