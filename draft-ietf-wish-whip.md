@@ -105,6 +105,16 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
 - WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
+The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, Media Server, and WHIP session. This flow outlines the process of setting up and tearing down a ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
+
+- WHIP client: Initiates the communication by sending an HTTP POST with an SDP Offer to the WHIP endpoint.
+- WHIP endpoint: Responds with a "201 Created" message containing an SDP answer.
+- WHIP client and media server: Establish an ICE and DTLS sessions for NAT traversal and secure communication.
+- RTP/RTCP Flow: Real-time Transport Protocol and Real-time Transport Control Protocol flows are established for media transmission from the WHIP client to the media server
+- WHIP client: Sends an HTTP DELETE to terminate the WHIP session.
+- WHIP session: Responds with a "200 OK" to confirm the session termination.
+
+
 # Protocol Operation
 
 In order to set up an ingestion session, the WHIP client MUST generate an SDP offer according to the JSEP rules for an initial offer as in {{Section 5.2.1 of !RFC8829}} and perform an HTTP POST request as per {{Section 9.3.3 of !RFC9110}} to the configured WHIP endpoint URL.
@@ -115,7 +125,7 @@ As the WHIP protocol only supports the ingestion use case with unidirectional me
 
 If the HTTP POST to the WHIP endpoint has a content type different than "application/sdp", the WHIP endpoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP body is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
-Following is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Location header pointing to the newly created WHIP session:
+Following {{#sdp-exchange-example}} is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Location header pointing to the newly created WHIP session:
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -204,7 +214,7 @@ a=rtcp-fb:96 nack pli
 a=rtpmap:97 rtx/90000
 a=fmtp:97 apt=96
 ~~~~~
-{: title="Example of SDP offer/answer exchange done via an HTTP POST"}
+{: title="Example of SDP offer/answer exchange done via an HTTP POST" #sdp-exchange-example}
 
 Once a session is setup, consent freshness as per {{!RFC7675}} SHALL be used to detect non-graceful disconnection by full ICE implementations and DTLS teardown for session termination by either side.
 
@@ -220,7 +230,7 @@ The WHIP sessions MUST return an "405 Method Not Allowed" response for any HTTP 
 
 ## ICE support {#ice-support}
 
-ICE {{!RFC8845}} is a protocol addressing the complexities of Network Address Translation (NAT) traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
+ICE {{!RFC8845}} is a protocol addressing the complexities of NAT traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
 
 Trickle ICE {{!RFC8838}} optimizes the connectivity process by incrementally sharing potential communication paths, reducing latency, and facilitating quicker establishment. 
 
@@ -280,7 +290,9 @@ a=end-of-candidates
 
 HTTP/1.1 204 No Content
 ~~~~~
-{: title="Example of a Trickle ICE request and response"}
+{: title="Example of a Trickle ICE request and response" #trickle-ice-example}
+
+{{#trickle-ice-example}} shows an example of the Trickle ICE procedure where the WHIP client sends a PATCH request with updated ICE candidate information and receives a successful response from the WHIP session.
 
 ### ICE Restarts {#ice-restarts}
 
@@ -331,7 +343,9 @@ a=ice-pwd:0b66f472495ef0ccac7bda653ab6be49ea13114472a5d10a
 a=candidate:1 1 udp 2130706431 198.51.100.1 39132 typ host
 a=end-of-candidates
 ~~~~~
-{: title="Example of an ICE restart request and response"}
+{: title="Example of an ICE restart request and response" #trickle-restart-example}
+
+{{#trickle-ice-example}} demonstrates a Trickle ICE restart procedure example. The WHIP client sends a PATCH request containing updated ICE information, including a new ufrag and password, along with newly gathered ICE candidates. In response, the WHIP session provides ICE information for the session after the ICE restart, including the updated ufrag and password, as well as the previous ICE candidate.
 
 ## WebRTC constraints
 
@@ -388,7 +402,9 @@ A reference to each STUN/TURN server will be returned using the "Link" header fi
      Link: <turns:turn.example.net?transport=tcp>; rel="ice-server";
            username="user"; credential="myPassword"; credential-type="password"
 ~~~~~
-{: title="Example of a STUN/TURN servers configuration"}
+{: title="Example of a STUN/TURN servers configuration"  #stun-server-example}
+
+{{#stun-server-example}} illustrates the Link headers included in a 201 Created response, providing the ICE server URLs and associated credentials.
 
 NOTE: The naming of both the "rel" attribute value of "ice-server" and the target attributes follows the one used on the W3C WebRTC recommendation {{?W3C.REC-webrtc-20210126}} RTCConfiguration dictionary in section 4.2.1. "rel" attribute value of "ice-server" is not prepended with the "urn:ietf:params:whip:" so it can be reused by other specifications which may use this mechanism to configure the usage of STUN/TURN servers.
 
@@ -442,7 +458,9 @@ Location: https://whip.example.com/session/id
 Link: <https://whip.ietf.org/publications/213786HF/sse>;
       rel="urn:ietf:params:whip:ext:example:server-sent-events"
 ~~~~~
-{: title="Example of a WHIP protocol extension"}
+{: title="Example of a WHIP protocol extension" #protocol-extension-example}
+
+{{#protocol-extension-example}} shows an example of a WHIP protocol extension supported by the WHIP session, as indicated in the Link header of the 201 Created response.
 
 # Security Considerations
 
