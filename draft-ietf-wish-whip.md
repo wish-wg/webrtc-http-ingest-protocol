@@ -335,7 +335,7 @@ a=end-of-candidates
 
 ## WebRTC constraints
 
-In order to reduce the complexity of implementing WHIP in both clients and media servers, WHIP imposes the following restrictions regarding WebRTC usage:
+To simplify the implementation of WHIP in both clients and media servers, WHIP introduces specific restrictions on WebRTC usage. The following subsections will explain these restrictions in detail:
 
 ### SDP Bundle
 
