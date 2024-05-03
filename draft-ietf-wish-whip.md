@@ -125,7 +125,7 @@ As the WHIP protocol only supports the ingestion use case with unidirectional me
 
 If the HTTP POST to the WHIP endpoint has a content type different than "application/sdp", the WHIP endpoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP body is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
-Following {{#sdp-exchange-example}} is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Location header pointing to the newly created WHIP session:
+Following {{sdp-exchange-example}} is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Location header pointing to the newly created WHIP session:
 
 ~~~~~
 POST /whip/endpoint HTTP/1.1
@@ -292,7 +292,7 @@ HTTP/1.1 204 No Content
 ~~~~~
 {: title="Example of a Trickle ICE request and response" #trickle-ice-example}
 
-{{#trickle-ice-example}} shows an example of the Trickle ICE procedure where the WHIP client sends a PATCH request with updated ICE candidate information and receives a successful response from the WHIP session.
+{{trickle-ice-example}} shows an example of the Trickle ICE procedure where the WHIP client sends a PATCH request with updated ICE candidate information and receives a successful response from the WHIP session.
 
 ### ICE Restarts {#ice-restarts}
 
@@ -345,7 +345,7 @@ a=end-of-candidates
 ~~~~~
 {: title="Example of an ICE restart request and response" #trickle-restart-example}
 
-{{#trickle-ice-example}} demonstrates a Trickle ICE restart procedure example. The WHIP client sends a PATCH request containing updated ICE information, including a new ufrag and password, along with newly gathered ICE candidates. In response, the WHIP session provides ICE information for the session after the ICE restart, including the updated ufrag and password, as well as the previous ICE candidate.
+{{trickle-ice-example}} demonstrates a Trickle ICE restart procedure example. The WHIP client sends a PATCH request containing updated ICE information, including a new ufrag and password, along with newly gathered ICE candidates. In response, the WHIP session provides ICE information for the session after the ICE restart, including the updated ufrag and password, as well as the previous ICE candidate.
 
 ## WebRTC constraints
 
@@ -404,7 +404,7 @@ A reference to each STUN/TURN server will be returned using the "Link" header fi
 ~~~~~
 {: title="Example of a STUN/TURN servers configuration"  #stun-server-example}
 
-{{#stun-server-example}} illustrates the Link headers included in a 201 Created response, providing the ICE server URLs and associated credentials.
+{{stun-server-example}} illustrates the Link headers included in a 201 Created response, providing the ICE server URLs and associated credentials.
 
 NOTE: The naming of both the "rel" attribute value of "ice-server" and the target attributes follows the one used on the W3C WebRTC recommendation {{?W3C.REC-webrtc-20210126}} RTCConfiguration dictionary in section 4.2.1. "rel" attribute value of "ice-server" is not prepended with the "urn:ietf:params:whip:" so it can be reused by other specifications which may use this mechanism to configure the usage of STUN/TURN servers.
 
@@ -460,7 +460,7 @@ Link: <https://whip.ietf.org/publications/213786HF/sse>;
 ~~~~~
 {: title="Example of a WHIP protocol extension" #protocol-extension-example}
 
-{{#protocol-extension-example}} shows an example of a WHIP protocol extension supported by the WHIP session, as indicated in the Link header of the 201 Created response.
+{{protocol-extension-example}} shows an example of a WHIP protocol extension supported by the WHIP session, as indicated in the Link header of the 201 Created response.
 
 # Security Considerations
 
