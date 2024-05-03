@@ -42,7 +42,7 @@ This document updates RFC 8842 and RFC 8840.
 
 # Introduction
 
-The IETF RTCWEB working group standardized JSEP ({{!RFC8829}}), a mechanism used to control the setup, management, and teardown of a multimedia session. It also describes how to negotiate media flows using the Offer/Answer Model with the Session Description Protocol (SDP) {{!RFC3264}} including the formats for data sent over the wire (e.g., media types, codec parameters, and encryption). WebRTC intentionally does not specify a signaling transport protocol at application level.
+The IETF RTCWEB working group standardized JSEP ({{!RFC9429}}), a mechanism used to control the setup, management, and teardown of a multimedia session. It also describes how to negotiate media flows using the Offer/Answer Model with the Session Description Protocol (SDP) {{!RFC3264}} including the formats for data sent over the wire (e.g., media types, codec parameters, and encryption). WebRTC intentionally does not specify a signaling transport protocol at application level.
 
 Unfortunately, the lack of a standardized signaling mechanism in WebRTC has been an obstacle to adoption as an ingestion protocol within the broadcast/streaming industry, where a streamlined production pipeline is taken for granted: plug in cables carrying raw media to hardware encoders, then push the encoded media to any streaming service or Content Delivery Network (CDN) ingest using an ingestion protocol.
 
@@ -117,9 +117,9 @@ The {{whip-protocol-operation}} illustrates the communication flow between a WHI
 
 # Protocol Operation
 
-In order to set up an ingestion session, the WHIP client MUST generate an SDP offer according to the JSEP rules for an initial offer as in {{Section 5.2.1 of !RFC8829}} and perform an HTTP POST request as per {{Section 9.3.3 of !RFC9110}} to the configured WHIP endpoint URL.
+In order to set up an ingestion session, the WHIP client MUST generate an SDP offer according to the JSEP rules for an initial offer as in {{Section 5.2.1 of !RFC9429}} and perform an HTTP POST request as per {{Section 9.3.3 of !RFC9110}} to the configured WHIP endpoint URL.
 
-The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint MUST generate an SDP answer according to the JSEP rules for an initial answer as in {{Section 5.3.1 of !RFC8829}} and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
+The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint MUST generate an SDP answer according to the JSEP rules for an initial answer as in {{Section 5.3.1 of !RFC9429}} and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
 
 As the WHIP protocol only supports the ingestion use case with unidirectional media, the WHIP client SHOULD use "sendonly" attribute in the SDP offer but MAY use the "sendrecv" attribute instead, "inactive" and "recvonly" attributes MUST NOT be used. The WHIP endpoint MUST use "recvonly" attribute in the SDP answer. 
 
@@ -262,7 +262,7 @@ Additionally, if ICE restarts are supported by the WHIP session, the WHIP client
 
 WHIP clients generating the HTTP PATCH body with the SDP fragment and its subsequent processing by WHIP sessions MUST follow to the guidelines defined in {{Section 4.4 of !RFC8840}} with the following considerations:
 
- - As per {{!RFC8829}}, only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
+ - As per {{!RFC9429}}, only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
  - The WHIP client MAY exclude ICE candidates from the HTTP PATCH body if they have already been confirmed by the WHIP session with a successful HTTP response to a previous HTTP PATCH request.
 
 If the WHIP session is using entity-tags for identifying the ICE sessions in explained in {{http-patch-usage}}, a WHIP client sending a PATCH request for performing trickle ICE MUST include an "If-Match" header field with the latest known entity-tag as per {{Section 13.1.1 of !RFC9110}}.
@@ -299,7 +299,7 @@ HTTP/1.1 204 No Content
 As defined in {{!RFC8839}}, when an ICE restart occurs, a new SDP offer/answer exchange is triggered. However, as WHIP does not support renegotiation of non-ICE related SDP information, a WHIP client will not send a new offer when an ICE restart occurs. Instead, the WHIP client and WHIP session will only exchange the relevant ICE information via an HTTP PATCH request as defined in {{http-patch-usage}} and MUST assume that the previously negotiated non-ICE related SDP information still apply after the ICE restart.
 
 When performing an ICE restart, the WHIP client MUST include the updated "ice-pwd" and "ice-ufrag" in the SDP fragment of the HTTP PATCH request body as well as the new set of gathered ICE candidates as defined in {{!RFC8840}}.
-Similar what is defined in {{trickle-ice}}, as per {{!RFC8829}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
+Similar what is defined in {{trickle-ice}}, as per {{!RFC9429}} only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
 A WHIP client sending a PATCH request for performing ICE restart MUST contain an "If-Match" header field with a field-value "*" as per {{Section 13.1.1 of !RFC9110}}. 
 
 {{!RFC8840}} states that an agent MUST discard any received requests containing "ice-pwd" and "ice-ufrag" attributes that do not match those of the current ICE Negotiation Session, however, any WHIP session receiving an updated "ice-pwd" and "ice-ufrag" attributes MUST consider the request as performing an ICE restart instead and, if supported, SHALL return a "200 OK" with an "application/trickle-ice-sdpfrag" body containing the new ICE username fragment and password and a new set of ICE candidates for the WHIP session. Also, the "200 OK" response for a successful ICE restart MUST contain the new entity-tag corresponding to the new ICE session in an ETag response header field and MAY contain a new set of ICE candidates for the media server. 
@@ -353,7 +353,7 @@ To simplify the implementation of WHIP in both clients and media servers, WHIP i
 
 ### SDP Bundle
 
-Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "max-bundle" policy as defined in {{!RFC8829}}. The WHIP client and the media server MUST support multiplexed media associated with the BUNDLE group as per {{Section 9 of !RFC9143}}. In addition, per {{!RFC9143}} the WHIP client and media server SHALL use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the media server, both The WHIP client and WHIP endpoints MUST include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{Section 3 of !RFC8858}}.
+Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "max-bundle" policy as defined in {{!RFC9429}}. The WHIP client and the media server MUST support multiplexed media associated with the BUNDLE group as per {{Section 9 of !RFC9143}}. In addition, per {{!RFC9143}} the WHIP client and media server SHALL use RTP/RTCP multiplexing for all bundled media. In order to reduce the network resources required at the media server, both The WHIP client and WHIP endpoints MUST include the "rtcp-mux-only" attribute in each bundled "m=" sections as per {{Section 3 of !RFC8858}}.
 
 ### Single MediaStream
 
@@ -361,7 +361,7 @@ WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore
 
 ### No partially successful answers
 
-The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC8829}} in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful ingest sessions which can be misleading to end users.
+The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful ingest sessions which can be misleading to end users.
 
 ### DTLS setup role and SDP "setup" attribute
 
@@ -410,7 +410,7 @@ NOTE: The naming of both the "rel" attribute value of "ice-server" and the targe
 
 NOTE: Depending on the ICE Agent implementation, the WHIP client may need to call the setConfiguration method before calling the setLocalDescription method with the local SDP offer in order to avoid having to perform an ICE restart for applying the updated STUN/TURN server configuration on the next ICE gathering phase.
 
-There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{Section 4.1.18 of !RFC8829}}. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is not NOT RECOMMENDED to be used by the WHIP clients and, if supported by the underlying WHIP client's webrtc implementation, the WHIP client SHOULD wait for the information to be returned by the WHIP endpoint on the response of the HTTP POST request instead.
+There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{Section 4.1.18 of !RFC9429}}. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is not NOT RECOMMENDED to be used by the WHIP clients and, if supported by the underlying WHIP client's webrtc implementation, the WHIP client SHOULD wait for the information to be returned by the WHIP endpoint on the response of the HTTP POST request instead.
 
 The generation of the TURN server credentials may require performing a request to an external provider, which can both add latency to the OPTIONS request processing and increase the processing required to handle that request. In order to prevent this, the WHIP endpoint SHOULD NOT return the STUN/TURN server configuration if the OPTIONS request is a preflight request for CORS as defined in {{FETCH}}, that is, if The OPTIONS request does not contain an Access-Control-Request-Method with "POST" value and the the Access-Control-Request-Headers HTTP header does not contain the "Link" value. 
 
