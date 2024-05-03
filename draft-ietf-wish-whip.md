@@ -101,11 +101,11 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP client: This represents the WebRTC media encoder or producer, which functions as a client of the WHIP protocol by encoding and delivering media to a remote media server.
 - WHIP endpoint: This denotes the ingest server that receives the initial WHIP request.
 - WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP session.
-- media server: This is the WebRTC media server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
+- Media server: This is the WebRTC media server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
 - WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
 - WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
-The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, Media Server, and WHIP session. This flow outlines the process of setting up and tearing down a ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
+The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down a ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
 
 - WHIP client: Initiates the communication by sending an HTTP POST with an SDP Offer to the WHIP endpoint.
 - WHIP endpoint: Responds with a "201 Created" message containing an SDP answer.
