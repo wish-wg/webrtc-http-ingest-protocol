@@ -611,8 +611,8 @@ WHIP Protocol Extensions URNs have a "ext" type as defined in {{urn-whip-subspac
    wish@ietf.org mailing list and review registrations.
 
    Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {{!BCP26}} .
-   An RFC is REQUIRED for the registration of new value data types that modify existing properties.
-   An RFC is also REQUIRED for registration of WHIP Protocol Extensions URNs that modify WHIP Protocol Extensions previously documented in an existing RFC.
+   An Standards Track RFC is REQUIRED for the registration of new value data types that modify existing properties.
+   An Standards Track RFC is also REQUIRED for registration of WHIP Protocol Extensions URNs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
    The registration procedure begins when a completed registration template, defined in the sections below, is sent to iana@iana.org.
    Decisions made by the designated expert can be appealed to an Applications and Real Time (ART) Area Director, then to the IESG.
@@ -634,7 +634,7 @@ The Designated Expert (DE) is expected to ascertain the existence of suitable do
 
 The DE is also expected to check the clarity of purpose and use of the requested registration.
 
-Additionally, the DE must verify that any request for one of these registrations has been made available for review and comment within the IETF: the DE will post the request to the WebRTC Ingest Signaling over HTTPS (wish) Working Group mailing list (or a successor mailing list designated by the IESG). 
+Additionally, the DE must verify that any request for one of these registrations has been made available for review and comment within the IETF. the DE will post the request to the WebRTC Ingest Signaling over HTTPS (wish) Working Group mailing list (or a successor mailing list designated by the IESG). 
 
 If the request comes from within the IETF, it should be documented in an Internet-Draft. Lastly, the DE must ensure that any other request for a code point does not conflict with work that is active or already published within the IETF.
 
