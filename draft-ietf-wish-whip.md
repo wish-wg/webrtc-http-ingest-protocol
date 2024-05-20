@@ -483,7 +483,7 @@ On top of that, the WHIP protocol exposes a thin new attack surface specific of 
 - Insecure direct object references (IDOR) on the WHIP session locations:
   If the URLs returned by the WHIP endpoint for the WHIP sessions location are easy to guess, it would be possible for an attacker to send multiple HTTP DELETE requests and terminate all the WHIP sessions currently running.
   In order to prevent this scenario, WHIP endpoints SHOULD generate URLs with enough randomness, using a cryptographically secure pseudorandom number generator following the best practices in Randomness Requirements for Security {{!RFC4086}}, and implement a rate limit and avalanche control mechanism for HTTP DELETE requests.
-  The security considerations for Universally Unique IDentifier (UUID) {{!RFC4122, Section 6}} are applicable for generating the WHIP sessions location URL.
+  The security considerations for Universally Unique IDentifier (UUID) {{!RFC9562, Section 8}} are applicable for generating the WHIP sessions location URL.
 
 - HTTP PATCH flooding: 
 Similar to the HTTP POST flooding, a malicious client could also create a resource exhaustion by sending multiple HTTP PATCH request to the WHIP session, although the WHIP sessions can limit the impact by not allocating new ICE candidates and reusing the existing ICE candidates when doing ICE restarts.
