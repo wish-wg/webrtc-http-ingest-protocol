@@ -455,7 +455,7 @@ In this theoretical case, the "201 Created" response to the HTTP POST request wo
 HTTP/1.1 201 Created
 Content-Type: application/sdp
 Location: https://whip.example.com/session/id
-Link: <https://whip.ietf.org/publications/213786HF/sse>;
+Link: <https://whip.example.com/session/id/sse>;
       rel="urn:ietf:params:whip:ext:example:server-sent-events"
 ~~~~~
 {: title="Example of a WHIP protocol extension" #protocol-extension-example}
