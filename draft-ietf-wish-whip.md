@@ -105,12 +105,12 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
 - WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
-The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down a ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
+The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down a ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS and Secure Real-time Transport Protocol (SRTP) for security, and RTP/RTCP for media transport:
 
 - WHIP client: Initiates the communication by sending an HTTP POST with an SDP Offer to the WHIP endpoint.
 - WHIP endpoint: Responds with a "201 Created" message containing an SDP answer.
 - WHIP client and media server: Establish an ICE and DTLS sessions for NAT traversal and secure communication.
-- RTP/RTCP Flow: Real-time Transport Protocol and Real-time Transport Control Protocol flows are established for media transmission from the WHIP client to the media server
+- RTP/RTCP Flow: Real-time Transport Protocol and Real-time Transport Control Protocol flows are established for media transmission from the WHIP client to the media server, secured by the SRTP profile.
 - WHIP client: Sends an HTTP DELETE to terminate the WHIP session.
 - WHIP session: Responds with a "200 OK" to confirm the session termination.
 
