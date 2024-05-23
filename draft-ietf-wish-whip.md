@@ -53,7 +53,7 @@ This document proposes a simple protocol based on HTTP for supporting WebRTC as 
 - Is easy to implement,
 - Is as easy to use as popular IP-based broadcast protocols
 - Is fully compliant with WebRTC and RTCWEB specs
-- Enables ingestion on both traditional media platforms and WebRTC end-to-end platforms, achieving the lowest possible latency.
+- Enables ingestion on both classical media platforms and WebRTC end-to-end platforms, achieving the lowest possible latency.
 - Lowers the requirements on both hardware encoders and broadcasting services to support WebRTC.
 - Is usable both in web browsers and in standalone encoders.
 
@@ -105,7 +105,7 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
 - WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
-The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down a ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
+The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down an ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
 
 - WHIP client: Initiates the communication by sending an HTTP POST with an SDP Offer to the WHIP endpoint.
 - WHIP endpoint: Responds with a "201 Created" message containing an SDP answer.
@@ -216,7 +216,7 @@ a=fmtp:97 apt=96
 ~~~~~
 {: title="Example of SDP offer/answer exchange done via an HTTP POST" #sdp-exchange-example}
 
-Once a session is setup, consent freshness as per {{!RFC7675}} SHALL be used to detect non-graceful disconnection by full ICE implementations and DTLS teardown for session termination by either side.
+Once a session is set up, consent freshness as per {{!RFC7675}} SHALL be used to detect non-graceful disconnection by full ICE implementations and DTLS teardown for session termination by either side.
 
 To explicitly terminate a WHIP session, the WHIP client MUST perform an HTTP DELETE request to the WHIP session URL returned in the Location header field of the initial HTTP POST. Upon receiving the HTTP DELETE request, the WHIP session will be removed and the resources freed on the media server, terminating the ICE and DTLS sessions.
 
@@ -240,7 +240,7 @@ Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and c
 
 ### HTTP PATCH request usage {#http-patch-usage}
 
-The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing a SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} carrying the relevant ICE information.
+The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing an SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} carrying the relevant ICE information.
 
 If the HTTP PATCH to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP PATCH request with a "415 Unsupported Media Type" error response. If the SDP fragment is malformed, the WHIP session MUST reject the HTTP PATCH with a "400 Bad Request" error response.
 
@@ -357,7 +357,7 @@ Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "m
 
 ### Single MediaStream
 
-WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain an "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response.
+WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response.
 
 ### No partially successful answers
 
@@ -410,15 +410,15 @@ NOTE: The naming of both the "rel" attribute value of "ice-server" and the targe
 
 NOTE: Depending on the ICE Agent implementation, the WHIP client may need to call the setConfiguration method before calling the setLocalDescription method with the local SDP offer in order to avoid having to perform an ICE restart for applying the updated STUN/TURN server configuration on the next ICE gathering phase.
 
-There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{Section 4.1.18 of !RFC9429}}. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is not NOT RECOMMENDED to be used by the WHIP clients and, if supported by the underlying WHIP client's webrtc implementation, the WHIP client SHOULD wait for the information to be returned by the WHIP endpoint on the response of the HTTP POST request instead.
+There are some WebRTC implementations that do not support updating the STUN/TURN server configuration after the local offer has been created as specified in {{Section 4.1.18 of !RFC9429}}. In order to support these clients, the WHIP endpoint MAY also include the STUN/TURN server configuration on the responses to OPTIONS request sent to the WHIP endpoint URL before the POST request is sent. However, this method is NOT RECOMMENDED to be used by the WHIP clients and, if supported by the underlying WHIP client's webrtc implementation, the WHIP client SHOULD wait for the information to be returned by the WHIP endpoint on the response of the HTTP POST request instead.
 
-The generation of the TURN server credentials may require performing a request to an external provider, which can both add latency to the OPTIONS request processing and increase the processing required to handle that request. In order to prevent this, the WHIP endpoint SHOULD NOT return the STUN/TURN server configuration if the OPTIONS request is a preflight request for CORS as defined in {{FETCH}}, that is, if The OPTIONS request does not contain an Access-Control-Request-Method with "POST" value and the the Access-Control-Request-Headers HTTP header does not contain the "Link" value. 
+The generation of the TURN server credentials may require performing a request to an external provider, which can both add latency to the OPTIONS request processing and increase the processing required to handle that request. In order to prevent this, the WHIP endpoint SHOULD NOT return the STUN/TURN server configuration if the OPTIONS request is a preflight request for CORS as defined in {{FETCH}}, that is, if The OPTIONS request does not contain an Access-Control-Request-Method with "POST" value and the Access-Control-Request-Headers HTTP header does not contain the "Link" value. 
 
 The WHIP clients MAY also support configuring the STUN/TURN server URIs with long term credentials provided by either the broadcasting service or an external TURN provider, overriding the values provided by the WHIP endpoint.
 
 ## Authentication and authorization
 
-All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{Section 11 of !RFC9110}} and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However this does not preclude the support of additional HTTP authentication schemes as defined in {{Section 11.6 of !RFC9110}}.
+All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{Section 11 of !RFC9110}} and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However, this does not preclude the support of additional HTTP authentication schemes as defined in {{Section 11.6 of !RFC9110}}.
 
 ### Bearer token authentication
 
@@ -443,7 +443,7 @@ In order to support future extensions to be defined for the WHIP protocol, a com
 Protocol extensions supported by the WHIP sessions MUST be advertised to the WHIP client in the "201 Created" response to the initial HTTP POST request sent to the WHIP endpoint.
 The WHIP endpoint MUST return one "Link" header field for each extension that it supports, with the extension "rel" attribute value containing the extension URN and the URL for the HTTP resource that will be available for receiving requests related to that extension.
 
-Protocol extensions are optional for both WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP session MUST NOT require the usage of any of the extensions.
+Protocol extensions are optional for both WHIP clients and servers. WHIP clients MUST ignore any Link attribute with an unknown "rel" attribute value and WHIP sessions MUST NOT require the usage of any extension.
 
 Each protocol extension MUST register a unique "rel" attribute value at IANA starting with the prefix: "urn:ietf:params:whip:ext" as defined in {{urn-whip-subspace}}.
 
@@ -475,7 +475,7 @@ On top of that, the WHIP protocol exposes a thin new attack surface specific of 
 
 - HTTP POST flooding and resource exhaustion:
   It would be possible for an attacker in possession of authentication credentials valid for ingesting a WHIP stream to make multiple HTTP POST to the WHIP endpoint.
-  This will force the WHIP endpoint to process the incoming SDP and allocate resources for being able to setup the DTLS/ICE connection.
+  This will force the WHIP endpoint to process the incoming SDP and allocate resources for being able to set up the DTLS/ICE connection.
   While the malicious client does not need to initiate the DTLS/ICE connection at all, the WHIP session will have to wait for the DTLS/ICE connection timeout in order to release the associated resources.
   If the connection rate is high enough, this could lead to resource exhaustion on the servers handling the requests and it will not be able to process legitimate incoming ingests.
   In order to prevent this scenario, WHIP endpoints SHOULD implement a rate limit and avalanche control mechanism for incoming initial HTTP POST requests.
@@ -600,7 +600,7 @@ This section defines the process for registering new WHIP protocol extensions UR
    
 A WHIP Protocol Extension URNs is used as a value in the "rel" attribute of the Link header as defined in {{protocol-extensions}} for the purpose of signaling the WHIP protocol extensions supported by the WHIP endpoints.
    
-WHIP Protocol Extensions URNs have a "ext" type as defined in {{urn-whip-subspace}}.
+WHIP Protocol Extensions URNs have an "ext" type as defined in {{urn-whip-subspace}}.
 
 ###  Registration Procedure
 
@@ -644,7 +644,7 @@ A WHIP Protocol Extension URNs is defined by completing the following template:
 
  -   URN: A unique URN for the WHIP Protocol Extension (e.g., "urn:ietf:params:whip:ext:example:server-sent-events").
  -   Reference: A formal reference to the publicly available specification
- -   Name: A descriptive name of the WHIP Protocol Extension extension (e.g., "Sender Side events").
+ -   Name: A descriptive name of the WHIP Protocol Extension (e.g., "Sender Side events").
  -   Description: A brief description of the function of the extension, in a short paragraph or two
  -   Contact information: Contact information for the organization or person making the registration
 
