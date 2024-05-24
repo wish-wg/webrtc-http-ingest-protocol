@@ -105,12 +105,12 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
 - WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
-The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down an ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS for security, and RTP/RTCP for media transport:
+The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down an ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS and Secure Real-time Transport Protocol (SRTP) for security, and RTP/RTCP for media transport:
 
 - WHIP client: Initiates the communication by sending an HTTP POST with an SDP Offer to the WHIP endpoint.
 - WHIP endpoint: Responds with a "201 Created" message containing an SDP answer.
 - WHIP client and media server: Establish an ICE and DTLS sessions for NAT traversal and secure communication.
-- RTP/RTCP Flow: Real-time Transport Protocol and Real-time Transport Control Protocol flows are established for media transmission from the WHIP client to the media server
+- RTP/RTCP Flow: Real-time Transport Protocol and Real-time Transport Control Protocol flows are established for media transmission from the WHIP client to the media server, secured by the SRTP profile.
 - WHIP client: Sends an HTTP DELETE to terminate the WHIP session.
 - WHIP session: Responds with a "200 OK" to confirm the session termination.
 
@@ -552,9 +552,9 @@ Declaration of Syntactic Structure:
 
      - type: The entity type. This specification only defines the "ext" type.
 
-     - name: A required US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
+     - name: A required ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines a major namespace of a WHIP protocol extension. The value MAY also be an industry name or organization name.
 
-     - other: Any US-ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
+     - other: Any ASCII string that conforms to the URN syntax requirements (see {{?RFC8141}}) and defines the sub-namespace (which MAY be further broken down in namespaces delimited by colons) as needed to uniquely identify an WHIP protocol extension.
 
 Relevant Ancillary Documentation:
 
@@ -607,7 +607,7 @@ WHIP Protocol Extensions URNs have an "ext" type as defined in {{urn-whip-subspa
    The IETF has created a mailing list, "wish@ietf.org", which can be used
    for public discussion of WHIP protocol extensions proposals prior to registration.
    Use of the mailing list is strongly encouraged. The IESG has
-   appointed a designated expert {{RFC8126}} who will monitor the
+   appointed a designated expert {{!RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
    Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {{!BCP26}} .
