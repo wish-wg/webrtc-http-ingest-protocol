@@ -416,6 +416,10 @@ The generation of the TURN server credentials may require performing a request t
 
 The WHIP clients MAY also support configuring the STUN/TURN server URIs with long term credentials provided by either the broadcasting service or an external TURN provider, overriding the values provided by the WHIP endpoint.
 
+### Congestion control
+
+{{?RFC8836}} defines the congestion control requirements for interactive Real-Time media to be used in WebRTC. These requirements are based on the assumption of the need to provide the data continuously, within a very limited time window (no more delay than hundreds of milliseconds end-to-end). If the latency target is higher, some of the requirements present in RFC8836 could be relaxed to allow more flexible implementations.
+
 ## Authentication and authorization
 
 All WHIP endpoints, sessions and clients MUST support HTTP Authentication as per {{Section 11 of !RFC9110}} and in order to ensure interoperability, bearer token authentication as defined in the next section MUST be supported by all WHIP entities. However, this does not preclude the support of additional HTTP authentication schemes as defined in {{Section 11.6 of !RFC9110}}.
