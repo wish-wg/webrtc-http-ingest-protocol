@@ -117,6 +117,14 @@ The {{whip-protocol-operation}} illustrates the communication flow between a WHI
 
 # Protocol Operation
 
+## HTTP usage 
+
+Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes.
+
+WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC7807}}.
+
+## Ingest session set up
+
 In order to set up an ingestion session, the WHIP client MUST generate an SDP offer according to the JSEP rules for an initial offer as in {{Section 5.2.1 of !RFC9429}} and perform an HTTP POST request as per {{Section 9.3.3 of !RFC9110}} to the configured WHIP endpoint URL.
 
 The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint MUST generate an SDP answer according to the JSEP rules for an initial answer as in {{Section 5.3.1 of !RFC9429}} and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
