@@ -119,9 +119,9 @@ The {{whip-protocol-operation}} illustrates the communication flow between a WHI
 
 ## HTTP usage 
 
-Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes.
+Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes. WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC7807}}.
 
-WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC7807}}.
+The HTTP resources for the WHIP endpoints and sessions do not have any representation in this specification, so the WHIP endpoints and sessions MUST return a 2XX sucessfull response with no content when a GET request is received.
 
 ## Ingest session set up
 
@@ -230,11 +230,7 @@ To explicitly terminate a WHIP session, the WHIP client MUST perform an HTTP DEL
 
 A media server terminating a session MUST follow the procedures in {{Section 5.2 of !RFC7675}}  for immediate revocation of consent.
 
-The WHIP endpoints MUST return an "405 Method Not Allowed" response for any HTTP request method different than OPTIONS and POST on the endpoint URL in order to reserve their usage for future versions of this protocol specification.
-
 The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Sharing (CORS) as defined in {{FETCH}}. The "200 OK" response to any OPTIONS request SHOULD include an "Accept-Post" header with a media type value of "application/sdp" as per {{!W3C.REC-ldp-20150226}}.
-
-The WHIP sessions MUST return an "405 Method Not Allowed" response for any HTTP request method different than PATCH and DELETE on the session URLs in order to reserve their usage for future versions of this protocol specification.
 
 ## ICE support {#ice-support}
 
