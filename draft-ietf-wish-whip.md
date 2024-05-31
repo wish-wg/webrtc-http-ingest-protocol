@@ -102,7 +102,7 @@ The elements in {{whip-protocol-operation}} are described as follows:
 - WHIP endpoint: This denotes the ingest server that receives the initial WHIP request.
 - WHIP endpoint URL: Refers to the URL of the WHIP endpoint responsible for creating the WHIP session.
 - Media server: This is the WebRTC media server or consumer responsible for establishing the media session with the WHIP client and receiving the media content it produces.
-- WHIP session: Indicates the allocated HTTP resource by the WHIP endpoint for handling an ongoing ingest session.
+- WHIP session: This indicates the server handling the allocated HTTP resource by the WHIP endpoint for an ongoing ingest session.
 - WHIP session URL: Refers to the URL of the WHIP resource allocated by the WHIP endpoint for a specific media session. The WHIP client can send requests to the WHIP session using this URL to modify the session, such as ICE operations or termination. 
 
 The {{whip-protocol-operation}} illustrates the communication flow between a WHIP client, WHIP endpoint, media server, and WHIP session. This flow outlines the process of setting up and tearing down an ingestion session using the WHIP protocol, involving negotiation, ICE for Network Address Translation (NAT) traversal, DTLS and Secure Real-time Transport Protocol (SRTP) for security, and RTP/RTCP for media transport:
@@ -121,17 +121,15 @@ The {{whip-protocol-operation}} illustrates the communication flow between a WHI
 
 Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes. WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC7807}}.
 
-The HTTP resources for the WHIP endpoints and sessions do not have any representation in this specification, so the WHIP endpoints and sessions MUST return a 2XX sucessfull response with no content when a GET request is received.
+The WHIP endpoints and sessions are origin servers as defined in {{Section 3.6. of !RFC9110}} handling the requests and providing responses for the underlying HTTP resources. Those HTTP resources do not have any representation defined in this specification, so the WHIP endpoints and sessions MUST return a 2XX sucessfull response with no content when a GET request is received.
 
 ## Ingest session set up
 
 In order to set up an ingestion session, the WHIP client MUST generate an SDP offer according to the JSEP rules for an initial offer as in {{Section 5.2.1 of !RFC9429}} and perform an HTTP POST request as per {{Section 9.3.3 of !RFC9110}} to the configured WHIP endpoint URL.
 
-The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint MUST generate an SDP answer according to the JSEP rules for an initial answer as in {{Section 5.3.1 of !RFC9429}} and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session.
+The HTTP POST request MUST have a content type of "application/sdp" and contain the SDP offer as the body. The WHIP endpoint MUST generate an SDP answer according to the JSEP rules for an initial answer as in {{Section 5.3.1 of !RFC9429}} and return a "201 Created" response with a content type of "application/sdp", the SDP answer as the body, and a Location header field pointing to the newly created WHIP session. If the HTTP POST to the WHIP endpoint has a content type different than "application/sdp" or the SDP is malformed, the WHIP endpoint MUST reject the HTTP POST request with an appropiate 4XX error response. 
 
 As the WHIP protocol only supports the ingestion use case with unidirectional media, the WHIP client SHOULD use "sendonly" attribute in the SDP offer but MAY use the "sendrecv" attribute instead, "inactive" and "recvonly" attributes MUST NOT be used. The WHIP endpoint MUST use "recvonly" attribute in the SDP answer. 
-
-If the HTTP POST to the WHIP endpoint has a content type different than "application/sdp", the WHIP endpoint MUST reject the HTTP POST request with a "415 Unsupported Media Type" error response. If the SDP body is malformed, the WHIP session MUST reject the HTTP POST with a "400 Bad Request" error response. 
 
 Following {{sdp-exchange-example}} is an example of an HTTP POST sent from a WHIP client to a WHIP endpoint and the "201 Created" response from the WHIP endpoint containing the Location header pointing to the newly created WHIP session:
 
@@ -246,9 +244,9 @@ Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and c
 
 The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing an SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} carrying the relevant ICE information.
 
-If the HTTP PATCH to the WHIP session has a content type different than "application/trickle-ice-sdpfrag", the WHIP session MUST reject the HTTP PATCH request with a "415 Unsupported Media Type" error response. If the SDP fragment is malformed, the WHIP session MUST reject the HTTP PATCH with a "400 Bad Request" error response.
+If the HTTP PATCH to the WHIP session has a content type different than "application/trickle-ice-sdpfrag" or the SDP fragment is malformed, the WHIP session MUST reject the HTTP PATCH request with an 4XX error response.
 
-If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" response for the HTTP PATCH requests that are not supported as per {{Section 15.5.21 of !RFC9110}}. 
+If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return an 5XX error response for the HTTP PATCH requests that are not supported as per {{Section 15.5.21 of !RFC9110}}. 
 
 The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Consequently, as those HTTP PATCH requests may be received out-of-order by the WHIP session, if WHIP session supports ICE restarts, it MUST generate a unique strong entity-tag identifying the ICE session as per {{Section 8.8.3 of !RFC9110}}, being OPTIONAL otherwise. The initial value of the entity-tag identifying the initial ICE session MUST be returned in an ETag header field in the "201 Created" response to the initial POST request to the WHIP endpoint.
 
