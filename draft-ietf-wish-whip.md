@@ -359,15 +359,15 @@ Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "m
 
 ### Single MediaStream
 
-WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with a "406 Not Acceptable" error response.
+WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with an appropiate 4XX error response.
 
 ### No partially successful answers
 
-The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with a "406 Not Acceptable" error response to prevent having partially successful ingest sessions which can be misleading to end users.
+The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with a 4XX error response to prevent having partially successful ingest sessions which can be misleading to end users.
 
 ### DTLS setup role and SDP "setup" attribute
 
-When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute with an "actpass" attribute value, as defined in {{!RFC8842}}. However, if the WHIP client only implements the DTLS client role, it MAY use an SDP "setup" attribute with an "active" attribute value. If the WHIP endpoint does not support an SDP offer with an SDP "setup" attribute with an "active" attribute value, it SHOULD reject the request with a "422 Unprocessable Entity" response.
+When a WHIP client sends an SDP offer, it SHOULD insert an SDP "setup" attribute with an "actpass" attribute value, as defined in {{!RFC8842}}. However, if the WHIP client only implements the DTLS client role, it MAY use an SDP "setup" attribute with an "active" attribute value. If the WHIP endpoint does not support an SDP offer with an SDP "setup" attribute with an "active" attribute value, it SHOULD reject the request with an appropiate 4XX error response.
 
 NOTE: {{!RFC8842}} defines that the offerer must insert an SDP "setup" attribute with an "actpass" attribute value. However, the WHIP client will always communicate with a media server that is expected to support the DTLS server role, in which case the client might choose to only implement support for the DTLS client role.
 
