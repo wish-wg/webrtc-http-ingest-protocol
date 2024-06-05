@@ -638,9 +638,9 @@ The Designated Expert (DE) is expected to ascertain the existence of suitable do
 
 The DE is also expected to check the clarity of purpose and use of the requested registration.
 
-Additionally, the DE must verify that any request for one of these registrations has been made available for review and comment within the IETF. the DE will post the request to the WebRTC Ingest Signaling over HTTPS (wish) Working Group mailing list (or a successor mailing list designated by the IESG). 
+Additionally, the DE must verify that any request for one of these registrations has been made available for review and comment by posting the request to the WebRTC Ingest Signaling over HTTPS (wish) Working Group mailing list (or a successor mailing list designated by the IESG). 
 
-If the request comes from within the IETF, it should be documented in an Internet-Draft. Lastly, the DE must ensure that any other request for a code point does not conflict with work that is active or already published within the IETF.
+Specifications should be documented in an Internet-Draft. Lastly, the DE must ensure that any other request for a code point does not conflict with work that is active in or already published by the IETF.
 
 ###  WHIP Protocol Extension Registration Template
 
