@@ -507,6 +507,10 @@ Description: Conveys the STUN and TURN servers that can be used by an ICE Agent 
 
 Reference: TBD
 
+## WebRTC-HTTP Ingestion Protocol (WHIP) registry group
+
+IANA  is asked to create a new registry group called "WebRTC-HTTP Ingestion Protocol (WHIP)". This group includes the "WebRTC-HTTP ingestion protocol (WHIP) URNs" and "WebRTC-HTTP ingestion protocol (WHIP) extension URNs" registries described below.
+
 ## Registration of WHIP URN Sub-namespace and WHIP registries
 
 IANA is asked to add an entry to the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry and create a sub-namespace for the Registered Parameter Identifier as per {{!RFC3553}}: "urn:ietf:params:whip".
@@ -518,24 +522,26 @@ To manage this sub-namespace, IANA is asked to create the "WebRTC-HTTP ingestion
 The "WebRTC-HTTP ingestion protocol (WHIP) URNs" registry is used to manage entries within the "urn:ietf:params:whip" namespace. The registry descriptions is as follows:
 
    - Registry group: WebRTC-HTTP ingestion protocol (WHIP)
-   - 
+
    - Registry name: WebRTC-HTTP ingestion protocol (WHIP) URNs
      
    - Specification: this document (RFC TBD)
      
    - Registration procedure: Specification Required
 
-   - Field names: URI, name, description and reference.
+   - Field names: URI, description, change controller, reference and IANA registry reference
 
-The registry contains a single value:
+The registry contains a single initial value:
 
    - URI: urn:ietf:params:whip:ext
      
-   - Name: ext
+   - Description: WebRTC-HTTP ingestion protocol (WHIP) extension URNs
+
+   - Change Controller: IETF
      
-   - Description: WebRTC-HTTP ingestion protocol (WHIP) extension URNs registry
-     
-   - Reference: See Section {{urn-whip-ext-registry}}
+   - Reference: this document (RFC TBD) Section {{urn-whip-ext-registry}}
+
+   - IANA registry reference: WebRTC-HTTP ingestion protocol (WHIP) extension URNs registry.
 
 ### WebRTC-HTTP ingestion protocol (WHIP) extension URNs registry {#urn-whip-ext-registry}
 
@@ -551,7 +557,7 @@ The "WebRTC-HTTP ingestion protocol (WHIP) Extension URNs" is used to manage ent
 
    - Registration procedure: Specification Required
 
-   - Field names: URI, type, description and reference.
+   - Field names: URI, description, change controller, reference and IANA registry reference
      
 
 ## URN Sub-namespace for WHIP {#urn-whip-subspace}
