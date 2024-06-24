@@ -6,7 +6,7 @@ category: std
 ipr: trust200902
 area: ART
 workgroup: wish
-updates: 8842, 8840
+updates: 8842, 8840****
 
 keyword: WebRTC
 
@@ -553,8 +553,6 @@ The "WebRTC-HTTP ingestion protocol (WHIP) Extension URNs" is used to manage ent
      
    - Specification: this document (RFC TBD)
      
-   - Registration policy: Specification Required
-
    - Registration procedure: Specification Required
 
    - Field names: URI, description, change controller, reference and IANA registry reference
