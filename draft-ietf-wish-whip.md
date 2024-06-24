@@ -6,7 +6,7 @@ category: std
 ipr: trust200902
 area: ART
 workgroup: wish
-updates: 8842, 8840****
+updates: 8842, 8840
 
 keyword: WebRTC
 
