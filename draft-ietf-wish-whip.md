@@ -119,7 +119,7 @@ The {{whip-protocol-operation}} illustrates the communication flow between a WHI
 
 ## HTTP usage 
 
-Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes. WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC7807}}.
+Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes. WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC9457}}.
 
 The WHIP endpoints and sessions are origin servers as defined in {{Section 3.6. of !RFC9110}} handling the requests and providing responses for the underlying HTTP resources. Those HTTP resources do not have any representation defined in this specification, so the WHIP endpoints and sessions MUST return a 2XX sucessfull response with no content when a GET request is received.
 
