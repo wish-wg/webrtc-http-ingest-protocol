@@ -363,7 +363,7 @@ WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore
 
 ### No partially successful answers
 
-The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with a 4XX error response to prevent having partially successful ingest sessions which can be misleading to end users.
+The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with an "422 Unprocessable Content" or "400 Bad Request" error response to prevent having partially successful ingest sessions which can be misleading to end users. The WHIP endpoint MAY also return a problem statement as recommended in {{#http-usage}} proving further error details about the failed request.
 
 ### DTLS setup role and SDP "setup" attribute
 
