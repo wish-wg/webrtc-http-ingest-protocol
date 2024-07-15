@@ -117,7 +117,7 @@ The {{whip-protocol-operation}} illustrates the communication flow between a WHI
 
 # Protocol Operation
 
-## HTTP usage 
+## HTTP usage {#http-usage}
 
 Following {{?BCP56}} guidelines, WHIP clients MUST NOT match error codes returned by the WHIP endpoints and resources to a specific error cause indicated in this specification. WHIP clients MUST be able to handle all applicable status codes gracefully falling back to the generic n00 semantics of a given status code on unknown error codes. WHIP endpoints and resources COULD convey finer-grained error information by a problem statement json object in the response message body of the failed request as per {{?RFC9457}}.
 
