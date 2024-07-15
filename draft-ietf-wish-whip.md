@@ -244,6 +244,9 @@ Trickle ICE and ICE restart support are RECOMMENDED for both WHIP sessions and c
 
 The WHIP client MAY perform trickle ICE or ICE restarts by sending an HTTP PATCH request as per {{!RFC5789}} to the WHIP session URL, with a body containing an SDP fragment with media type "application/trickle-ice-sdpfrag" as specified in {{!RFC8840}} carrying the relevant ICE information.
 
+If the HTTP PATCH to the WHIP session has a content type different than "application/trickle-ice-sdpfrag" or the SDP fragment is malformed, the WHIP session MUST reject the HTTP PATCH with an appropiate 4XX error response.
+
+If the HTTP POST to the WHIP endpoint has a content type different than "application/sdp" or the SDP is malformed, the WHIP endpoint MUST reject the HTTP POST request with an appropiate 4XX error response.
 
 If the WHIP session supports either Trickle ICE or ICE restarts, but not both, it MUST return a "422 Unprocessable Content" error response for the HTTP PATCH requests that are not supported as per {{Section 15.5.21 of !RFC9110}}. 
 
