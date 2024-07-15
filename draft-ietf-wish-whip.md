@@ -359,7 +359,7 @@ Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "m
 
 ### Single MediaStream
 
-WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with an appropiate 4XX error response.
+WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with an "422 Unprocessable Content" or "400 Bad Request" error response. The WHIP endpoint MAY also return a problem statement as recommended in {{#http-usage}} proving further error details about the failed request.
 
 ### No partially successful answers
 
