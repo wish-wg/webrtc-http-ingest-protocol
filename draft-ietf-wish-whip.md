@@ -649,7 +649,7 @@ WHIP Protocol Extensions URNs have an "ext" type as defined in {{urn-whip-subspa
    appointed a designated expert as per {{?RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
-   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {?{RFC8126}}.
+   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {{?RFC8126}}.
    An Standards Track RFC is REQUIRED for the registration of new value data types that modify existing properties.
    An Standards Track RFC is also REQUIRED for registration of WHIP Protocol Extensions URNs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
