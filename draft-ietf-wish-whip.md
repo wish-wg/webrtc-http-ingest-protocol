@@ -358,11 +358,11 @@ Both the WHIP client and the WHIP endpoint SHALL support {{!RFC9143}} and use "m
 
 ### Single MediaStream
 
-WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with an "422 Unprocessable Content" or "400 Bad Request" error response. The WHIP endpoint MAY also return a problem statement as recommended in {{#http-usage}} proving further error details about the failed request.
+WHIP only supports a single MediaStream as defined in {{!RFC8830}} and therefore all "m=" sections MUST contain a "msid" attribute with the same value. The MediaStream MUST contain at least one MediaStreamTrack of any media kind and it MUST NOT have two or more than MediaStreamTracks for the same media (audio or video). However, it would be possible for future revisions of this spec to allow more than a single MediaStream or MediaStreamTrack of each media kind, so in order to ensure forward compatibility, if the number of audio and or video MediaStreamTracks or number of MediaStreams are not supported by the WHIP endpoint, it MUST reject the HTTP POST request with an "422 Unprocessable Content" or "400 Bad Request" error response. The WHIP endpoint MAY also return a problem statement as recommended in {{http-usage}} proving further error details about the failed request.
 
 ### No partially successful answers
 
-The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with an "422 Unprocessable Content" or "400 Bad Request" error response to prevent having partially successful ingest sessions which can be misleading to end users. The WHIP endpoint MAY also return a problem statement as recommended in {{#http-usage}} proving further error details about the failed request.
+The WHIP endpoint SHOULD NOT reject individual "m=" sections as per {{Section 5.3.1 of !RFC9429}} in case there is any error processing the "m=" section, but reject the HTTP POST request with an "422 Unprocessable Content" or "400 Bad Request" error response to prevent having partially successful ingest sessions which can be misleading to end users. The WHIP endpoint MAY also return a problem statement as recommended in {{http-usage}} proving further error details about the failed request.
 
 ### DTLS setup role and SDP "setup" attribute
 
@@ -646,16 +646,16 @@ WHIP Protocol Extensions URNs have an "ext" type as defined in {{urn-whip-subspa
    The IETF has created a mailing list, "wish@ietf.org", which can be used
    for public discussion of WHIP protocol extensions proposals prior to registration.
    Use of the mailing list is strongly encouraged. The IESG has
-   appointed a designated expert {{!RFC8126}} who will monitor the
+   appointed a designated expert as per {{?RFC8126}} who will monitor the
    wish@ietf.org mailing list and review registrations.
 
-   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {{!BCP26}} .
+   Registration of new "ext" type URNs (in the namespace "urn:ietf:params:whip:ext") belonging to a WHIP Protocol Extension MUST be documented in a permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible and reviewed by the designated expert as per Section 4.6 of {{?RFC8126}}.
    An Standards Track RFC is REQUIRED for the registration of new value data types that modify existing properties.
    An Standards Track RFC is also REQUIRED for registration of WHIP Protocol Extensions URNs that modify WHIP Protocol Extensions previously documented in an existing RFC.
 
    The registration procedure begins when a completed registration template, defined in the sections below, is sent to iana@iana.org.
    Decisions made by the designated expert can be appealed to an Applications and Real Time (ART) Area Director, then to the IESG.
-   The normal appeals procedure described in {{!BCP9}} is to be followed. 
+   The normal appeals procedure described in {{?BCP9}} is to be followed. 
    
    Once the registration procedure concludes successfully, IANA creates
    or modifies the corresponding record in the WHIP Protocol Extension registry.
@@ -669,7 +669,7 @@ WHIP Protocol Extensions URNs have an "ext" type as defined in {{urn-whip-subspa
 
 ### Guidance for Designated Experts
 
-The Designated Expert (DE) is expected to ascertain the existence of suitable documentation (a specification) as described in {{RFC8126}} and to verify that the document is permanently and publicly available. 
+The Designated Expert (DE) is expected to ascertain the existence of suitable documentation (a specification) as described in {{?RFC8126}} and to verify that the document is permanently and publicly available. 
 
 The DE is also expected to check the clarity of purpose and use of the requested registration.
 
@@ -692,5 +692,3 @@ A WHIP Protocol Extension URNs is defined by completing the following template:
 The authors wish to thank Lorenzo Miniero, Juliusz Chroboczek, Adam Roach, Nils Ohlmeier, Christer Holmberg, Cameron Elliott, Gustavo Garcia, Jonas Birme, Sandro Gauci, Christer Holmberg and everyone else in the WebRTC community that have provided comments, feedback, text and improvement proposals on the document and contributed early implementations of the spec. 
 
 --- back
-
-
