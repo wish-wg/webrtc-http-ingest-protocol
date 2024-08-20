@@ -251,6 +251,8 @@ The WHIP client MAY send overlapping HTTP PATCH requests to one WHIP session. Co
 
 WHIP clients SHOULD NOT use entity-tag validation when matching a specific ICE session is not required, such as for example when initiating a DELETE request to terminate a session. WHIP sessions MUST ignore any entity-tag value sent by the WHIP client when ICE session matching is not required, as in the HTTP DELETE request.
 
+Missing or outdated ETags in the PATCH requests from WHIP clients will be answered by WHIP sessions as per {{Section 13.1.1 of !RFC9110}} and {{Section 3 of !RFC6585}}, with a "428 Precondition Required" response for a missing entity tag, and a "412 Precondition Failed" response for a non-matching entity tag.
+
 ### Trickle ICE {#trickle-ice}
 
 Depending on the Trickle ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8845}}. For the purpose of reducing setup times, when using Trickle ICE the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates.
@@ -266,7 +268,7 @@ WHIP clients generating the HTTP PATCH body with the SDP fragment and its subseq
  - As per {{!RFC9429}}, only m-sections not marked as bundle-only can gather ICE candidates, so given that the "max-bundle" policy is being used, the SDP fragment will contain only the offerer-tagged m-line of the bundle group.
  - The WHIP client MAY exclude ICE candidates from the HTTP PATCH body if they have already been confirmed by the WHIP session with a successful HTTP response to a previous HTTP PATCH request.
 
-WHIP sessions that support Trickle ICE MUST return a strong ETag as per {{Section 8.8.3 of !RFC9110}} in a successful response to a POST to the WHIP endpoint. WHIP clients that support Trickle ICE MUST use the ETag as per {{Section 13.1.1 of !RFC9110}} in its PATCH requests. Missing or outdated ETags in the PATCH requests from WHIP clients will be answered by WHIP sessions as per {{Section 13.1.1 of !RFC9110}} and {{Section 3 of !RFC6585}}, with a "428 Precondition Required" response for a missing entity tag, and a "412 Precondition Failed" response for a non-matching entity tag.
+WHIP sessions and clients that support Trickle ICE MUST make use of entity-tags and conditional requests as explained in {{http-patch-usage}}.
 
 When a WHIP session receives a PATCH request that adds new ICE candidates without performing an ICE restart, it MUST return a "204 No Content" response without a body and MUST NOT include an ETag header in the response. If the WHIP session does not support a candidate transport or is not able to resolve the connection address, it MUST silently discard the candidate and continue processing the rest of the request normally.
 
