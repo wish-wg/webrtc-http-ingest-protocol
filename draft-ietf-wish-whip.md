@@ -232,7 +232,7 @@ The WHIP endpoints MUST support OPTIONS requests for Cross-Origin Resource Shari
 
 ## ICE support {#ice-support}
 
-ICE {{!RFC8845}} is a protocol addressing the complexities of NAT traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
+ICE {{!RFC8445}} is a protocol addressing the complexities of NAT traversal, commonly encountered in Internet communication. NATs hinder direct communication between devices on different local networks, posing challenges for real-time applications. ICE facilitates seamless connectivity by employing techniques to discover and negotiate efficient communication paths. 
 
 Trickle ICE {{!RFC8838}} optimizes the connectivity process by incrementally sharing potential communication paths, reducing latency, and facilitating quicker establishment. 
 
@@ -255,7 +255,7 @@ Missing or outdated ETags in the PATCH requests from WHIP clients will be answer
 
 ### Trickle ICE {#trickle-ice}
 
-Depending on the Trickle ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8845}}. For the purpose of reducing setup times, when using Trickle ICE the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates.
+Depending on the Trickle ICE support on the WHIP client, the initial offer by the WHIP client MAY be sent after the full ICE gathering is complete with the full list of ICE candidates, or it MAY only contain local candidates (or even an empty list of candidates) as per {{!RFC8445}}. For the purpose of reducing setup times, when using Trickle ICE the WHIP client SHOULD send the SDP offer as soon as possible, containing either locally gathered ICE candidates or an empty list of candidates.
 
 In order to simplify the protocol, the WHIP session cannot signal additional ICE candidates to the WHIP client after the SDP answer has been sent. The WHIP endpoint SHALL gather all the ICE candidates for the media server before responding to the client request and the SDP answer SHALL contain the full list of ICE candidates of the media server.
 
