@@ -347,7 +347,7 @@ a=end-of-candidates
 ~~~~~
 {: title="Example of an ICE restart request and response" #trickle-restart-example}
 
-{{trickle-ice-example}} demonstrates a Trickle ICE restart procedure example. The WHIP client sends a PATCH request containing updated ICE information, including a new ufrag and password, along with newly gathered ICE candidates. In response, the WHIP session provides ICE information for the session after the ICE restart, including the updated ufrag and password, as well as the previous ICE candidate.
+{{trickle-restart-example}} demonstrates a Trickle ICE restart procedure example. The WHIP client sends a PATCH request containing updated ICE information, including a new ufrag and password, along with newly gathered ICE candidates. In response, the WHIP session provides ICE information for the session after the ICE restart, including the updated ufrag and password, as well as the previous ICE candidate.
 
 ## WebRTC constraints
 
